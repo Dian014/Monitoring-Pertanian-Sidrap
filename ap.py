@@ -150,7 +150,7 @@ with st.expander("Prediksi Panen"):
     suhu_manual = st.number_input("Suhu Maks (°C)", value=32.0, key="manual_suhu")
     hum_manual = st.number_input("Kelembapan (%)", value=78.0, key="manual_hum")
     luas_manual = st.number_input("Luas Lahan (ha)", value=1.0, key="manual_luas")
-    harga_manual = st.number_input("Harga Gabah (Rp/kg)", value=6500, key="manual_harga")
+    harga_manual = st.number_input("Harga Gabah (Rp/kg)", value=7000, key="manual_harga")
 
     pred_manual = model.predict([[ch_manual, suhu_manual, hum_manual]])[0]
     total_manual = pred_manual * luas_manual
@@ -159,7 +159,7 @@ with st.expander("Prediksi Panen"):
     # Prediksi otomatis (dari data harian rata-rata)
     st.subheader("Prediksi Otomatis (Berdasarkan Data Cuaca)")
     luas_auto = st.number_input("Luas Sawah (ha) (otomatis)", value=1.0, key="auto_luas")
-    harga_auto = st.number_input("Harga Gabah (Rp/kg) (otomatis)", value=6500, key="auto_harga")
+    harga_auto = st.number_input("Harga Gabah (Rp/kg) (otomatis)", value=7000, key="auto_harga")
 
     if not df_harian.empty:
         input_auto = df_harian[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
@@ -184,7 +184,7 @@ with st.expander("Prediksi Panen"):
 
     # Input luas & harga
     luas_ha = st.number_input("Luas Lahan (ha)", value=1.0, key="luas_tahunan")
-    harga_rp = st.number_input("Harga Gabah (Rp/kg)", value=6500, key="harga_tahunan")
+    harga_rp = st.number_input("Harga Gabah (Rp/kg)", value=7000, key="harga_tahunan")
 
     # Perhitungan
     total1 = pred1 * luas_ha
@@ -422,6 +422,7 @@ faq_pairs = [
     ("tanem padi gimana", "Gunakan benih bagus, siram teratur, dan pupuk tepat."),
     ("jagung ga tumbuh", "Cek kualitas benih dan kondisi tanah serta air."),
     ("pupuk kurang", "Tanaman akan terlihat layu dan kuning."),
+    ("kenapa saya sayang aripa", "Karena aripaku sayang diannnnnnn."),
 ]
 
 def cari_jawaban(pertanyaan, faq_list, threshold=70):
