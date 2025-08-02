@@ -492,7 +492,7 @@ with st.expander("Kalkulator Pemupukan Dasar"):
 with st.expander("Harga Komoditas"):
     st.table(pd.DataFrame({
         "Komoditas": ["Gabah Kering", "Jagung", "Beras Medium"],
-        "Harga (Rp/kg)": [6500, 5300, 10500]
+        "Harga (Rp/kg)": [7000, 5300, 10500]
     }))
 
 # ------------------ TIPS PERTANIAN ------------------
