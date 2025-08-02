@@ -27,10 +27,10 @@ LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
 LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
 
 # ------------------ HEADER ------------------
-st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang ARIPAKKU SAYANGGGGGG")
+st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang ARIPAKKU SAYANGGGGGG SAYANGGGGGGGGGGGG")
 st.markdown("""
 Lokasi: Kabupaten Sidenreng Rapppang – Sulawesi Selatan  
-Dikembangkan oleh Dian Eka Putra | Email: ekaputradian01@gmail.com | WA: 085654073752
+Dikembangkan oleh Dian Eka Putra ARIPAKUU | Email: ekaputradian01@gmail.com | WA: 085654073752
 """)
 
 # ------------------ PETA CURAH HUJAN ------------------
@@ -170,7 +170,7 @@ with st.expander("Prediksi Panen"):
     pendapatan_auto = total_auto * harga_auto
 
     # Proyeksi Panen Tahunan Otomatis (2 Kali Panen)
-    st.markdown("### 📆 Proyeksi Panen Tahunan")
+    st.markdown("###  Proyeksi Panen Tahunan")
 
     # Gunakan data 7 hari pertama untuk panen 1
     df_panen1 = df_harian.head(7)
@@ -193,10 +193,10 @@ with st.expander("Prediksi Panen"):
     uang_total = hasil_total * harga_rp
 
     # Tampilkan hasil
-    st.write("#### 🌾 Panen Pertama")
+    st.write("#### Panen Pertama")
     st.write(f"- Prediksi Hasil: {pred1:,.0f} kg/ha | Total: {total1:,.0f} kg | Rp {total1 * harga_rp:,.0f}")
 
-    st.write("#### 🌾 Panen Kedua")
+    st.write("#### Panen Kedua")
     st.write(f"- Prediksi Hasil: {pred2:,.0f} kg/ha | Total: {total2:,.0f} kg | Rp {total2 * harga_rp:,.0f}")
 
     st.success(f"🟩 Total Panen Tahunan: {hasil_total:,.0f} kg | Rp {uang_total:,.0f}")
@@ -478,7 +478,7 @@ with st.expander("Kalkulator Pemupukan Dasar"):
         }
     }
 
-    st.markdown(f"### 📌 Rekomendasi Pupuk untuk **{tanaman}**")
+    st.markdown(f"### Rekomendasi Pupuk untuk **{tanaman}**")
     total_kebutuhan = rekomendasi_pupuk[tanaman]
 
     for jenis_pupuk, data in total_kebutuhan.items():
@@ -608,7 +608,7 @@ with st.expander("Pengingat Harian"):
     for i, tugas in enumerate(st.session_state.todo):
         col1, col2 = st.columns([0.9, 0.1])
         col1.markdown(f"- {tugas}")
-        if col2.button("🗑️ Hapus", key=f"hapus_todo_{i}"):
+        if col2.button("Hapus", key=f"hapus_todo_{i}"):
             st.session_state.todo.pop(i)
             save_todo(st.session_state.todo)
             st.session_state.todo_update = True
