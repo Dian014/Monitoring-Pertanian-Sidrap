@@ -21,80 +21,153 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
-import streamlit as st
-
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
     layout="wide"
 )
 
-# ------------------ Dark Mode State ------------------
+# ---------------------- Inisialisasi State ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ------------------ Toggle Function ------------------
-def toggle_dark_mode():
-    st.session_state.dark_mode = not st.session_state.dark_mode
-    st.experimental_rerun()
+# ---------------------- Warna ----------------------
+def gradient_css(colors, direction="to right"):
+    return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# ------------------ Warna Utama ------------------
-COLOR_HIJAU_PADI = "#D4F1BE"
 COLOR_BIRU_TUA = "#0A2647"
+COLOR_BIRU_MUDA = "#144272"
+COLOR_BIRU_NAVY = "#102040"
+COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
+COLOR_HIJAU_TERANG = "#CFF5B2"
+COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
+COLOR_GRAY_DARK = "#2A2A2A"
+COLOR_ABU_LABEL = "#DDDDDD"
 
-# ------------------ Tema ------------------
+# ---------------------- Tema ----------------------
 LIGHT_THEME = {
-    "sidebar_bg": f"linear-gradient(to bottom, {COLOR_HIJAU_PADI}, {COLOR_BIRU_AIR})",
+    "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
     "main_bg": COLOR_PUTIH,
-    "text_color": COLOR_HITAM,
-    "input_bg": "#f7f7f7",
-    "input_text": COLOR_HITAM,
+    "font": COLOR_HITAM,
+    "input_bg": "#F0F2F6",
+    "input_font": COLOR_HITAM,
+    "input_focus_bg": "#FFFFFF",
+    "label_font": COLOR_HITAM
 }
 
 DARK_THEME = {
-    "sidebar_bg": f"linear-gradient(to bottom, {COLOR_BIRU_TUA}, {COLOR_BIRU_AIR})",
-    "main_bg": COLOR_BIRU_TUA,
-    "text_color": COLOR_PUTIH,
-    "input_bg": "#1c1c1c",
-    "input_text": COLOR_PUTIH,
+    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
+    "main_bg": COLOR_BIRU_NAVY,
+    "font": COLOR_PUTIH,
+    "input_bg": COLOR_BIRU_INPUT_GRAD,
+    "input_font": COLOR_PUTIH,
+    "input_focus_bg": "#29476B",
+    "label_font": COLOR_ABU_LABEL
 }
 
+# Tema tabel
+TABLE_THEME = {
+    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
+    "table_font": COLOR_HITAM
+}
+
+# Pilih tema
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
-# ------------------ CSS Styling ------------------
-st.markdown(
-    f"""
+# ---------------------- CSS Styling ----------------------
+st.markdown(f"""
     <style>
-    .stApp {{
-        background-color: {theme['main_bg']};
-        color: {theme['text_color']};
-    }}
-    section[data-testid="stSidebar"] > div:first-child {{
-        background: {theme['sidebar_bg']};
-    }}
-    section[data-testid="stSidebar"] * {{
-        color: {theme['text_color']} !important;
-    }}
-    input, textarea, select {{
-        background-color: {theme['input_bg']} !important;
-        color: {theme['input_text']} !important;
-    }}
-    label {{
-        color: {theme['text_color']} !important;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+        html, body, .stApp {{
+            background: {theme['main_bg']};
+            color: {theme['font']};
+        }}
 
-# ------------------ Sidebar ------------------
+        /* Sidebar */
+        section[data-testid="stSidebar"] > div:first-child {{
+            background: {theme['sidebar_bg']};
+            padding-top: 20px;
+        }}
+        section[data-testid="stSidebar"] * {{
+            color: {theme['font']} !important;
+        }}
+
+        /* Input, textarea, select */
+        input, textarea, select {{
+            background: {theme['input_bg']} !important;
+            color: {theme['input_font']} !important;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }}
+
+        /* Input focus */
+        input:focus, textarea:focus, select:focus {{
+            background: {theme['input_focus_bg']} !important;
+            color: {theme['input_font']} !important;
+            border: 1px solid #66AFE9;
+            outline: none;
+        }}
+
+        /* Label dan placeholder */
+        label, span, div[role="textbox"], ::placeholder {{
+            color: {theme['label_font']} !important;
+        }}
+
+        /* Slider label */
+        .stSlider > div {{
+            color: {theme['label_font']} !important;
+        }}
+
+        /* Expander header */
+        div[data-testid="stExpander"] > details > summary {{
+            color: {theme['label_font']} !important;
+            font-weight: bold;
+        }}
+
+        /* Expander content */
+        div[data-testid="stExpander"] {{
+            background: {theme['input_bg']} !important;
+            border-radius: 10px;
+            padding: 10px;
+        }}
+
+        /* Tabel kustom */
+        .custom-html-table {{
+            background: {TABLE_THEME['table_bg']};
+            color: {TABLE_THEME['table_font']};
+            border-collapse: collapse;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-size: 16px;
+        }}
+        .custom-html-table th, .custom-html-table td {{
+            border: 1px solid rgba(0,0,0,0.2);
+            padding: 12px 15px;
+            text-align: left;
+            background: transparent;
+        }}
+        .custom-html-table th {{
+            background-color: rgba(255,255,255,0.2);
+            font-weight: bold;
+        }}
+        .custom-html-table tbody tr:hover {{
+            background-color: rgba(255,255,255,0.15);
+        }}
+
+        /* Dropdown stSelectbox */
+        div[role="listbox"] {{
+            background: {theme['input_focus_bg']} !important;
+            color: {theme['input_font']} !important;
+        }}
+    </style>
+""", unsafe_allow_html=True)
+
+# ---------------------- Sidebar ----------------------
 with st.sidebar:
-    st.button(
-        "🌗 Toggle Dark Mode",
-        on_click=toggle_dark_mode
-    )
+    st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
