@@ -851,7 +851,7 @@ def save_harga_komoditas(data):
 if "harga_komoditas" not in st.session_state:
     st.session_state.harga_komoditas = load_harga_komoditas()
 
-with st.expander("Harga Komoditas (Dapat Diedit)"):
+with st.expander("Harga Komoditas"):
     st.markdown("Silakan ubah harga langsung pada kolom input di bawah ini.")
 
     new_data = []
@@ -865,7 +865,7 @@ with st.expander("Harga Komoditas (Dapat Diedit)"):
         save_harga_komoditas(new_data)
         st.success("Harga komoditas berhasil diperbarui.")
 
-    st.markdown("### Tabel Harga Saat Ini")
+    st.markdown("Tabel Harga Saat Ini")
     st.table(pd.DataFrame(st.session_state.harga_komoditas))
 
 # ------------------ TIPS PERTANIAN ------------------
