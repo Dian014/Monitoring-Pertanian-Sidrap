@@ -143,19 +143,47 @@ st.markdown(f"""
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ TAMPILKAN TABEL ------------------
-st.dataframe(df.style.set_properties(**{
-    'text-align': 'center',
-    'font-size': '16px',
-    'color': table_text,
-    'background-color': table_bg,
-}).set_table_styles([
-    {'selector': 'th', 'props': [('background-color', '#004080'), ('color', 'white'), ('font-weight', 'bold'), ('text-align', 'center')]},
-    {'selector': 'td', 'props': [('padding', '10px'), ('text-align', 'center')]},
-    {'selector': 'tbody tr:nth-child(odd)', 'props': [('background-color', '#e8f5e9')]},
-    {'selector': 'tbody tr:nth-child(even)', 'props': [('background-color', '#c8e6c9')]},
-    {'selector': 'tbody tr:hover', 'props': [('background-color', '#aed581'), ('color', '#001f4d')]}
-]))
+# Fungsi untuk membuat tabel HTML dengan styling
+def render_styled_table(dataframe):
+    styles = """
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #001f4d;
+        }
+        thead th {
+            background-color: #004080;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+        tbody td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #b2dfdb;
+        }
+        tbody tr:nth-child(odd) {
+            background-color: #e8f5e9;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #c8e6c9;
+        }
+        tbody tr:hover {
+            background-color: #aed581;
+            color: #001f4d;
+            cursor: pointer;
+        }
+    </style>
+    """
+
+    html = dataframe.to_html(classes='styled-table', index=False)
+    return styles + html
+
+# Render dan tampilkan tabel HTML yang sudah distyling
+st.markdown(render_styled_table(df), unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
