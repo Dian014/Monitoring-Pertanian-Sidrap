@@ -34,34 +34,32 @@ if "dark_mode" not in st.session_state:
 
 # ------------------ Warna Dasar ------------------
 COLOR_HIJAU_PADI = "#d8f3dc"
-COLOR_BIRU_TUA = "#1b263b"
-COLOR_BIRU_MUDA = "#a8dadc"
+COLOR_BIRU_TUA = "#273549"
+COLOR_BIRU_MUDA = "#3c5a72"
 COLOR_PUTIH = "#ffffff"
-COLOR_GELAP_LEMBUT = "#1e1e2f"  # Gantikan semua hitam
+COLOR_HITAM_LEMBUT = "#2c2f36"
 
 # ------------------ Berdasarkan Mode ------------------
 if st.session_state.dark_mode:
-    BACKGROUND = f"linear-gradient(135deg, {COLOR_BIRU_TUA} 75%, {COLOR_BIRU_MUDA} 25%)"
+    BACKGROUND = f"linear-gradient(135deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_PUTIH
-    INPUT_BG = "#2c2f36"
+    INPUT_BG = "#3c3f4d"
     INPUT_FONT = COLOR_PUTIH
-    EXPANDER_BG = "#242633"
-    TABLE_BG = "#2b2e3c"
-    HOVER_BG = "#3c3f4d"
-    PLACEHOLDER_COLOR = "#bbbbbb"
+    EXPANDER_BG = "#333645"
+    TABLE_BG = "#3c3f4d"
+    HOVER_BG = "#4a4d5c"
 else:
-    BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
+    BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
-    FONT_COLOR = "#1c1c1e"
+    FONT_COLOR = COLOR_HITAM_LEMBUT
     INPUT_BG = COLOR_PUTIH
-    INPUT_FONT = "#1c1c1e"
+    INPUT_FONT = COLOR_HITAM_LEMBUT
     EXPANDER_BG = "#f9f9f9"
     TABLE_BG = "#ffffff"
     HOVER_BG = "#f0f0f0"
-    PLACEHOLDER_COLOR = "#888888"
 
-# ------------------ CSS ------------------
+# ------------------ CSS Custom ------------------
 st.markdown(f"""
 <style>
 html, body, .stApp {{
@@ -73,98 +71,42 @@ section[data-testid="stSidebar"] > div:first-child {{
     background: {SIDEBAR_BG};
     padding-top: 20px;
 }}
+
 section[data-testid="stSidebar"] * {{
     color: {FONT_COLOR} !important;
 }}
 
-/* General input styling */
-input, textarea, select, button, .stTextInput input {{
+input, textarea, select {{
     background-color: {INPUT_BG} !important;
     color: {INPUT_FONT} !important;
     border: 1px solid #999;
     border-radius: 6px;
 }}
+
 input:focus, textarea:focus, select:focus {{
     border: 1px solid #66AFE9 !important;
     outline: none;
 }}
 
-/* Expander styling */
 div[data-testid="stExpander"] {{
     background: {EXPANDER_BG} !important;
     border-radius: 10px;
-    border: 1px solid #444;
-    padding: 12px;
-    color: {FONT_COLOR} !important;
-}}
-div[data-testid="stExpander"] summary {{
-    color: {FONT_COLOR} !important;
-    font-weight: bold;
-}}
-
-/* Upload area */
-section div[data-testid="stFileUploaderDropzone"] {{
-    background-color: {HOVER_BG} !important;
-    border: 2px dashed #aaa !important;
-    color: {FONT_COLOR} !important;
-}}
-section div[data-testid="stFileUploaderDropzone"] * {{
-    color: {FONT_COLOR} !important;
-}}
-
-/* Table styling */
-.stApp .dataframe, .stApp .stDataFrame, .stApp .stTable {{
-    background-color: {TABLE_BG} !important;
-    color: {FONT_COLOR} !important;
-}}
-.stApp .dataframe td, .stApp .dataframe th,
-.stApp .stDataFrame td, .stApp .stDataFrame th {{
-    color: {FONT_COLOR} !important;
-}}
-
-/* All other texts */
-.stApp div, .stApp span, .stApp label, .stApp p,
-.stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {{
-    color: {FONT_COLOR} !important;
-}}
-
-/* Placeholder text */
-::placeholder {{
-    color: {PLACEHOLDER_COLOR} !important;
-}}
-
-/* Selectbox & dropdown */
-.stSelectbox div[data-baseweb="select"] > div,
-[data-baseweb="popover"], [role="listbox"] {{
-    background-color: {HOVER_BG} !important;
-    color: {FONT_COLOR} !important;
-    border: 1px solid #777;
-}}
-[data-baseweb="popover"] * {{
-    color: {FONT_COLOR} !important;
-}}
-
-/* Form container */
-div[data-testid="stForm"] {{
-    background-color: {EXPANDER_BG} !important;
-    border: 1px solid #444 !important;
-    border-radius: 10px;
+    border: 1px solid #555;
     padding: 12px;
 }}
 
-/* Checkbox text */
 .stApp .stCheckbox label {{
     color: {FONT_COLOR} !important;
 }}
 
-/* Cursor color */
-input, textarea {{
-    caret-color: {FONT_COLOR} !important;
+::placeholder {{
+    color: #bbbbbb !important;
 }}
 
-/* Remove all pure black */
-* {{
-    background-color: transparent;
+[data-baseweb="popover"], [role="listbox"] {{
+    background-color: {HOVER_BG} !important;
+    color: {FONT_COLOR} !important;
+    border: 1px solid #777;
 }}
 </style>
 """, unsafe_allow_html=True)
