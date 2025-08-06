@@ -56,33 +56,47 @@ theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
+        /* Background App */
         .stApp {{
             background: {theme['main_bg']};
             color: {theme['list_font']};
         }}
+
+        /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
             color: {theme['list_font']};
         }}
-        section[data-testid="stSidebar"] label, 
-        section[data-testid="stSidebar"] input, 
-        section[data-testid="stSidebar"] span, 
-        section[data-testid="stSidebar"] .stSlider {{
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] input,
+        section[data-testid="stSidebar"] div[data-testid="stSlider"],
+        section[data-testid="stSidebar"] .stSlider,
+        section[data-testid="stSidebar"] .stNumberInput,
+        section[data-testid="stSidebar"] .stCheckbox {{
             color: {theme['list_font']} !important;
         }}
+        section[data-testid="stSidebar"] .stNumberInput input {{
+            color: {theme['list_font']} !important;
+            background-color: rgba(255,255,255,0.1);
+        }}
+
+        /* Expander */
         div[data-testid="stExpander"] {{
             background-color: {theme['list_bg']} !important;
             color: {theme['list_font']} !important;
             border-radius: 8px;
         }}
-        .css-1xarl3l {{
-            color: {theme['list_font']} !important;
-        }}
-        thead tr th {{
+
+        /* Tabel HTML Dataframe */
+        .stDataFrame, .stTable {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
         }}
-        tbody tr td {{
+        .stDataFrame thead tr th {{
+            background: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
+        }}
+        .stDataFrame tbody tr td {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
         }}
@@ -92,9 +106,6 @@ st.markdown(f"""
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
-    lat = st.number_input("Latitude", value=-3.921406)
-    lon = st.number_input("Longitude", value=119.772731)
-    st.slider("Batas Curah Hujan untuk Irigasi (mm):", min_value=0, max_value=50, value=5)
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
