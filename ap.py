@@ -34,108 +34,103 @@ if "dark_mode" not in st.session_state:
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-COLOR_BIRU_TUA = "#0A2647"
+# 4 warna utama
+COLOR_HIJAU_TERANG = "#CFF5B2"   # Hijau padi
+COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_MUDA = "#144272"
 COLOR_BIRU_NAVY = "#102040"
-COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
-COLOR_HIJAU_TERANG = "#CFF5B2"
-COLOR_HIJAU_LEMBUT = "#E9FCD4"
-COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
-COLOR_GRAY_DARK = "#2A2A2A"
 COLOR_ABU_LABEL = "#DDDDDD"
 
 # ---------------------- Tema ----------------------
-LIGHT_THEME = {
-    "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
-    "main_bg": COLOR_PUTIH,
-    "font": COLOR_HITAM,
-    "input_bg": "#F0F2F6",
-    "input_font": COLOR_HITAM,
-    "input_focus_bg": "#FFFFFF",
-    "label_font": COLOR_HITAM
-}
+# Gradasi sidebar: hijau -> biru
+SIDEBAR_GRADIENT = gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_MUDA])
 
-DARK_THEME = {
-    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
-    "main_bg": COLOR_BIRU_NAVY,
-    "font": COLOR_PUTIH,
-    "input_bg": COLOR_BIRU_INPUT_GRAD,
-    "input_font": COLOR_PUTIH,
-    "input_focus_bg": "#29476B",
-    "label_font": COLOR_ABU_LABEL
-}
+# Gradasi konten utama: biru navy -> hijau lembut
+MAIN_BG_GRADIENT = gradient_css([COLOR_BIRU_NAVY, COLOR_HIJAU_LEMBUT])
 
-# Tema tabel
-TABLE_THEME = {
-    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
-    "table_font": COLOR_HITAM
-}
+# Input background gradasi
+INPUT_GRADIENT = gradient_css([COLOR_HIJAU_LEMBUT, COLOR_HIJAU_TERANG])
 
-# Pilih tema
-theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
+# Pilih teks warna berdasarkan mode
+if st.session_state.dark_mode:
+    FONT_COLOR = COLOR_PUTIH
+    LABEL_COLOR = COLOR_ABU_LABEL
+    INPUT_FONT_COLOR = COLOR_PUTIH
+    INPUT_FOCUS_BG = COLOR_BIRU_MUDA
+else:
+    FONT_COLOR = COLOR_HITAM
+    LABEL_COLOR = COLOR_HITAM
+    INPUT_FONT_COLOR = COLOR_HITAM
+    INPUT_FOCUS_BG = COLOR_PUTIH
 
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
         html, body, .stApp {{
-            background: {theme['main_bg']};
-            color: {theme['font']};
+            background: {MAIN_BG_GRADIENT};
+            color: {FONT_COLOR};
         }}
 
-        /* Sidebar */
+        /* Sidebar gradasi */
         section[data-testid="stSidebar"] > div:first-child {{
-            background: {theme['sidebar_bg']};
+            background: {SIDEBAR_GRADIENT};
             padding-top: 20px;
         }}
         section[data-testid="stSidebar"] * {{
-            color: {theme['font']} !important;
+            color: {FONT_COLOR} !important;
         }}
 
-        /* Input, textarea, select */
+        /* Input, textarea, select normal */
         input, textarea, select {{
-            background: {theme['input_bg']} !important;
-            color: {theme['input_font']} !important;
+            background: {INPUT_GRADIENT} !important;
+            color: {INPUT_FONT_COLOR} !important;
             border: 1px solid #ccc;
             border-radius: 6px;
         }}
 
         /* Input focus */
         input:focus, textarea:focus, select:focus {{
-            background: {theme['input_focus_bg']} !important;
-            color: {theme['input_font']} !important;
+            background: {INPUT_FOCUS_BG} !important;
+            color: {INPUT_FONT_COLOR} !important;
             border: 1px solid #66AFE9;
             outline: none;
         }}
 
         /* Label dan placeholder */
         label, span, div[role="textbox"], ::placeholder {{
-            color: {theme['label_font']} !important;
+            color: {LABEL_COLOR} !important;
         }}
 
         /* Slider label */
         .stSlider > div {{
-            color: {theme['label_font']} !important;
+            color: {LABEL_COLOR} !important;
         }}
 
         /* Expander header */
         div[data-testid="stExpander"] > details > summary {{
-            color: {theme['label_font']} !important;
+            color: {LABEL_COLOR} !important;
             font-weight: bold;
         }}
 
         /* Expander content */
         div[data-testid="stExpander"] {{
-            background: {theme['input_bg']} !important;
+            background: {INPUT_GRADIENT} !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
+        /* Dropdown (stSelectbox) */
+        div[role="listbox"] {{
+            background: {INPUT_FOCUS_BG} !important;
+            color: {INPUT_FONT_COLOR} !important;
+        }}
+
         /* Tabel kustom */
         .custom-html-table {{
-            background: {TABLE_THEME['table_bg']};
-            color: {TABLE_THEME['table_font']};
+            background: {gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_MUDA])};
+            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH};
             border-collapse: collapse;
             width: 100%;
             border-radius: 12px;
@@ -155,12 +150,6 @@ st.markdown(f"""
         }}
         .custom-html-table tbody tr:hover {{
             background-color: rgba(255,255,255,0.15);
-        }}
-
-        /* Dropdown stSelectbox */
-        div[role="listbox"] {{
-            background: {theme['input_focus_bg']} !important;
-            color: {theme['input_font']} !important;
         }}
     </style>
 """, unsafe_allow_html=True)
