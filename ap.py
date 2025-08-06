@@ -31,38 +31,31 @@ if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
 # ------------------ Warna Dasar ------------------
-COLOR_HIJAU_PADI = "#d8f3dc"
-COLOR_BIRU_TUA = "#1b263b"
-COLOR_PUTIH = "#ffffff"
-COLOR_HITAM = "#000000"
-COLOR_BIRU_MUDA = "#a8dadc"
-
-# ------------------ Warna Berdasarkan Mode ------------------
 if st.session_state.dark_mode:
-    BACKGROUND = f"linear-gradient(135deg, {COLOR_BIRU_TUA} 75%, {COLOR_BIRU_MUDA} 25%)"
-    SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
-    FONT_COLOR = COLOR_PUTIH
+    BACKGROUND = "#1b263b"
+    SIDEBAR_BG = "#162133"
+    FONT_COLOR = "#ffffff"
     INPUT_BG = "#2b2b2b"
-    INPUT_FONT = COLOR_PUTIH
-    EXPANDER_BG = "#1e1e1e"
+    INPUT_FONT = "#ffffff"
+    TABLE_BG = "#2f2f2f"
 else:
-    BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
-    SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
-    FONT_COLOR = COLOR_HITAM
-    INPUT_BG = COLOR_PUTIH
-    INPUT_FONT = COLOR_HITAM
-    EXPANDER_BG = "#f9f9f9"
+    BACKGROUND = "#d8f3dc"
+    SIDEBAR_BG = "#c8e6c9"
+    FONT_COLOR = "#000000"
+    INPUT_BG = "#ffffff"
+    INPUT_FONT = "#000000"
+    TABLE_BG = "#ffffff"
 
 # ------------------ CSS Styling ------------------
 st.markdown(f"""
     <style>
         html, body, .stApp {{
-            background: {BACKGROUND};
-            color: {FONT_COLOR};
+            background: {BACKGROUND} !important;
+            color: {FONT_COLOR} !important;
         }}
 
         section[data-testid="stSidebar"] > div:first-child {{
-            background: {SIDEBAR_BG};
+            background: {SIDEBAR_BG} !important;
             padding-top: 20px;
         }}
 
@@ -70,78 +63,62 @@ st.markdown(f"""
             color: {FONT_COLOR} !important;
         }}
 
+        /* Semua input dan select */
         input, textarea, select {{
             background: {INPUT_BG} !important;
             color: {INPUT_FONT} !important;
-            border: 1px solid rgba(200,200,200,0.4);
+            border: 1px solid #555 !important;
             border-radius: 6px;
             padding: 6px;
         }}
 
         input:focus, textarea:focus, select:focus {{
             border: 1px solid #66AFE9 !important;
-            outline: none;
+            outline: none !important;
         }}
 
+        /* Label, placeholder */
         label, span, div[role="textbox"], ::placeholder {{
             color: {FONT_COLOR} !important;
         }}
 
+        /* Expander */
         div[data-testid="stExpander"] > details > summary {{
             color: {FONT_COLOR} !important;
             font-weight: bold;
         }}
 
         div[data-testid="stExpander"] {{
-            background: {EXPANDER_BG} !important;
+            background: {BACKGROUND} !important;
             border-radius: 10px;
             padding: 12px;
         }}
+
+        /* Tabel atau dataframe */
+        .stDataFrame, .stTable, .dataframe {{
+            background-color: {TABLE_BG} !important;
+            color: {FONT_COLOR} !important;
+        }}
+
+        .stDataFrame * {{
+            color: {FONT_COLOR} !important;
+        }}
+
+        /* Table header dan sel */
+        .stDataFrame thead, .stTable thead {{
+            background-color: {TABLE_BG} !important;
+        }}
+
+        .stDataFrame tbody, .stTable tbody {{
+            background-color: {TABLE_BG} !important;
+        }}
+
+        /* Hilangkan border shadow putih aneh */
+        .stDataFrame, .stTable {{
+            border: none !important;
+        }}
     </style>
 """, unsafe_allow_html=True)
-
-# ------------------ Tambahan CSS Supaya Tabel dan Area Putih Tetap Kontras ------------------
-st.markdown(
-    """
-    <style>
-        /* Pastikan semua teks default inherit mode warna */
-        .stApp div, .stApp span, .stApp label, .stApp p, 
-        .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
-        .stApp h5, .stApp h6 {
-            color: inherit !important;
-        }
-
-        /* Bagian tabel kosong atau dataframe punya latar abu gelap */
-        .stApp .dataframe, 
-        .stApp .stDataFrame, 
-        .stApp .stTable, 
-        .stApp div[role="table"] {
-            background-color: rgba(40,40,40,0.9) !important;
-            color: white !important;
-        }
-
-        /* Teks di dalam tabel, header dan cell */
-        .stApp .dataframe th, 
-        .stApp .dataframe td,
-        .stApp .stDataFrame th,
-        .stApp .stDataFrame td,
-        .stApp div[role="table"] * {
-            color: white !important;
-        }
-
-        /* Placeholder warna kontras */
-        ::placeholder {
-            color: #bbbbbb !important;
-        }
-
-        /* Expander summary tetap kontras */
-        div[data-testid="stExpander"] > details > summary {
-            color: white !important;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 # ------------------ Sidebar ------------------
 with st.sidebar:
