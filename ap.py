@@ -22,112 +22,74 @@ from rapidfuzz import process, fuzz
 
 # ---------------------- Konfigurasi halaman ----------------------
 st.set_page_config(
-    page_title="Dashboard Pertanian Cerdas",
+    page_title="Dashboard Pertanian",
     layout="wide"
 )
 
-# ------------------ State Mode ------------------
+# ------------------ Mode State ------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ------------------ Warna Pokok ------------------
-# 4 warna utama
-COLOR_HIJAU_TERANG = "#CFF5B2"   # Hijau padi
-COLOR_HIJAU_LEMBUT = "#E9FCD4"
-COLOR_BIRU_MUDA = "#4FC3F7"
-COLOR_BIRU_NAVY = "#102040"
-COLOR_PUTIH = "#FFFFFF"
+# ------------------ Warna ------------------
+COLOR_HIJAU_PADI = "#d8f3dc"   # hijau padi terang
+COLOR_BIRU_TUA = "#1b263b"     # biru tua gelap
+COLOR_PUTIH = "#ffffff"
 COLOR_HITAM = "#000000"
+COLOR_BIRU_MUDA = "#a8dadc"
 
-# ------------------ Gradasi per Mode ------------------
+# ------------------ Styling per Mode ------------------
 if st.session_state.dark_mode:
-    # DARK MODE: dominan gelap
-    MAIN_GRADIENT = f"linear-gradient(135deg, {COLOR_BIRU_NAVY}, {COLOR_BIRU_MUDA}, {COLOR_HIJAU_LEMBUT})"
-    SIDEBAR_GRADIENT = f"linear-gradient(180deg, {COLOR_BIRU_NAVY}, {COLOR_BIRU_MUDA})"
+    BACKGROUND = f"linear-gradient(120deg, {COLOR_BIRU_TUA} 80%, {COLOR_BIRU_MUDA} 20%)"
+    SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_PUTIH
-    LABEL_COLOR = COLOR_PUTIH
-    INPUT_BG = "#1E1E1E"
+    INPUT_BG = "#222222"
     INPUT_FONT = COLOR_PUTIH
 else:
-    # LIGHT MODE: dominan terang
-    MAIN_GRADIENT = f"linear-gradient(135deg, {COLOR_HIJAU_TERANG}, {COLOR_HIJAU_LEMBUT}, {COLOR_BIRU_MUDA})"
-    SIDEBAR_GRADIENT = f"linear-gradient(180deg, {COLOR_HIJAU_LEMBUT}, {COLOR_BIRU_MUDA})"
+    BACKGROUND = f"linear-gradient(120deg, {COLOR_HIJAU_PADI} 80%, {COLOR_PUTIH} 20%)"
+    SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
     FONT_COLOR = COLOR_HITAM
-    LABEL_COLOR = COLOR_HITAM
     INPUT_BG = COLOR_PUTIH
     INPUT_FONT = COLOR_HITAM
 
-# ------------------ CSS Styling ------------------
+# ------------------ CSS ------------------
 st.markdown(f"""
     <style>
         html, body, .stApp {{
-            background: {MAIN_GRADIENT};
+            background: {BACKGROUND};
             color: {FONT_COLOR};
         }}
 
-        /* Sidebar gradasi */
         section[data-testid="stSidebar"] > div:first-child {{
-            background: {SIDEBAR_GRADIENT};
+            background: {SIDEBAR_BG};
             padding-top: 20px;
         }}
-
-        /* Semua teks di sidebar */
         section[data-testid="stSidebar"] * {{
             color: {FONT_COLOR} !important;
         }}
 
-        /* Input umum */
         input, textarea, select {{
             background: {INPUT_BG} !important;
             color: {INPUT_FONT} !important;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 5px;
         }}
-
         input:focus, textarea:focus, select:focus {{
             border: 1px solid #66AFE9 !important;
-            outline: none !important;
         }}
 
-        /* Label */
         label, span, div[role="textbox"], ::placeholder {{
-            color: {LABEL_COLOR} !important;
+            color: {FONT_COLOR} !important;
         }}
 
-        /* Expander header */
         div[data-testid="stExpander"] > details > summary {{
-            color: {LABEL_COLOR} !important;
+            color: {FONT_COLOR} !important;
             font-weight: bold;
         }}
 
-        /* Expander content */
         div[data-testid="stExpander"] {{
-            background: rgba(255,255,255,0.1) !important;
-            border-radius: 10px;
-            padding: 10px;
-        }}
-
-        /* Table styling */
-        .custom-html-table {{
-            background: linear-gradient(90deg, {COLOR_HIJAU_TERANG}, {COLOR_BIRU_MUDA});
-            color: {FONT_COLOR};
-            border-collapse: collapse;
-            width: 100%;
+            background: rgba(255,255,255,0.05) !important;
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            font-size: 15px;
-        }}
-        .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(0,0,0,0.2);
-            padding: 12px;
-            background: transparent;
-        }}
-        .custom-html-table th {{
-            background-color: rgba(255,255,255,0.2);
-        }}
-        .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.15);
+            padding: 10px;
         }}
     </style>
 """, unsafe_allow_html=True)
