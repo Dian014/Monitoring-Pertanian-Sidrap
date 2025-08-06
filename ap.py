@@ -27,108 +27,11 @@ st.set_page_config(
 )
 
 # ------------------ TAMPILAN KUSTOM CSS ------------------
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* Background gradasi */
-    body, .main {
-        background: linear-gradient(to bottom right, #e0f7fa, #e0f2f1);
-    }
-
-    /* Header dan Title */
-    .css-10trblm.e16nr0p30 {
-        color: #004d40;
-        font-size: 40px;
-        font-weight: 700;
-        transition: color 0.3s ease;
-    }
-
-    /* Markdown Subtitle */
-    .css-1v0mbdj p {
-        color: #00695c;
-        font-size: 18px;
-        font-weight: 500;
-    }
-
-    /* Sidebar Styling */
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(to bottom, #00695c, #004d40);
-        color: white;
-        transition: background 0.3s ease;
-    }
-
-    /* Expander Animasi & Border */
-    details {
-        border: 1px solid #b2dfdb;
-        border-radius: 8px;
-        padding: 8px;
-        transition: all 0.4s ease-in-out;
-        background-color: #ffffffee;
-    }
-
-    summary {
-        font-weight: 600;
-        font-size: 18px;
-        color: #004d40;
-        transition: color 0.3s ease;
-    }
-
-    details[open] {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background-color: #c8e6c9;
-        transform: scale(1.01);
-    }
-
-    /* Form input lebih rapi */
-    input, textarea {
-        border: 1px solid #b2dfdb !important;
-        border-radius: 6px !important;
-        padding: 8px !important;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.2s ease;
-    }
-
-    input:focus, textarea:focus {
-        border-color: #26a69a !important;
-        box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
-    }
-
-    /* Button styling */
-    button[kind="primary"] {
-        background-color: #00796b !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        font-size: 16px !important;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, transform 0.2s;
-    }
-
-    button[kind="primary"]:hover {
-        background-color: #004d40 !important;
-        transform: scale(1.02);
-    }
-
-    /* Data table border */
-    .stDataFrame {
-        border: 1px solid #80cbc4;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 # ------------------ DARK MODE TOGGLE ------------------
 dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
-# ------------------ CSS DINAMIS BERDASARKAN MODE ------------------
+# ------------------ WARNA DAN CSS ------------------
 if dark_mode:
     bg_main = "#121212"
     bg_sidebar = "#1E1E1E"
@@ -139,90 +42,89 @@ if dark_mode:
     expander_open_bg = "#2a7f62"
     button_bg = "#1E8E7E"
     button_hover = "#145C4D"
+    table_bg = "#1e1e1e"
+    table_text = "#E0E0E0"
 else:
     bg_main = "linear-gradient(to bottom right, #e0f7fa, #e0f2f1)"
-    bg_sidebar = "linear-gradient(to bottom, #00695c, #004d40)"
-    text_main = "#004d40"
-    text_secondary = "#00695c"
+    bg_sidebar = "linear-gradient(to bottom, #003366, #001f4d)"  # Biru tua Sidrap
+    text_main = "#001f4d"  # Biru tua Sidrap
+    text_secondary = "#2e7d32"  # Hijau padi
     border_color = "#b2dfdb"
     expander_bg = "#ffffffee"
     expander_open_bg = "#c8e6c9"
-    button_bg = "#00796b"
-    button_hover = "#004d40"
+    button_bg = "#004080"  # Biru tua Sidrap
+    button_hover = "#00264d"
+    table_bg = "white"
+    table_text = "#001f4d"  # Biru tua Sidrap
 
+# ------------------ INJECT CSS ------------------
 st.markdown(f"""
-    <style>
+<style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-    html, body, [class*="css"]  {{
+    html, body, [class*="css"] {{
         font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
         background: {bg_main} !important;
         color: {text_main} !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }}
 
-    /* Sidebar Styling */
     section[data-testid="stSidebar"] {{
         background: {bg_sidebar} !important;
-        color: {text_main} !important;
-        transition: background 0.3s ease;
+        color: white !important;
     }}
 
-    /* Header dan Title */
     .css-10trblm.e16nr0p30 {{
         color: {text_main} !important;
         font-size: 40px;
         font-weight: 700;
-        transition: color 0.3s ease;
     }}
 
-    /* Markdown Subtitle */
     .css-1v0mbdj p {{
         color: {text_secondary} !important;
         font-size: 18px;
         font-weight: 500;
     }}
 
-    /* Expander Animasi & Border */
-    details {{
+    .stDataFrame {{
         border: 1px solid {border_color} !important;
         border-radius: 8px;
-        padding: 8px;
-        transition: all 0.4s ease-in-out;
-        background-color: {expander_bg} !important;
+        background-color: {table_bg} !important;
+        color: {table_text} !important;
+        font-size: 16px;
+        transition: all 0.3s ease;
     }}
 
-    summary {{
-        font-weight: 600;
-        font-size: 18px;
-        color: {text_main} !important;
-        transition: color 0.3s ease;
+    .stDataFrame th {{
+        background-color: #004080 !important;  /* Header biru tua Sidrap */
+        color: white !important;
+        font-weight: 700;
+        text-align: center;
     }}
 
-    details[open] {{
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        background-color: {expander_open_bg} !important;
-        transform: scale(1.01);
-    }}
-
-    /* Form input lebih rapi */
-    input, textarea {{
-        border: 1px solid {border_color} !important;
-        border-radius: 6px !important;
+    .stDataFrame td {{
         padding: 8px !important;
-        font-family: 'Inter', sans-serif;
-        background-color: {"#222" if dark_mode else "#fff"} !important;
-        color: {text_main} !important;
-        transition: all 0.2s ease;
+        text-align: center;
     }}
 
-    input:focus, textarea:focus {{
-        border-color: {button_bg} !important;
-        box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.4);
-        outline: none;
+    /* Baris ganjil */
+    .stDataFrame tbody tr:nth-child(odd) {{
+        background-color: #e8f5e9 !important; /* hijau padi muda */
     }}
 
-    /* Button styling */
+    /* Baris genap */
+    .stDataFrame tbody tr:nth-child(even) {{
+        background-color: #c8e6c9 !important; /* hijau padi */
+    }}
+
+    /* Hover efek */
+    .stDataFrame tbody tr:hover {{
+        background-color: #aed581 !important; /* hijau padi cerah */
+        color: #001f4d !important; /* teks biru tua */
+        cursor: pointer;
+    }}
+
+    /* Tombol */
     button[kind="primary"] {{
         background-color: {button_bg} !important;
         color: white !important;
@@ -230,102 +132,30 @@ st.markdown(f"""
         padding: 10px 16px !important;
         font-size: 16px !important;
         font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, transform 0.2s;
     }}
 
     button[kind="primary"]:hover {{
         background-color: {button_hover} !important;
-        transform: scale(1.02);
+        transform: scale(1.05);
+        transition: 0.3s ease;
     }}
 
-    /* Data table border */
-    .stDataFrame {{
-        border: 1px solid {border_color} !important;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        background-color: {"#1e1e1e" if dark_mode else "white"} !important;
-        color: {text_main} !important;
-    }}
-    </style>
+</style>
 """, unsafe_allow_html=True)
 
-# ------------------ TAMPILAN KUSTOM CSS ------------------
-
-# CSS untuk tema terang
-light_css = """
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        background: linear-gradient(to bottom right, #e0f7fa, #e0f2f1);
-        color: #004d40;
-    }
-
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(to bottom, #00695c, #004d40);
-        color: white;
-    }
-
-    details {
-        border: 1px solid #b2dfdb;
-        border-radius: 8px;
-        padding: 8px;
-        background-color: #ffffffee;
-        transition: all 0.4s ease-in-out;
-    }
-
-    summary {
-        font-weight: 600;
-        font-size: 18px;
-        color: #004d40;
-    }
-
-    details[open] {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background-color: #c8e6c9;
-        transform: scale(1.01);
-    }
-
-    input, textarea {
-        border: 1px solid #b2dfdb !important;
-        border-radius: 6px !important;
-        padding: 8px !important;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.2s ease;
-        background-color: white !important;
-        color: #004d40 !important;
-    }
-
-    input:focus, textarea:focus {
-        border-color: #26a69a !important;
-        box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
-    }
-
-    button[kind="primary"] {
-        background-color: #00796b !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        font-size: 16px !important;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, transform 0.2s;
-    }
-
-    button[kind="primary"]:hover {
-        background-color: #004d40 !important;
-        transform: scale(1.02);
-    }
-
-    .stDataFrame {
-        border: 1px solid #80cbc4;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        color: #004d40;
-    }
-"""
+# ------------------ TAMPILKAN TABEL ------------------
+st.dataframe(df.style.set_properties(**{
+    'text-align': 'center',
+    'font-size': '16px',
+    'color': table_text,
+    'background-color': table_bg,
+}).set_table_styles([
+    {'selector': 'th', 'props': [('background-color', '#004080'), ('color', 'white'), ('font-weight', 'bold'), ('text-align', 'center')]},
+    {'selector': 'td', 'props': [('padding', '10px'), ('text-align', 'center')]},
+    {'selector': 'tbody tr:nth-child(odd)', 'props': [('background-color', '#e8f5e9')]},
+    {'selector': 'tbody tr:nth-child(even)', 'props': [('background-color', '#c8e6c9')]},
+    {'selector': 'tbody tr:hover', 'props': [('background-color', '#aed581'), ('color', '#001f4d')]}
+]))
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
