@@ -26,50 +26,42 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Inisialisasi State ----------------------
+# ------------------ State Mode ------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Warna ----------------------
-def gradient_css(colors, direction="to right"):
-    return f"linear-gradient({direction}, {', '.join(colors)})"
-
+# ------------------ Warna Pokok ------------------
 # 4 warna utama
 COLOR_HIJAU_TERANG = "#CFF5B2"   # Hijau padi
 COLOR_HIJAU_LEMBUT = "#E9FCD4"
-COLOR_BIRU_MUDA = "#144272"
+COLOR_BIRU_MUDA = "#4FC3F7"
 COLOR_BIRU_NAVY = "#102040"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
-COLOR_ABU_LABEL = "#DDDDDD"
 
-# ---------------------- Tema ----------------------
-# Gradasi sidebar: hijau -> biru
-SIDEBAR_GRADIENT = gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_MUDA])
-
-# Gradasi konten utama: biru navy -> hijau lembut
-MAIN_BG_GRADIENT = gradient_css([COLOR_BIRU_NAVY, COLOR_HIJAU_LEMBUT])
-
-# Input background gradasi
-INPUT_GRADIENT = gradient_css([COLOR_HIJAU_LEMBUT, COLOR_HIJAU_TERANG])
-
-# Pilih teks warna berdasarkan mode
+# ------------------ Gradasi per Mode ------------------
 if st.session_state.dark_mode:
+    # DARK MODE: dominan gelap
+    MAIN_GRADIENT = f"linear-gradient(135deg, {COLOR_BIRU_NAVY}, {COLOR_BIRU_MUDA}, {COLOR_HIJAU_LEMBUT})"
+    SIDEBAR_GRADIENT = f"linear-gradient(180deg, {COLOR_BIRU_NAVY}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_PUTIH
-    LABEL_COLOR = COLOR_ABU_LABEL
-    INPUT_FONT_COLOR = COLOR_PUTIH
-    INPUT_FOCUS_BG = COLOR_BIRU_MUDA
+    LABEL_COLOR = COLOR_PUTIH
+    INPUT_BG = "#1E1E1E"
+    INPUT_FONT = COLOR_PUTIH
 else:
+    # LIGHT MODE: dominan terang
+    MAIN_GRADIENT = f"linear-gradient(135deg, {COLOR_HIJAU_TERANG}, {COLOR_HIJAU_LEMBUT}, {COLOR_BIRU_MUDA})"
+    SIDEBAR_GRADIENT = f"linear-gradient(180deg, {COLOR_HIJAU_LEMBUT}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_HITAM
     LABEL_COLOR = COLOR_HITAM
-    INPUT_FONT_COLOR = COLOR_HITAM
-    INPUT_FOCUS_BG = COLOR_PUTIH
+    INPUT_BG = COLOR_PUTIH
+    INPUT_FONT = COLOR_HITAM
 
-# ---------------------- CSS Styling ----------------------
+# ------------------ CSS Styling ------------------
 st.markdown(f"""
     <style>
         html, body, .stApp {{
-            background: {MAIN_BG_GRADIENT};
+            background: {MAIN_GRADIENT};
             color: {FONT_COLOR};
         }}
 
@@ -78,33 +70,27 @@ st.markdown(f"""
             background: {SIDEBAR_GRADIENT};
             padding-top: 20px;
         }}
+
+        /* Semua teks di sidebar */
         section[data-testid="stSidebar"] * {{
             color: {FONT_COLOR} !important;
         }}
 
-        /* Input, textarea, select normal */
+        /* Input umum */
         input, textarea, select {{
-            background: {INPUT_GRADIENT} !important;
-            color: {INPUT_FONT_COLOR} !important;
+            background: {INPUT_BG} !important;
+            color: {INPUT_FONT} !important;
             border: 1px solid #ccc;
             border-radius: 6px;
         }}
 
-        /* Input focus */
         input:focus, textarea:focus, select:focus {{
-            background: {INPUT_FOCUS_BG} !important;
-            color: {INPUT_FONT_COLOR} !important;
-            border: 1px solid #66AFE9;
-            outline: none;
+            border: 1px solid #66AFE9 !important;
+            outline: none !important;
         }}
 
-        /* Label dan placeholder */
+        /* Label */
         label, span, div[role="textbox"], ::placeholder {{
-            color: {LABEL_COLOR} !important;
-        }}
-
-        /* Slider label */
-        .stSlider > div {{
             color: {LABEL_COLOR} !important;
         }}
 
@@ -116,37 +102,29 @@ st.markdown(f"""
 
         /* Expander content */
         div[data-testid="stExpander"] {{
-            background: {INPUT_GRADIENT} !important;
+            background: rgba(255,255,255,0.1) !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
-        /* Dropdown (stSelectbox) */
-        div[role="listbox"] {{
-            background: {INPUT_FOCUS_BG} !important;
-            color: {INPUT_FONT_COLOR} !important;
-        }}
-
-        /* Tabel kustom */
+        /* Table styling */
         .custom-html-table {{
-            background: {gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_MUDA])};
-            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH};
+            background: linear-gradient(90deg, {COLOR_HIJAU_TERANG}, {COLOR_BIRU_MUDA});
+            color: {FONT_COLOR};
             border-collapse: collapse;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            font-size: 15px;
         }}
         .custom-html-table th, .custom-html-table td {{
             border: 1px solid rgba(0,0,0,0.2);
-            padding: 12px 15px;
-            text-align: left;
+            padding: 12px;
             background: transparent;
         }}
         .custom-html-table th {{
             background-color: rgba(255,255,255,0.2);
-            font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
             background-color: rgba(255,255,255,0.15);
@@ -154,7 +132,7 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# ---------------------- Sidebar ----------------------
+# ------------------ Sidebar ------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
     
