@@ -45,7 +45,8 @@ if st.session_state.dark_mode:
     INPUT_BG = "#2b2b2b"
     INPUT_FONT = COLOR_PUTIH
     EXPANDER_BG = "#1e1e1e"
-    TABLE_THEME = "dark"
+    TABLE_BG = "rgba(40,40,40,0.9)"
+    TABLE_FONT = COLOR_PUTIH
 else:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
@@ -53,7 +54,8 @@ else:
     INPUT_BG = COLOR_PUTIH
     INPUT_FONT = COLOR_HITAM
     EXPANDER_BG = "#f9f9f9"
-    TABLE_THEME = "light"
+    TABLE_BG = "#ffffff"
+    TABLE_FONT = COLOR_HITAM
 
 # ------------------ CSS Styling ------------------
 st.markdown(f"""
@@ -100,17 +102,39 @@ st.markdown(f"""
             padding: 12px;
         }}
 
-        /* Pastikan semua teks default inherit */
+        /* TABLE dan LIST FIX */
+        .stApp .dataframe, 
+        .stApp .stDataFrame, 
+        .stApp .stTable, 
+        .stApp div[role="table"] {{
+            background-color: {TABLE_BG} !important;
+            color: {TABLE_FONT} !important;
+        }}
+
+        .stApp .dataframe td, 
+        .stApp .dataframe th, 
+        .stApp .stDataFrame td, 
+        .stApp .stDataFrame th, 
+        .stApp div[role="table"] * {{
+            color: {TABLE_FONT} !important;
+        }}
+
+        /* Komponen teks default */
         .stApp div, .stApp span, .stApp label, .stApp p, 
         .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
         .stApp h5, .stApp h6 {{
-            color: inherit !important;
+            color: {FONT_COLOR} !important;
         }}
 
         ::placeholder {{
             color: #bbbbbb !important;
         }}
 
+        /* Selectbox dan Dropdown fix */
+        .stSelectbox div[data-baseweb="select"] > div {{
+            background-color: {INPUT_BG} !important;
+            color: {INPUT_FONT} !important;
+        }}
     </style>
 """, unsafe_allow_html=True)
 
