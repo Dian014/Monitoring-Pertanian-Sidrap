@@ -26,40 +26,43 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Deteksi atau Simpan Mode ----------------------
+# ---------------------- Deteksi Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Warna & Gradasi ----------------------
+# ---------------------- Gradasi & Warna ----------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Palet warna
+# Warna dasar
 COLOR_BIRU_TUA = "#0A2647"
-COLOR_HIJAU_PADI = "#CFF5B2"
 COLOR_BIRU_AIR = "#B6E2D3"
+COLOR_HIJAU_PADI = "#CFF5B2"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
 # Tema terang
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
-    "font": COLOR_HITAM,
+    "main_bg": gradient_css([COLOR_HIJAU_PADI, "#EAF8DC"]),
+    "list_bg": COLOR_PUTIH,
+    "list_font": COLOR_HITAM,
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
     "table_font": COLOR_HITAM,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR, COLOR_HIJAU_PADI, COLOR_PUTIH], direction="to bottom right"),
+    "font": COLOR_HITAM
 }
 
 # Tema gelap
 DARK_THEME = {
-    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
+    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, "#A4D4A0"]),
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "font": COLOR_PUTIH,
+    "list_bg": gradient_css([COLOR_BIRU_AIR, "#D4F1EC"]),
+    "list_font": COLOR_PUTIH,
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
     "table_font": COLOR_PUTIH,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR, COLOR_HIJAU_PADI, COLOR_PUTIH], direction="to bottom right"),
+    "font": COLOR_PUTIH
 }
 
-# Pilih tema berdasarkan checkbox
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
@@ -91,15 +94,15 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
-        /* Expander */
+        /* Expander & List Cards */
         div[data-testid="stExpander"] {{
-            background: {theme['table_bg']} !important;
-            color: {theme['font']} !important;
+            background: {theme['list_bg']} !important;
+            color: {theme['list_font']} !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
-        /* st.table dan st.dataframe */
+        /* Tables (st.table & st.dataframe) */
         .stTable, .stDataFrame {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
@@ -109,10 +112,10 @@ st.markdown(f"""
         .stTable td, .stDataFrame td {{
             color: {theme['table_font']} !important;
             background: transparent !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 0 0 2px rgba(0,0,0,0.4);
         }}
 
-        /* Tabel HTML kustom */
+        /* Tabel HTML Custom */
         .custom-html-table {{
             background: {theme['table_bg']};
             color: {theme['table_font']};
@@ -128,7 +131,6 @@ st.markdown(f"""
             padding: 12px 15px;
             text-align: left;
             background: transparent;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }}
         .custom-html-table th {{
             background-color: rgba(255,255,255,0.12);
@@ -136,6 +138,13 @@ st.markdown(f"""
         }}
         .custom-html-table tbody tr:hover {{
             background-color: rgba(255,255,255,0.08);
+        }}
+
+        /* Responsif Mobile */
+        @media (max-width: 768px) {{
+            .custom-html-table {{
+                font-size: 14px;
+            }}
         }}
     </style>
 """, unsafe_allow_html=True)
