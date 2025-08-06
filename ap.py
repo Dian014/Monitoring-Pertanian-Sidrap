@@ -26,7 +26,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Deteksi Mode ----------------------
+# ---------------------- Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -34,33 +34,28 @@ if "dark_mode" not in st.session_state:
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna dasar
+# Warna
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_HIJAU_PADI = "#CFF5B2"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
-# Tema terang
+# Tema utama
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "main_bg": gradient_css([COLOR_HIJAU_PADI, "#EAF8DC"]),
-    "list_bg": COLOR_PUTIH,
+    "main_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_PUTIH]),
+    "list_bg": gradient_css([COLOR_PUTIH, COLOR_BIRU_AIR]),
     "list_font": COLOR_HITAM,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
-    "table_font": COLOR_HITAM,
-    "font": COLOR_HITAM
+    "font": COLOR_HITAM,
 }
 
-# Tema gelap
 DARK_THEME = {
-    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, "#A4D4A0"]),
+    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "list_bg": gradient_css([COLOR_BIRU_AIR, "#D4F1EC"]),
+    "list_bg": gradient_css([COLOR_BIRU_AIR, "#144272"]),
     "list_font": COLOR_PUTIH,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
-    "table_font": COLOR_PUTIH,
-    "font": COLOR_PUTIH
+    "font": COLOR_PUTIH,
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -78,7 +73,7 @@ st.markdown(f"""
             background: {theme['sidebar_bg']};
             color: {theme['font']};
         }}
-        section[data-testid="stSidebar"] * {{
+        section[data-testid="stSidebar'] * {{
             color: {theme['font']} !important;
         }}
 
@@ -94,7 +89,7 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
-        /* Expander & List Cards */
+        /* Expander / Card */
         div[data-testid="stExpander"] {{
             background: {theme['list_bg']} !important;
             color: {theme['list_font']} !important;
@@ -102,23 +97,23 @@ st.markdown(f"""
             padding: 10px;
         }}
 
-        /* Tables (st.table & st.dataframe) */
+        /* Tabel bawaan Streamlit */
         .stTable, .stDataFrame {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
+            background: linear-gradient(to right, {COLOR_BIRU_TUA}, {COLOR_HIJAU_PADI}) !important;
+            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH} !important;
             border-radius: 10px;
         }}
         .stTable th, .stDataFrame th,
         .stTable td, .stDataFrame td {{
-            color: {theme['table_font']} !important;
+            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH} !important;
             background: transparent !important;
             text-shadow: 0 0 2px rgba(0,0,0,0.4);
         }}
 
-        /* Tabel HTML Custom */
+        /* Tabel HTML Custom - Gradasi sendiri */
         .custom-html-table {{
-            background: {theme['table_bg']};
-            color: {theme['table_font']};
+            background: linear-gradient(to right, {COLOR_BIRU_TUA}, {COLOR_BIRU_AIR});
+            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH};
             border-collapse: collapse;
             width: 100%;
             border-radius: 12px;
@@ -140,7 +135,7 @@ st.markdown(f"""
             background-color: rgba(255,255,255,0.08);
         }}
 
-        /* Responsif Mobile */
+        /* Responsif */
         @media (max-width: 768px) {{
             .custom-html-table {{
                 font-size: 14px;
