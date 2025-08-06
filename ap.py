@@ -25,6 +25,12 @@ st.set_page_config(
 # ------------------ TAMPILAN KUSTOM CSS ------------------
 st.markdown("""
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    html, body, [class*="css"]  {
+        font-family: 'Inter', sans-serif;
+    }
+
     /* Background gradasi */
     body, .main {
         background: linear-gradient(to bottom right, #e0f7fa, #e0f2f1);
@@ -34,13 +40,14 @@ st.markdown("""
     .css-10trblm.e16nr0p30 {
         color: #004d40;
         font-size: 40px;
-        font-weight: bold;
+        font-weight: 700;
     }
 
     /* Markdown Subtitle */
     .css-1v0mbdj p {
         color: #00695c;
         font-size: 18px;
+        font-weight: 500;
     }
 
     /* Sidebar Styling */
@@ -59,7 +66,7 @@ st.markdown("""
     }
 
     summary {
-        font-weight: bold;
+        font-weight: 600;
         font-size: 18px;
         color: #004d40;
     }
@@ -74,6 +81,7 @@ st.markdown("""
         border: 1px solid #b2dfdb !important;
         border-radius: 6px !important;
         padding: 8px !important;
+        font-family: 'Inter', sans-serif;
     }
 
     /* Button styling */
@@ -83,6 +91,8 @@ st.markdown("""
         border-radius: 8px !important;
         padding: 10px 16px !important;
         font-size: 16px !important;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
     }
 
     /* Data table border */
@@ -100,6 +110,7 @@ LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
 # ------------------ HEADER ------------------
 st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang")
 st.markdown("""
+Lacak dan kelola lahan pertanian Anda dengan data real-time dan visualisasi modern
 Lokasi: Kabupaten Sidenreng Rapppang – Sulawesi Selatan  
 Dikembangkan oleh Dian Eka Putra | Email: ekaputradian01@gmail.com | WA: 085654073752
 """)
