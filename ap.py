@@ -21,8 +21,6 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
-import streamlit as st
-
 st.set_page_config(
     page_title="Dashboard Pertanian",
     layout="wide"
@@ -101,6 +99,49 @@ st.markdown(f"""
         }}
     </style>
 """, unsafe_allow_html=True)
+
+# ------------------ Tambahan CSS Supaya Tabel dan Area Putih Tetap Kontras ------------------
+st.markdown(
+    """
+    <style>
+        /* Pastikan semua teks default inherit mode warna */
+        .stApp div, .stApp span, .stApp label, .stApp p, 
+        .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
+        .stApp h5, .stApp h6 {
+            color: inherit !important;
+        }
+
+        /* Bagian tabel kosong atau dataframe punya latar abu gelap */
+        .stApp .dataframe, 
+        .stApp .stDataFrame, 
+        .stApp .stTable, 
+        .stApp div[role="table"] {
+            background-color: rgba(40,40,40,0.9) !important;
+            color: white !important;
+        }
+
+        /* Teks di dalam tabel, header dan cell */
+        .stApp .dataframe th, 
+        .stApp .dataframe td,
+        .stApp .stDataFrame th,
+        .stApp .stDataFrame td,
+        .stApp div[role="table"] * {
+            color: white !important;
+        }
+
+        /* Placeholder warna kontras */
+        ::placeholder {
+            color: #bbbbbb !important;
+        }
+
+        /* Expander summary tetap kontras */
+        div[data-testid="stExpander"] > details > summary {
+            color: white !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ------------------ Sidebar ------------------
 with st.sidebar:
