@@ -36,17 +36,20 @@ COLOR_BIRU_TUA = "#1b263b"
 COLOR_PUTIH = "#ffffff"
 COLOR_HITAM = "#000000"
 COLOR_BIRU_MUDA = "#a8dadc"
+COLOR_GREY_DARK = "#2e2e2e"
 
 # ------------------ Warna Berdasarkan Mode ------------------
 if st.session_state.dark_mode:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_BIRU_TUA} 75%, {COLOR_BIRU_MUDA} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_PUTIH
-    INPUT_BG = "#2b2b2b"
+    INPUT_BG = "#1e1e1e"
     INPUT_FONT = COLOR_PUTIH
-    EXPANDER_BG = "#1e1e1e"
-    TABLE_BG = "rgba(40,40,40,0.9)"
+    EXPANDER_BG = "#222"
+    TABLE_BG = "#2b2b2b"
     TABLE_FONT = COLOR_PUTIH
+    PLACEHOLDER = "#bbbbbb"
+    BOX_BORDER = "#444"
 else:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
@@ -56,138 +59,112 @@ else:
     EXPANDER_BG = "#f9f9f9"
     TABLE_BG = "#ffffff"
     TABLE_FONT = COLOR_HITAM
+    PLACEHOLDER = "#666"
+    BOX_BORDER = "#ccc"
 
-# ------------------ CSS Styling Utama ------------------
+# ------------------ CSS Styling ------------------
 st.markdown(f"""
-<style>
-html, body, .stApp {{
-    background: {BACKGROUND};
-    color: {FONT_COLOR};
-}}
+    <style>
+        html, body, .stApp {{
+            background: {BACKGROUND};
+            color: {FONT_COLOR};
+        }}
 
-section[data-testid="stSidebar"] > div:first-child {{
-    background: {SIDEBAR_BG};
-    padding-top: 20px;
-}}
-section[data-testid="stSidebar"] * {{
-    color: {FONT_COLOR} !important;
-}}
+        section[data-testid="stSidebar"] > div:first-child {{
+            background: {SIDEBAR_BG};
+            padding-top: 20px;
+        }}
+        section[data-testid="stSidebar"] * {{
+            color: {FONT_COLOR} !important;
+        }}
 
-/* Input styling */
-input, textarea, select {{
-    background: {INPUT_BG} !important;
-    color: {INPUT_FONT} !important;
-    border: 1px solid #888;
-    border-radius: 6px;
-    padding: 6px;
-}}
-input:focus, textarea:focus, select:focus {{
-    border: 1px solid #66AFE9 !important;
-    outline: none;
-}}
+        input, textarea, select {{
+            background: {INPUT_BG} !important;
+            color: {INPUT_FONT} !important;
+            border: 1px solid {BOX_BORDER};
+            border-radius: 6px;
+        }}
 
-/* Expander background and text */
-div[data-testid="stExpander"] {{
-    background: {EXPANDER_BG} !important;
-    border: 1px solid #444 !important;
-    border-radius: 10px;
-    padding: 12px;
-}}
-div[data-testid="stExpander"] > details > summary {{
-    color: {FONT_COLOR} !important;
-    font-weight: bold;
-}}
+        input:focus, textarea:focus, select:focus {{
+            border: 1px solid #66AFE9 !important;
+            outline: none;
+        }}
 
-/* Table styling */
-.stApp .dataframe, 
-.stApp .stDataFrame, 
-.stApp .stTable, 
-.stApp div[role="table"] {{
-    background-color: {TABLE_BG} !important;
-    color: {TABLE_FONT} !important;
-}}
-.stApp .dataframe td, 
-.stApp .dataframe th, 
-.stApp .stDataFrame td, 
-.stApp .stDataFrame th, 
-.stApp div[role="table"] * {{
-    color: {TABLE_FONT} !important;
-}}
+        label, span, div[role="textbox"], ::placeholder {{
+            color: {FONT_COLOR} !important;
+        }}
 
-/* Placeholder text */
-::placeholder {{
-    color: #bbbbbb !important;
-}}
+        ::placeholder {{
+            color: {PLACEHOLDER} !important;
+        }}
 
-/* All other texts */
-.stApp div, .stApp span, .stApp label, .stApp p, 
-.stApp h1, .stApp h2, .stApp h3, .stApp h4, 
-.stApp h5, .stApp h6 {{
-    color: {FONT_COLOR} !important;
-}}
+        div[data-testid="stExpander"] {{
+            background: {EXPANDER_BG} !important;
+            border: 1px solid {BOX_BORDER};
+            border-radius: 10px;
+            padding: 12px;
+        }}
 
-/* Form container */
-div[data-testid="stForm"] {{
-    background: #222 !important;
-    border: 1px solid #555 !important;
-    border-radius: 8px;
-    padding: 12px;
-}}
+        div[data-testid="stExpander"] > details > summary {{
+            color: {FONT_COLOR} !important;
+            font-weight: bold;
+        }}
 
-/* Checkbox text */
-.stApp .stCheckbox label {{
-    color: {FONT_COLOR} !important;
-}}
+        .stApp .stDataFrame, 
+        .stApp .dataframe, 
+        .stApp .stTable, 
+        .stApp div[role="table"] {{
+            background-color: {TABLE_BG} !important;
+            color: {TABLE_FONT} !important;
+            border-radius: 6px;
+            padding: 6px;
+        }}
 
-/* Cursor always visible */
-input, textarea {{
-    caret-color: #ffffff !important;
-}}
-</style>
-""", unsafe_allow_html=True)
+        .stApp .stDataFrame th,
+        .stApp .stDataFrame td,
+        .stApp div[role="table"] * {{
+            color: {TABLE_FONT} !important;
+        }}
 
-# ------------------ PATCH CSS Khusus: Dropdown, Upload, Listbox Fix ------------------
-st.markdown("""
-<style>
-/* Dropdown menu */
-div[data-baseweb="menu"] {
-    background-color: #2b2b2b !important;
-    color: white !important;
-}
-div[data-baseweb="menu"] div {
-    color: white !important;
-}
+        /* Dropdown, multiselect, file uploader */
+        div[data-baseweb="select"] > div {{
+            background-color: {INPUT_BG} !important;
+            color: {INPUT_FONT} !important;
+        }}
 
-/* Selectbox field */
-div[data-baseweb="select"] {
-    background-color: #2b2b2b !important;
-    color: white !important;
-}
+        section div[data-testid="stFileUploaderDropzone"] {{
+            background-color: {INPUT_BG} !important;
+            border: 2px dashed {BOX_BORDER} !important;
+            color: {FONT_COLOR} !important;
+        }}
 
-/* Multiselect tags */
-div[data-baseweb="tag"] {
-    background-color: #2b2b2b !important;
-    color: white !important;
-}
+        section div[data-testid="stFileUploaderDropzone"] * {{
+            color: {FONT_COLOR} !important;
+        }}
 
-/* FileUploader text & icon */
-section div[data-testid="stFileUploaderDropzone"] {
-    background-color: #2b2b2b !important;
-    border: 2px dashed #999 !important;
-}
-section div[data-testid="stFileUploaderDropzone"] * {
-    color: white !important;
-}
+        /* Form box styling */
+        div[data-testid="stForm"] {{
+            background: {EXPANDER_BG} !important;
+            border: 1px solid {BOX_BORDER};
+            border-radius: 10px;
+            padding: 15px;
+        }}
 
-/* Listbox items */
-ul[role="listbox"] > li {
-    color: white !important;
-    background-color: #2b2b2b !important;
-}
-ul[role="listbox"] > li:hover {
-    background-color: #3a3a3a !important;
-}
-</style>
+        /* Checkbox label fix */
+        .stApp .stCheckbox label {{
+            color: {FONT_COLOR} !important;
+        }}
+
+        /* Cegah teks menghilang saat hover/klik */
+        .stApp * {{
+            text-shadow: none !important;
+        }}
+
+        /* Cursor selalu kontras */
+        input, textarea {{
+            caret-color: {FONT_COLOR} !important;
+        }}
+    </style>
 """, unsafe_allow_html=True)
 
 # ------------------ Sidebar ------------------
