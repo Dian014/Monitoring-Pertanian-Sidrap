@@ -783,7 +783,7 @@ for role, msg in st.session_state.chat_history:
     else:
         st.markdown(f"**{role}**: {msg}")
         
-# Fitur Tambahan: Kalkulator Pupuk
+# ------------------ Kalkulator Pemupukan Dasar ------------------
 with st.expander("Kalkulator Pemupukan Dasar"):
     tanaman = st.selectbox("Jenis Tanaman", ["Padi", "Jagung", "Kedelai"])
     luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, key="pupuk_luas")
@@ -807,22 +807,62 @@ with st.expander("Kalkulator Pemupukan Dasar"):
         }
     }
 
-    st.markdown(f"### Rekomendasi Pupuk untuk **{tanaman}**")
-    total_kebutuhan = rekomendasi_pupuk[tanaman]
+    st.markdown(f"###Rekomendasi Pupuk untuk **{tanaman}** per {luas_lahan} ha")
+    data_tabel = []
 
-    for jenis_pupuk, data in total_kebutuhan.items():
+    for jenis_pupuk, data in rekomendasi_pupuk[tanaman].items():
         total_kg = data["dosis"] * luas_lahan
-        st.markdown(
-            f"- **{jenis_pupuk}**: {total_kg} kg/ha  \n"
-            f"  ⤷ _{data['fungsi']}_"
-        )
+        data_tabel.append({
+            "Jenis Pupuk": jenis_pupuk,
+            "Total Kebutuhan (kg)": total_kg,
+            "Fungsi": data["fungsi"]
+        })
 
-# Harga komoditas
-with st.expander("Harga Komoditas"):
-    st.table(pd.DataFrame({
-        "Komoditas": ["Gabah Kering", "Jagung", "Beras Medium"],
-        "Harga (Rp/kg)": [7000, 5300, 10500]
-    }))
+    st.table(pd.DataFrame(data_tabel))
+    
+# ------------------ Harga Komoditas (Bisa Diedit) ------------------
+
+# Nama file harga komoditas
+HARGA_FILE = "data/harga_komoditas.json"
+
+# Fungsi load/save data harga
+def load_harga_komoditas():
+    if os.path.exists(HARGA_FILE):
+        with open(HARGA_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                pass
+    return [
+        {"Komoditas": "Gabah Kering", "Harga (Rp/kg)": 7000},
+        {"Komoditas": "Jagung", "Harga (Rp/kg)": 5300},
+        {"Komoditas": "Beras Medium", "Harga (Rp/kg)": 10500}
+    ]
+
+def save_harga_komoditas(data):
+    with open(HARGA_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+# Inisialisasi harga di session_state
+if "harga_komoditas" not in st.session_state:
+    st.session_state.harga_komoditas = load_harga_komoditas()
+
+with st.expander("Harga Komoditas (Dapat Diedit)"):
+    st.markdown("Silakan ubah harga langsung pada kolom input di bawah ini.")
+
+    new_data = []
+    for i, row in enumerate(st.session_state.harga_komoditas):
+        komoditas = st.text_input(f"Komoditas {i+1}", value=row["Komoditas"], key=f"komo_{i}")
+        harga = st.number_input(f"Harga {komoditas} (Rp/kg)", value=row["Harga (Rp/kg)"], key=f"harga_{i}")
+        new_data.append({"Komoditas": komoditas, "Harga (Rp/kg)": harga})
+
+    if st.button("Simpan Harga Komoditas"):
+        st.session_state.harga_komoditas = new_data
+        save_harga_komoditas(new_data)
+        st.success("Harga komoditas berhasil diperbarui.")
+
+    st.markdown("### Tabel Harga Saat Ini")
+    st.table(pd.DataFrame(st.session_state.harga_komoditas))
 
 # ------------------ TIPS PERTANIAN ------------------
 with st.expander("Tips Pertanian Harian Otomatis"):
