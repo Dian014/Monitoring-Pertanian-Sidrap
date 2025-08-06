@@ -508,15 +508,15 @@ with st.expander("Prediksi Panen"):
     # ---- Prediksi 3 Kali Panen Tahunan (Khusus Padi) ----
     st.markdown("### Proyeksi Panen Tahunan Padi (3 Kali Panen)")
     df_panen1 = df_harian.head(7)
-    input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
+   input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred1 = model.predict(input_panen1)[0]
 
     df_panen2 = df_harian[60:67] if len(df_harian) >= 67 else df_harian.tail(7)
-    input_panen2 = df_panen2[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
+    input_panen2 = df_panen2[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred2 = model.predict(input_panen2)[0]
 
     df_panen3 = df_harian[120:127] if len(df_harian) >= 127 else df_harian.tail(7)
-    input_panen3 = df_panen3[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
+    input_panen3 = df_panen3[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred3 = model.predict(input_panen3)[0]
 
     luas_ha = st.number_input("Luas Lahan (ha) (Tahunan)", value=1.0, key="luas_tahunan")
