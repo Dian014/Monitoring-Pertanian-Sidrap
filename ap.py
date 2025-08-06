@@ -26,41 +26,32 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-
 # ------------------ CONTROLLER DARK MODE ------------------
 dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
 # ------------------ WARNA ------------------
 if dark_mode:
     # Mode Gelap
-    bg_main = "linear-gradient(to bottom right, #002147, #00142a)"  # biru tua gradasi
-    bg_sidebar = "linear-gradient(to bottom, #002147, #00142a)"
-    text_main = "#E0E0E0"
-    border_color = "#333"
-    coord_left_bg = "linear-gradient(90deg, #4caf50, #2e7d32)"  # hijau padi gradasi
-    coord_content_bg = "linear-gradient(90deg, #002147, #00142a)"  # biru tua gradasi
-    list_bg = "linear-gradient(90deg, #000000, #1a1a1a)"  # hitam gradasi
+    bg_main = "linear-gradient(135deg, #002b5c, #001233)"  # Biru tua gradasi
+    coord_left_bg = "linear-gradient(135deg, #2e7d32, #81c784)"  # Hijau padi gradasi
+    list_bg = "linear-gradient(135deg, #4fc3f7, #81d4fa)"  # Air gradasi
     list_text = "#ffffff"
-    table_header_bg = "linear-gradient(90deg, #002147, #4caf50)"  # biru tua + hijau padi
-    table_left_col_bg = "linear-gradient(90deg, #4caf50, #2e7d32)"
-    table_other_col_bg = "linear-gradient(90deg, #002147, #4caf50)"
     table_text = "#ffffff"
-    table_hover_bg = "linear-gradient(90deg, #4fc3f7, #81d4fa)"
+    table_header_bg = "linear-gradient(135deg, #004080, #2e7d32)"  # Biru tua + hijau padi
+    table_other_col_bg = "linear-gradient(135deg, #004080, #2e7d32)"
+    table_left_col_bg = "linear-gradient(135deg, #2e7d32, #004080)"
+    table_hover_bg = "linear-gradient(135deg, #81d4fa, #4fc3f7)"
 else:
     # Mode Terang
-    bg_main = "linear-gradient(to bottom right, #a5d6a7, #81c784)"  # hijau padi gradasi
-    bg_sidebar = "linear-gradient(to bottom, #a5d6a7, #81c784)"
-    text_main = "#001f4d"
-    border_color = "#b2dfdb"
-    coord_left_bg = "linear-gradient(90deg, #001f4d, #004080)"  # biru tua gradasi
-    coord_content_bg = "linear-gradient(90deg, #a5d6a7, #81c784)"  # hijau padi gradasi
+    bg_main = "linear-gradient(135deg, #81c784, #a5d6a7)"  # Hijau padi gradasi
+    coord_left_bg = "linear-gradient(135deg, #001f4d, #004080)"  # Biru tua gradasi
     list_bg = "#ffffff"
     list_text = "#000000"
-    table_header_bg = "linear-gradient(90deg, #004080, #4caf50)"  # biru tua + hijau padi
-    table_left_col_bg = "linear-gradient(90deg, #004080, #00264d)"
-    table_other_col_bg = "linear-gradient(90deg, #004080, #4caf50)"
     table_text = "#000000"
-    table_hover_bg = "linear-gradient(90deg, #81d4fa, #4fc3f7)"
+    table_header_bg = "linear-gradient(135deg, #004080, #2e7d32)"  # Biru tua + hijau padi
+    table_other_col_bg = "linear-gradient(135deg, #004080, #2e7d32)"
+    table_left_col_bg = "linear-gradient(135deg, #2e7d32, #004080)"
+    table_hover_bg = "linear-gradient(135deg, #a5d6a7, #81c784)"
 
 # ------------------ INJECT CSS ------------------
 st.markdown(f"""
@@ -70,37 +61,18 @@ st.markdown(f"""
     html, body, [class*="css"] {{
         font-family: 'Inter', sans-serif;
         background: {bg_main} !important;
-        color: {text_main} !important;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        color: {list_text if not dark_mode else "#ffffff"} !important;
+        transition: all 0.3s ease;
     }}
 
-    section[data-testid="stSidebar"] {{
-        background: {bg_sidebar} !important;
+    section[data-testid="stSidebar"] > div:first-child {{
+        background: {coord_left_bg} !important;
         color: white !important;
+        padding: 15px;
+        border-radius: 10px;
     }}
 
-    /* Koordinat sisi kiri */
-    .coord-left {{
-        background: {coord_left_bg};
-        color: white;
-        font-weight: 600;
-        padding: 12px 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        font-size: 18px;
-    }}
-
-    /* Isi koordinat */
-    .coord-content {{
-        background: {coord_content_bg};
-        padding: 15px 20px;
-        border-radius: 8px;
-        color: white;
-        margin-bottom: 30px;
-        font-size: 16px;
-    }}
-
-    /* List fitur */
+    /* List Fitur */
     .list-fitur {{
         background: {list_bg};
         color: {list_text};
@@ -108,63 +80,63 @@ st.markdown(f"""
         border-radius: 8px;
         font-size: 16px;
         margin-bottom: 30px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }}
 
-    /* TABEL */
+    /* Tabel */
     table.styled-table {{
         width: 100%;
         border-collapse: collapse;
-        font-family: 'Inter', sans-serif;
         font-size: 16px;
         color: {table_text};
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }}
 
-    /* HEADER TABEL */
     table.styled-table thead th {{
-        padding: 12px;
-        text-align: center;
-        font-weight: 700;
-        color: white;
         background: {table_header_bg};
-    }}
-
-    /* KOLOM KOORDINAT KIRI TABEL */
-    table.styled-table tbody td:first-child {{
-        font-weight: 600;
         color: white;
-        background: {table_left_col_bg};
+        padding: 10px;
+        text-align: center;
     }}
 
-    /* SEL LAIN (ISI) TABEL */
-    table.styled-table tbody td:not(:first-child) {{
-        border: 1px solid {border_color};
+    table.styled-table tbody td:first-child {{
+        background: {table_left_col_bg};
+        color: white;
+        font-weight: bold;
         text-align: center;
+    }}
+
+    table.styled-table tbody td:not(:first-child) {{
         background: {table_other_col_bg};
+        text-align: center;
         color: {table_text};
+        padding: 8px;
     }}
 
     table.styled-table tbody tr:hover td {{
-        background: {table_hover_bg};
-        color: {"white" if dark_mode else "#001f4d"};
+        background: {table_hover_bg} !important;
+        color: {"white" if dark_mode else "#000000"};
         cursor: pointer;
     }}
 
+    /* Responsive */
     @media (max-width: 768px) {{
-        table.styled-table {{ font-size: 14px; }}
-        .list-fitur {{ font-size: 14px; }}
-        .coord-left {{ font-size: 16px; }}
-        .coord-content {{ font-size: 14px; }}
+        table.styled-table {{
+            font-size: 14px;
+        }}
+        .list-fitur {{
+            font-size: 14px;
+        }}
     }}
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------ FUNGSI RENDER TABEL ------------------
 def render_styled_table(df):
-    return df.to_html(classes='styled-table', index=False)
+    return df.to_html(classes='styled-table', index=False, escape=False)
+    
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
 LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
