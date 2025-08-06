@@ -19,6 +19,7 @@ import os
 from PIL import Image
 from rapidfuzz import process, fuzz
 
+
 # ---------------------- Konfigurasi Awal ----------------------
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
@@ -33,27 +34,31 @@ def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
 # ---------------------- Warna Tema ----------------------
-COLOR_BIRU_TUA = "#0A2647"    # biru tua
-COLOR_HIJAU_PADI = "#CFF5B2"  # hijau padi
-COLOR_BIRU_AIR = "#B6E2D3"    # biru air
-COLOR_PUTIH = "#FFFFFF"       # putih
+COLOR_BIRU_TUA = "#0A2647"
+COLOR_HIJAU_PADI = "#CFF5B2"
+COLOR_BIRU_AIR = "#B6E2D3"
+COLOR_PUTIH = "#FFFFFF"
+COLOR_HITAM = "#000000"
+COLOR_ABU_TUA = "#1E1E1E"
 
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
     "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
     "list_bg": COLOR_BIRU_AIR,
-    "list_font": "black",
-    "table_font": "black",
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
+    "list_font": COLOR_HITAM,
+    "table_font": COLOR_HITAM,
+    "table_bg": COLOR_PUTIH,  # warna solid
+    "html_table_bg": "#F0FAF7",  # warna beda dengan .stTable
 }
 
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
     "list_bg": COLOR_BIRU_TUA,
-    "list_font": "white",
-    "table_font": "white",
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
+    "list_font": COLOR_PUTIH,
+    "table_font": COLOR_PUTIH,
+    "table_bg": COLOR_ABU_TUA,  # warna solid gelap
+    "html_table_bg": "#1B2A41",  # warna beda dengan .stTable
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -61,19 +66,16 @@ theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
-        /* Background halaman & font umum */
         .stApp {{
             background: {theme['main_bg']};
             color: {theme['list_font']};
-            transition: background 0.5s ease, color 0.5s ease;
         }}
 
-        /* Sidebar kiri */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
             color: {theme['list_font']};
-            transition: background 0.5s ease, color 0.5s ease;
         }}
+
         section[data-testid="stSidebar"] label,
         section[data-testid="stSidebar"] input,
         section[data-testid="stSidebar"] .stNumberInput,
@@ -81,56 +83,44 @@ st.markdown(f"""
         section[data-testid="stSidebar"] div[data-testid="stSlider"] {{
             color: {theme['list_font']} !important;
         }}
+
         section[data-testid="stSidebar"] .stNumberInput input {{
             color: {theme['list_font']} !important;
-            background-color: rgba(255,255,255,0.15);
+            background-color: rgba(255,255,255,0.1);
         }}
 
-        /* List fitur */
         div[data-testid="stExpander"] {{
             background-color: {theme['list_bg']} !important;
             color: {theme['list_font']} !important;
             border-radius: 10px;
             padding: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: background 0.5s ease, color 0.5s ease;
         }}
 
-        /* Tabel Streamlit dengan gradasi dan font kontras */
-        .stDataFrame, .stTable {{
-            background: {theme['table_bg']} !important;
+        .stTable, .stDataFrame {{
+            background-color: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: background 0.5s ease, color 0.5s ease;
-        }}
-        .stDataFrame thead tr th,
-        .stTable thead tr th {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding: 12px 15px;
-        }}
-        .stDataFrame tbody tr td,
-        .stTable tbody tr td {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            padding: 12px 15px;
+            border-radius: 10px;
+            padding: 10px;
+            overflow: auto;
         }}
 
-        /* Tabel HTML dengan styling gradasi dan font kontras */
+        .stTable thead th, .stDataFrame thead th {{
+            background-color: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
+        }}
+
+        .stTable tbody td, .stDataFrame tbody td {{
+            background-color: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
+        }}
+
         .custom-html-table {{
-            background: {theme['table_bg']};
+            background-color: {theme['html_table_bg']};
             color: {theme['table_font']};
             border-collapse: collapse;
             width: 100%;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: background 0.5s ease, color 0.5s ease;
         }}
         .custom-html-table th, .custom-html-table td {{
             border: 1px solid rgba(255,255,255,0.2);
@@ -138,22 +128,15 @@ st.markdown(f"""
             text-align: left;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.12);
-            font-weight: 700;
-            letter-spacing: 0.05em;
+            background-color: rgba(255,255,255,0.1);
+            font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.1);
-            transition: background-color 0.3s ease;
+            background-color: rgba(255,255,255,0.08);
         }}
 
-        /* Responsive for mobile */
         @media (max-width: 768px) {{
             .stDataFrame, .stTable, .custom-html-table {{
-                font-size: 14px;
-            }}
-            div[data-testid="stExpander"] {{
-                padding: 8px;
                 font-size: 14px;
             }}
         }}
