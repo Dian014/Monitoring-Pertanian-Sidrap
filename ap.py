@@ -122,7 +122,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ------------------ DARK MODE TOGGLE ------------------
-dark_mode = st.sidebar.checkbox("🌙 Dark Mode", value=False)
+dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
 # ------------------ CSS DINAMIS BERDASARKAN MODE ------------------
 if dark_mode:
@@ -333,7 +333,6 @@ st.markdown("""
 Lokasi: Kabupaten Sidenreng Rapppang – Sulawesi Selatan  
 Dikembangkan oleh Dian Eka Putra | Email: ekaputradian01@gmail.com | WA: 085654073752
 """)
-
 # ------------------ PETA CURAH HUJAN ------------------
 with st.expander("Peta Curah Hujan Real-time"):
     m = folium.Map(location=[LAT, LON], zoom_start=13, control_scale=True)
@@ -349,8 +348,7 @@ with st.expander("Peta Curah Hujan Real-time"):
 
 # ------------------ AMBIL DATA CUACA ------------------
 weather_url = (
-    f"https://api.open-meteo.com/v1/forecast?"
-    f"latitude={LAT}&longitude={LON}&"
+    f"https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&"
     "daily=temperature_2m_min,temperature_2m_max,precipitation_sum,relative_humidity_2m_mean&"
     "hourly=temperature_2m,precipitation,relative_humidity_2m&timezone=auto"
 )
@@ -375,28 +373,23 @@ df_harian["Rekomendasi Irigasi"] = df_harian["Curah Hujan (mm)"].apply(
 with st.expander("Tabel Data Cuaca Harian"):
     st.dataframe(df_harian, use_container_width=True)
 
-    # Export CSV
     csv = df_harian.to_csv(index=False).encode("utf-8")
     st.download_button("Download CSV", csv, "data_cuaca_harian.csv", "text/csv")
 
-        # Export Excel (pakai xlsxwriter)
     excel_io = BytesIO()
     with pd.ExcelWriter(excel_io, engine='xlsxwriter') as writer:
         df_harian.to_excel(writer, index=False, sheet_name="Cuaca Harian")
-        workbook  = writer.book
+        workbook = writer.book
         worksheet = writer.sheets["Cuaca Harian"]
-        # Set lebar kolom tanggal dan format tanggal
         date_format = workbook.add_format({'num_format': 'yyyy-mm-dd'})
         worksheet.set_column('A:A', 15, date_format)
     excel_io.seek(0)
     st.download_button("Download Excel", data=excel_io.read(), file_name="data_cuaca_harian.xlsx")
 
-    # Export PDF (ubah jadi download file HTML saja agar tidak error)
     pdf_html = df_harian.to_html(index=False)
     b64 = base64.b64encode(pdf_html.encode("utf-8")).decode("utf-8")
     href = f'<a href="data:text/html;base64,{b64}" download="laporan_cuaca_harian.html">📥 Download Laporan (HTML)</a>'
     st.markdown(href, unsafe_allow_html=True)
-
 
 # ------------------ DATAFRAME PER JAM ------------------
 df_jam = pd.DataFrame({
@@ -412,8 +405,6 @@ with st.expander("Grafik Harian"):
     st.plotly_chart(px.line(df_harian, x="Tanggal", y="Suhu Maks (°C)", title="Suhu Maksimum Harian"), use_container_width=True)
     st.plotly_chart(px.line(df_harian, x="Tanggal", y="Suhu Min (°C)", title="Suhu Minimum Harian"), use_container_width=True)
     st.plotly_chart(px.line(df_harian, x="Tanggal", y="Kelembapan (%)", title="Kelembapan Harian"), use_container_width=True)
-
-from datetime import datetime as dt
 
 # ------------------ GRAFIK JAM KE DEPAN ------------------
 df_jam_prediksi = df_jam[df_jam["Waktu"] > dt.now()].head(48)
@@ -436,13 +427,7 @@ model = LinearRegression().fit(
     model_df.drop("Hasil Panen (kg/ha)", axis=1), model_df["Hasil Panen (kg/ha)"]
 )
 
-if not df_harian.empty:
-    input_now = df_harian[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
-    hasil = model.predict(input_now)[0]
-else:
-    hasil = 0
-
-# ------------------ PREDIKSI PANEN (Manual + Otomatis) ------------------
+# ------------------ PREDIKSI PANEN ------------------
 with st.expander("Prediksi Panen"):
 
     # Input manual
@@ -452,55 +437,93 @@ with st.expander("Prediksi Panen"):
     hum_manual = st.number_input("Kelembapan (%)", value=78.0, key="manual_hum")
     luas_manual = st.number_input("Luas Lahan (ha)", value=1.0, key="manual_luas")
     harga_manual = st.number_input("Harga Gabah (Rp/kg)", value=7000, key="manual_harga")
+    biaya_manual = st.number_input("Biaya Produksi per Ha (Rp)", value=5000000, key="manual_biaya")
 
     pred_manual = model.predict([[ch_manual, suhu_manual, hum_manual]])[0]
     total_manual = pred_manual * luas_manual
     pendapatan_manual = total_manual * harga_manual
+    laba_kotor_manual = pendapatan_manual
+    laba_bersih_manual = pendapatan_manual - (biaya_manual * luas_manual)
+
+    st.markdown(f"""
+    - **Prediksi Hasil Panen (Manual):** {pred_manual:,.0f} kg/ha  
+    - **Total Panen:** {total_manual:,.0f} kg  
+    - **Pendapatan Kotor:** Rp {pendapatan_manual:,.0f}  
+    - **Laba Bersih:** Rp {laba_bersih_manual:,.0f}
+    """)
 
     # Prediksi otomatis (dari data harian rata-rata)
     st.subheader("Prediksi Otomatis (Berdasarkan Data Cuaca)")
+
     luas_auto = st.number_input("Luas Sawah (ha) (otomatis)", value=1.0, key="auto_luas")
     harga_auto = st.number_input("Harga Gabah (Rp/kg) (otomatis)", value=7000, key="auto_harga")
+    biaya_auto = st.number_input("Biaya Produksi per Ha (Rp) (otomatis)", value=5000000, key="auto_biaya")
 
     if not df_harian.empty:
         input_auto = df_harian[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
         pred_auto = model.predict(input_auto)[0]
     else:
         pred_auto = 0
+
     total_auto = pred_auto * luas_auto
     pendapatan_auto = total_auto * harga_auto
+    laba_kotor_auto = pendapatan_auto
+    laba_bersih_auto = pendapatan_auto - (biaya_auto * luas_auto)
 
-    # Proyeksi Panen Tahunan Otomatis (2 Kali Panen)
-    st.markdown("###  Proyeksi Panen Tahunan")
+    st.markdown(f"""
+    - **Prediksi Hasil Panen (Otomatis):** {pred_auto:,.0f} kg/ha  
+    - **Total Panen:** {total_auto:,.0f} kg  
+    - **Pendapatan Kotor:** Rp {pendapatan_auto:,.0f}  
+    - **Laba Bersih:** Rp {laba_bersih_auto:,.0f}
+    """)
 
-    # Gunakan data 7 hari pertama untuk panen 1
+    # Proyeksi Panen Tahunan (3 kali panen per tahun, setiap 3 bulan)
+    st.markdown("### Proyeksi Panen Tahunan (3 Kali Panen)")
+
+    # Panen 1: bulan 1-3 (gunakan 7 hari pertama data)
     df_panen1 = df_harian.head(7)
     input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred1 = model.predict(input_panen1)[0]
 
-    # Gunakan data hari ke-8 sampai ke-14 untuk panen 2 (anggap beda musim)
-    df_panen2 = df_harian[7:14] if len(df_harian) >= 14 else df_harian.tail(7)
+    # Panen 2: bulan 4-6 (gunakan data hari 61-67 atau fallback ke 7 hari terakhir)
+    if len(df_harian) >= 67:
+        df_panen2 = df_harian[60:67]
+    else:
+        df_panen2 = df_harian.tail(7)
     input_panen2 = df_panen2[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred2 = model.predict(input_panen2)[0]
 
-    # Input luas & harga
-    luas_ha = st.number_input("Luas Lahan (ha)", value=1.0, key="luas_tahunan")
-    harga_rp = st.number_input("Harga Gabah (Rp/kg)", value=7000, key="harga_tahunan")
+    # Panen 3: bulan 7-9 (gunakan data hari 121-127 atau fallback ke 7 hari terakhir)
+    if len(df_harian) >= 127:
+        df_panen3 = df_harian[120:127]
+    else:
+        df_panen3 = df_harian.tail(7)
+    input_panen3 = df_panen3[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
+    pred3 = model.predict(input_panen3)[0]
 
-    # Perhitungan
+    luas_ha = st.number_input("Luas Lahan (ha) (Tahunan)", value=1.0, key="luas_tahunan")
+    harga_rp = st.number_input("Harga Gabah (Rp/kg) (Tahunan)", value=7000, key="harga_tahunan")
+    biaya_tahunan = st.number_input("Biaya Produksi per Ha (Rp) (Tahunan)", value=5000000, key="biaya_tahunan")
+
     total1 = pred1 * luas_ha
     total2 = pred2 * luas_ha
-    hasil_total = total1 + total2
-    uang_total = hasil_total * harga_rp
+    total3 = pred3 * luas_ha
+    hasil_total = total1 + total2 + total3
+    pendapatan_total = hasil_total * harga_rp
+    biaya_total = biaya_tahunan * luas_ha * 3  # 3 kali panen
+    laba_bersih_total = pendapatan_total - biaya_total
 
-    # Tampilkan hasil
-    st.write("#### Panen Pertama")
+    st.write("#### Panen 1")
     st.write(f"- Prediksi Hasil: {pred1:,.0f} kg/ha | Total: {total1:,.0f} kg | Rp {total1 * harga_rp:,.0f}")
 
-    st.write("#### Panen Kedua")
+    st.write("#### Panen 2")
     st.write(f"- Prediksi Hasil: {pred2:,.0f} kg/ha | Total: {total2:,.0f} kg | Rp {total2 * harga_rp:,.0f}")
 
-    st.success(f"🟩 Total Panen Tahunan: {hasil_total:,.0f} kg | Rp {uang_total:,.0f}")
+    st.write("#### Panen 3")
+    st.write(f"- Prediksi Hasil: {pred3:,.0f} kg/ha | Total: {total3:,.0f} kg | Rp {total3 * harga_rp:,.0f}")
+
+    st.success(f"🟩 Total Panen Tahunan: {hasil_total:,.0f} kg | Rp {pendapatan_total:,.0f}")
+    st.success(f"🟨 Laba Bersih Tahunan: Rp {laba_bersih_total:,.0f}")
 
 faq_pairs = [
     # Padi
@@ -894,37 +917,24 @@ def save_todo(data):
 if "todo" not in st.session_state:
     st.session_state.todo = load_todo()
 
-if "todo_update" not in st.session_state:
-    st.session_state.todo_update = False  # flag untuk rerun todo
-
 with st.expander("Pengingat Harian"):
     tugas_baru = st.text_input("Tambah Tugas Baru:")
-    if st.button("✅ Simpan", key="btn_simpan_tugas"):
+    if st.button("✅ Simpan Tugas Baru"):
         if tugas_baru.strip():
             st.session_state.todo.append(tugas_baru.strip())
             save_todo(st.session_state.todo)
-            st.session_state.todo_update = True
+            st.success("Tugas berhasil disimpan.")
         else:
             st.warning("⚠️ Tugas tidak boleh kosong.")
 
+    # Tampilkan daftar tugas dengan tombol hapus
     for i, tugas in enumerate(st.session_state.todo):
         col1, col2 = st.columns([0.9, 0.1])
         col1.markdown(f"- {tugas}")
-        if col2.button("Hapus", key=f"hapus_todo_{i}"):
+        if col2.button("🗑️", key=f"hapus_tugas_{i}"):
             st.session_state.todo.pop(i)
             save_todo(st.session_state.todo)
-            st.session_state.todo_update = True
-
-# Panggil rerun sekali jika ada update di laporan atau todo
-# Panggil rerun sekali jika ada update di laporan atau todo
-if st.session_state.laporan_update or st.session_state.todo_update:
-    st.session_state.laporan_update = False
-    st.session_state.todo_update = False
-    try:
-        st.runtime.scriptrunner.request_rerun()
-    except Exception as e:
-        st.error(f"Terjadi error saat reload: {e}")
-
+            st.experimental_rerun()
 # Footer
 st.markdown("---")
 st.caption("© 2025 – Kabupaten Sidenreng Rappang | Dashboard Pertanian Digital by Dian Eka Putra")
