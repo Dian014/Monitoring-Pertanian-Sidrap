@@ -115,11 +115,13 @@ st.markdown(f"""
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-size: 16px;
         }}
         .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(0,0,0,0.2);
             padding: 12px 15px;
             text-align: left;
+            background: transparent;
         }}
         .custom-html-table th {{
             background-color: rgba(255,255,255,0.12);
@@ -134,6 +136,7 @@ st.markdown(f"""
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
+
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
