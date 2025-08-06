@@ -29,6 +29,7 @@ st.markdown("""
 
     html, body, [class*="css"]  {
         font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     /* Background gradasi */
@@ -41,6 +42,7 @@ st.markdown("""
         color: #004d40;
         font-size: 40px;
         font-weight: 700;
+        transition: color 0.3s ease;
     }
 
     /* Markdown Subtitle */
@@ -54,6 +56,7 @@ st.markdown("""
     section[data-testid="stSidebar"] {
         background: linear-gradient(to bottom, #00695c, #004d40);
         color: white;
+        transition: background 0.3s ease;
     }
 
     /* Expander Animasi & Border */
@@ -61,7 +64,7 @@ st.markdown("""
         border: 1px solid #b2dfdb;
         border-radius: 8px;
         padding: 8px;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.4s ease-in-out;
         background-color: #ffffffee;
     }
 
@@ -69,11 +72,13 @@ st.markdown("""
         font-weight: 600;
         font-size: 18px;
         color: #004d40;
+        transition: color 0.3s ease;
     }
 
     details[open] {
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        background-color: #e0f2f1;
+        background-color: #c8e6c9;
+        transform: scale(1.01);
     }
 
     /* Form input lebih rapi */
@@ -82,6 +87,12 @@ st.markdown("""
         border-radius: 6px !important;
         padding: 8px !important;
         font-family: 'Inter', sans-serif;
+        transition: all 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+        border-color: #26a69a !important;
+        box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.2);
     }
 
     /* Button styling */
@@ -93,12 +104,19 @@ st.markdown("""
         font-size: 16px !important;
         font-weight: 600;
         font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    button[kind="primary"]:hover {
+        background-color: #004d40 !important;
+        transform: scale(1.02);
     }
 
     /* Data table border */
     .stDataFrame {
         border: 1px solid #80cbc4;
         border-radius: 8px;
+        transition: all 0.3s ease;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -110,7 +128,6 @@ LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
 # ------------------ HEADER ------------------
 st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang")
 st.markdown("""
-Lacak dan kelola lahan pertanian Anda dengan data real-time dan visualisasi modern
 Lokasi: Kabupaten Sidenreng Rapppang – Sulawesi Selatan  
 Dikembangkan oleh Dian Eka Putra | Email: ekaputradian01@gmail.com | WA: 085654073752
 """)
