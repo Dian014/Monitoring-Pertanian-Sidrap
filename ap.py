@@ -29,28 +29,31 @@ if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
 # ---------------------- Fungsi Gradasi ----------------------
-def gradient_css(colors, direction="to bottom right"):
+def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
 # ---------------------- Warna Tema ----------------------
+COLOR_BIRU_TUA = "#0A2647"    # biru tua
+COLOR_HIJAU_PADI = "#CFF5B2"  # hijau padi
+COLOR_BIRU_AIR = "#B6E2D3"    # biru air
+COLOR_PUTIH = "#FFFFFF"       # putih
+
 LIGHT_THEME = {
-    "sidebar_bg": gradient_css(["#0A2647", "#144272"]),
-    "main_bg": gradient_css(["#DFF5E1", "#CFF5B2"]),
-    "list_bg": "#B6E2D3",  # biru air
+    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
+    "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
+    "list_bg": COLOR_BIRU_AIR,
     "list_font": "black",
     "table_font": "black",
-    # Gradasi 4 warna untuk tabel:
-    "table_bg": gradient_css(["#0A2647", "#CFF5B2", "#FFFFFF", "#B6E2D3"], direction="to right"),
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
 }
 
 DARK_THEME = {
-    "sidebar_bg": gradient_css(["#CFF5B2", "#B6E2D3"]),
-    "main_bg": gradient_css(["#0A2647", "#144272"]),
-    "list_bg": "#0A2647",  # biru tua
+    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
+    "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
+    "list_bg": COLOR_BIRU_TUA,
     "list_font": "white",
     "table_font": "white",
-    # Gradasi 4 warna untuk tabel (sama tapi font putih):
-    "table_bg": gradient_css(["#0A2647", "#CFF5B2", "#FFFFFF", "#B6E2D3"], direction="to right"),
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -58,13 +61,18 @@ theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
+        /* Background halaman & font umum */
         .stApp {{
             background: {theme['main_bg']};
             color: {theme['list_font']};
+            transition: background 0.5s ease, color 0.5s ease;
         }}
+
+        /* Sidebar kiri */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
             color: {theme['list_font']};
+            transition: background 0.5s ease, color 0.5s ease;
         }}
         section[data-testid="stSidebar"] label,
         section[data-testid="stSidebar"] input,
@@ -78,38 +86,42 @@ st.markdown(f"""
             background-color: rgba(255,255,255,0.15);
         }}
 
-        /* Expander / List Fitur */
+        /* List fitur */
         div[data-testid="stExpander"] {{
             background-color: {theme['list_bg']} !important;
             color: {theme['list_font']} !important;
             border-radius: 10px;
             padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: background 0.5s ease, color 0.5s ease;
         }}
 
-        /* Tabel Streamlit */
+        /* Tabel Streamlit dengan gradasi dan font kontras */
         .stDataFrame, .stTable {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
             border-radius: 12px;
-            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
         }}
         .stDataFrame thead tr th,
         .stTable thead tr th {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
             border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding: 10px 15px;
+            padding: 12px 15px;
         }}
         .stDataFrame tbody tr td,
         .stTable tbody tr td {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
             border-bottom: 1px solid rgba(255,255,255,0.15);
-            padding: 10px 15px;
+            padding: 12px 15px;
         }}
 
-        /* Tabel HTML */
+        /* Tabel HTML dengan styling gradasi dan font kontras */
         .custom-html-table {{
             background: {theme['table_bg']};
             color: {theme['table_font']};
@@ -118,6 +130,7 @@ st.markdown(f"""
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: background 0.5s ease, color 0.5s ease;
         }}
         .custom-html-table th, .custom-html-table td {{
             border: 1px solid rgba(255,255,255,0.2);
@@ -133,13 +146,23 @@ st.markdown(f"""
             background-color: rgba(255,255,255,0.1);
             transition: background-color 0.3s ease;
         }}
+
+        /* Responsive for mobile */
+        @media (max-width: 768px) {{
+            .stDataFrame, .stTable, .custom-html-table {{
+                font-size: 14px;
+            }}
+            div[data-testid="stExpander"] {{
+                padding: 8px;
+                font-size: 14px;
+            }}
+        }}
     </style>
 """, unsafe_allow_html=True)
 
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
-
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
