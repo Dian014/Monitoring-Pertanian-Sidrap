@@ -26,35 +26,41 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Dark mode toggle
-dark_mode = st.sidebar.checkbox("🌙 Dark Mode")
 
-# Konfigurasi warna berdasarkan mode
+# Toggle dark mode
+dark_mode = st.sidebar.checkbox("🌙 Dark Mode", value=False)
+
+# =======================
+# 🎨 Warna & Gradasi
+# =======================
 if dark_mode:
-    bg_main = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"  # Biru tua gradasi
-    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"        # Hijau padi gradasi
-    list_bg = "linear-gradient(135deg, #000000, #1c1c1c)"           # List fitur gelap
+    # Dark Mode
+    body_bg = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"        # biru tua
+    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"              # hijau padi
+    list_bg = "linear-gradient(135deg, #000000, #1c1c1c)"                 # hitam
     list_text = "#ffffff"
     table_text = "#ffffff"
 else:
-    bg_main = "linear-gradient(135deg, #e0f7da, #a5d6a7)"           # Hijau padi gradasi
-    sidebar_bg = "linear-gradient(135deg, #283c86, #45a247)"        # Biru tua gradasi
-    list_bg = "linear-gradient(135deg, #e0ffff, #b2ebf2)"           # List fitur terang
+    # Light Mode
+    body_bg = "linear-gradient(135deg, #e0f7da, #a5d6a7)"                 # hijau padi
+    sidebar_bg = "linear-gradient(135deg, #283c86, #45a247)"              # biru tua
+    list_bg = "linear-gradient(135deg, #e0ffff, #b2ebf2)"                 # biru air
     list_text = "#000000"
     table_text = "#000000"
 
-# Warna tabel (gradasi sama untuk kedua mode)
-table_header_bg = "linear-gradient(135deg, #0f2027, #2c5364)"
-table_left_col_bg = "linear-gradient(135deg, #2c5364, #a8e063)"
+table_header_bg = "linear-gradient(135deg, #0f2027, #2c5364)"             # header tabel
+table_left_col_bg = "linear-gradient(135deg, #2c5364, #a8e063)"           # kolom kiri tabel
 table_other_col_bg = "#ffffff80" if not dark_mode else "#00000080"
 table_hover_bg = "#90caf9" if not dark_mode else "#3949ab"
 
-# Inject CSS
+# =======================
+# 🧼 Custom CSS
+# =======================
 st.markdown(f"""
     <style>
     html, body, .main {{
-        background: {bg_main};
-        font-family: 'Inter', sans-serif;
+        background: {body_bg};
+        font-family: 'Segoe UI', sans-serif;
         color: {list_text};
         transition: all 0.3s ease;
     }}
@@ -73,13 +79,7 @@ st.markdown(f"""
         border-radius: 12px;
         font-size: 16px;
         margin-bottom: 25px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        transition: all 0.3s ease;
-    }}
-
-    .custom-list:hover {{
-        transform: scale(1.01);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }}
 
     table.custom-table {{
@@ -87,7 +87,7 @@ st.markdown(f"""
         border-collapse: collapse;
         font-size: 16px;
         margin-top: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }}
 
     table.custom-table th {{
@@ -106,8 +106,8 @@ st.markdown(f"""
 
     table.custom-table td {{
         background: {table_other_col_bg};
-        padding: 10px;
         color: {table_text};
+        padding: 10px;
         text-align: center;
     }}
 
@@ -117,7 +117,6 @@ st.markdown(f"""
         cursor: pointer;
     }}
 
-    /* Responsif */
     @media only screen and (max-width: 768px) {{
         .custom-list {{
             font-size: 14px;
