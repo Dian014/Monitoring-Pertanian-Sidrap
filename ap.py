@@ -27,106 +27,116 @@ st.set_page_config(
 )
 
 
-# Toggle dark mode
-dark_mode = st.sidebar.checkbox("🌙 Dark Mode", value=False)
+# Toggle mode (simulasi): Ganti ini sesuai setting di app kamu
+dark_mode = st.toggle("Mode Gelap")  # Atau ambil dari config/themes
 
-# =======================
-# 🎨 Warna & Gradasi
-# =======================
+# Warna dan gradasi
 if dark_mode:
-    # Dark Mode
-    body_bg = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"        # biru tua
-    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"              # hijau padi
-    list_bg = "linear-gradient(135deg, #000000, #1c1c1c)"                 # hitam
+    bg_main = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"  # Biru tua gradasi
+    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"        # Hijau padi gradasi
+    list_bg = "#000000"
     list_text = "#ffffff"
     table_text = "#ffffff"
+    table_header_bg = "linear-gradient(90deg, #0f2027, #56ab2f)"
+    table_left_col = "linear-gradient(90deg, #56ab2f, #0f2027)"
+    table_other_col = "#1a1a1a"
+    table_hover = "#333333"
 else:
-    # Light Mode
-    body_bg = "linear-gradient(135deg, #e0f7da, #a5d6a7)"                 # hijau padi
-    sidebar_bg = "linear-gradient(135deg, #283c86, #45a247)"              # biru tua
-    list_bg = "linear-gradient(135deg, #e0ffff, #b2ebf2)"                 # biru air
+    bg_main = "linear-gradient(135deg, #d4fc79, #96e6a1)"            # Hijau padi gradasi
+    sidebar_bg = "linear-gradient(135deg, #1e3c72, #2a5298)"        # Biru tua gradasi
+    list_bg = "#d0f0ff"  # Biru air
     list_text = "#000000"
     table_text = "#000000"
+    table_header_bg = "linear-gradient(90deg, #1e3c72, #a8e063)"
+    table_left_col = "linear-gradient(90deg, #a8e063, #1e3c72)"
+    table_other_col = "#ffffff"
+    table_hover = "#e0f7fa"
 
-table_header_bg = "linear-gradient(135deg, #0f2027, #2c5364)"             # header tabel
-table_left_col_bg = "linear-gradient(135deg, #2c5364, #a8e063)"           # kolom kiri tabel
-table_other_col_bg = "#ffffff80" if not dark_mode else "#00000080"
-table_hover_bg = "#90caf9" if not dark_mode else "#3949ab"
-
-# =======================
-# 🧼 Custom CSS
-# =======================
+# Inject CSS
 st.markdown(f"""
-    <style>
-    html, body, .main {{
-        background: {body_bg};
-        font-family: 'Segoe UI', sans-serif;
-        color: {list_text};
-        transition: all 0.3s ease;
-    }}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
+/* Global font & body background */
+html, body, .main {{
+    font-family: 'Inter', sans-serif;
+    background: {bg_main} !important;
+    color: {list_text};
+    transition: all 0.5s ease;
+}}
+
+/* Sidebar styling */
+section[data-testid="stSidebar"] > div:first-child {{
+    background: {sidebar_bg};
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+}}
+
+/* Expander list fitur */
+.list-fitur {{
+    background: {list_bg};
+    color: {list_text};
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}}
+.list-fitur:hover {{
+    transform: scale(1.02);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}}
+
+/* Tabel styling */
+table.styled-table {{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    color: {table_text};
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}}
+table.styled-table thead th {{
+    background: {table_header_bg};
+    color: white;
+    padding: 10px;
+    text-align: center;
+}}
+table.styled-table tbody td:first-child {{
+    background: {table_left_col};
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+}}
+table.styled-table tbody td:not(:first-child) {{
+    background: {table_other_col};
+    text-align: center;
+    color: {table_text};
+    padding: 8px;
+}}
+table.styled-table tbody tr:hover td {{
+    background: {table_hover} !important;
+    color: {list_text};
+    cursor: pointer;
+}}
+
+/* Responsif untuk HP */
+@media only screen and (max-width: 768px) {{
+    .list-fitur {{
+        font-size: 14px;
+        padding: 12px;
+    }}
+    table.styled-table {{
+        font-size: 13px;
+    }}
     section[data-testid="stSidebar"] > div:first-child {{
-        background: {sidebar_bg};
-        padding: 20px;
-        border-radius: 10px;
-        color: white;
+        padding: 15px;
     }}
-
-    .custom-list {{
-        background: {list_bg};
-        color: {list_text};
-        padding: 20px;
-        border-radius: 12px;
-        font-size: 16px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }}
-
-    table.custom-table {{
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 16px;
-        margin-top: 20px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }}
-
-    table.custom-table th {{
-        background: {table_header_bg};
-        color: white;
-        padding: 10px;
-        text-align: center;
-    }}
-
-    table.custom-table td:first-child {{
-        background: {table_left_col_bg};
-        color: white;
-        font-weight: bold;
-        text-align: center;
-    }}
-
-    table.custom-table td {{
-        background: {table_other_col_bg};
-        color: {table_text};
-        padding: 10px;
-        text-align: center;
-    }}
-
-    table.custom-table tr:hover td {{
-        background: {table_hover_bg};
-        color: black;
-        cursor: pointer;
-    }}
-
-    @media only screen and (max-width: 768px) {{
-        .custom-list {{
-            font-size: 14px;
-            padding: 12px;
-        }}
-        table.custom-table {{
-            font-size: 13px;
-        }}
-    }}
-    </style>
+}}
+</style>
 """, unsafe_allow_html=True)
     
 # ------------------ INPUT KOORDINAT ------------------
