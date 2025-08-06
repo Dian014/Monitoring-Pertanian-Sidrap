@@ -59,83 +59,107 @@ else:
 
 # ------------------ CSS Styling ------------------
 st.markdown(f"""
-    <style>
-        html, body, .stApp {{
-            background: {BACKGROUND};
-            color: {FONT_COLOR};
-        }}
+<style>
+html, body, .stApp {{
+    background: {BACKGROUND};
+    color: {FONT_COLOR};
+}}
 
-        section[data-testid="stSidebar"] > div:first-child {{
-            background: {SIDEBAR_BG};
-            padding-top: 20px;
-        }}
+section[data-testid="stSidebar"] > div:first-child {{
+    background: {SIDEBAR_BG};
+    padding-top: 20px;
+}}
+section[data-testid="stSidebar"] * {{
+    color: {FONT_COLOR} !important;
+}}
 
-        section[data-testid="stSidebar"] * {{
-            color: {FONT_COLOR} !important;
-        }}
+/* Input styling */
+input, textarea, select {{
+    background: {INPUT_BG} !important;
+    color: {INPUT_FONT} !important;
+    border: 1px solid #888;
+    border-radius: 6px;
+    padding: 6px;
+}}
+input:focus, textarea:focus, select:focus {{
+    border: 1px solid #66AFE9 !important;
+    outline: none;
+}}
 
-        input, textarea, select {{
-            background: {INPUT_BG} !important;
-            color: {INPUT_FONT} !important;
-            border: 1px solid rgba(200,200,200,0.4);
-            border-radius: 6px;
-            padding: 6px;
-        }}
+/* Expander background and text */
+div[data-testid="stExpander"] {{
+    background: {EXPANDER_BG} !important;
+    border: 1px solid #444 !important;
+    border-radius: 10px;
+    padding: 12px;
+}}
+div[data-testid="stExpander"] > details > summary {{
+    color: {FONT_COLOR} !important;
+    font-weight: bold;
+}}
 
-        input:focus, textarea:focus, select:focus {{
-            border: 1px solid #66AFE9 !important;
-            outline: none;
-        }}
+/* Upload area fix */
+section div[data-testid="stFileUploaderDropzone"] {{
+    background-color: #333 !important;
+    border: 2px dashed #999 !important;
+    color: {FONT_COLOR} !important;
+}}
+section div[data-testid="stFileUploaderDropzone"] * {{
+    color: {FONT_COLOR} !important;
+}}
 
-        label, span, div[role="textbox"], ::placeholder {{
-            color: {FONT_COLOR} !important;
-        }}
+/* Table styling */
+.stApp .dataframe, 
+.stApp .stDataFrame, 
+.stApp .stTable, 
+.stApp div[role="table"] {{
+    background-color: {TABLE_BG} !important;
+    color: {TABLE_FONT} !important;
+}}
+.stApp .dataframe td, 
+.stApp .dataframe th, 
+.stApp .stDataFrame td, 
+.stApp .stDataFrame th, 
+.stApp div[role="table"] * {{
+    color: {TABLE_FONT} !important;
+}}
 
-        div[data-testid="stExpander"] > details > summary {{
-            color: {FONT_COLOR} !important;
-            font-weight: bold;
-        }}
+/* All other texts */
+.stApp div, .stApp span, .stApp label, .stApp p, 
+.stApp h1, .stApp h2, .stApp h3, .stApp h4, 
+.stApp h5, .stApp h6 {{
+    color: {FONT_COLOR} !important;
+}}
 
-        div[data-testid="stExpander"] {{
-            background: {EXPANDER_BG} !important;
-            border-radius: 10px;
-            padding: 12px;
-        }}
+/* Placeholder text */
+::placeholder {{
+    color: #bbbbbb !important;
+}}
 
-        /* TABLE dan LIST FIX */
-        .stApp .dataframe, 
-        .stApp .stDataFrame, 
-        .stApp .stTable, 
-        .stApp div[role="table"] {{
-            background-color: {TABLE_BG} !important;
-            color: {TABLE_FONT} !important;
-        }}
+/* Selectbox fix */
+.stSelectbox div[data-baseweb="select"] > div {{
+    background-color: {INPUT_BG} !important;
+    color: {INPUT_FONT} !important;
+}}
 
-        .stApp .dataframe td, 
-        .stApp .dataframe th, 
-        .stApp .stDataFrame td, 
-        .stApp .stDataFrame th, 
-        .stApp div[role="table"] * {{
-            color: {TABLE_FONT} !important;
-        }}
+/* Form container styling */
+div[data-testid="stForm"] {{
+    background: #222 !important;
+    border: 1px solid #555 !important;
+    border-radius: 8px;
+    padding: 12px;
+}}
 
-        /* Komponen teks default */
-        .stApp div, .stApp span, .stApp label, .stApp p, 
-        .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
-        .stApp h5, .stApp h6 {{
-            color: {FONT_COLOR} !important;
-        }}
+/* Checkbox text */
+.stApp .stCheckbox label {{
+    color: {FONT_COLOR} !important;
+}}
 
-        ::placeholder {{
-            color: #bbbbbb !important;
-        }}
-
-        /* Selectbox dan Dropdown fix */
-        .stSelectbox div[data-baseweb="select"] > div {{
-            background-color: {INPUT_BG} !important;
-            color: {INPUT_FONT} !important;
-        }}
-    </style>
+/* Cursor always visible */
+input, textarea {{
+    caret-color: #ffffff !important;
+}}
+</style>
 """, unsafe_allow_html=True)
 
 # ------------------ Sidebar ------------------
