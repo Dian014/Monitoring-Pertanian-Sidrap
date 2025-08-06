@@ -21,51 +21,54 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
+
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
     layout="wide"
 )
 
-# ---------------------- Mode ----------------------
+# ---------------------- Deteksi Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Warna & Gradasi ----------------------
+# ---------------------- Warna ----------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna dasar
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
 COLOR_BIRU_NAVY = "#102040"
-COLOR_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
+COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
 COLOR_HIJAU_TERANG = "#CFF5B2"
 COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
-COLOR_GRAY_GELAP = "#2A2A2A"
+COLOR_GRAY_DARK = "#2A2A2A"
+COLOR_ABU_LABEL = "#DDDDDD"
 
 # Tema utama
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
-    "main_bg": "#FAFAFA",
+    "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
     "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
-    "input_focus_bg": "#FFFFFF"
+    "input_focus_bg": "#FFFFFF",
+    "label_font": COLOR_HITAM
 }
 
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
     "main_bg": COLOR_BIRU_NAVY,
     "font": COLOR_PUTIH,
-    "input_bg": COLOR_INPUT_GRAD,
+    "input_bg": COLOR_BIRU_INPUT_GRAD,
     "input_font": COLOR_PUTIH,
-    "input_focus_bg": "#29476B"
+    "input_focus_bg": "#29476B",
+    "label_font": COLOR_ABU_LABEL
 }
 
-# Tema tabel (selalu terang)
+# Tema tabel
 TABLE_THEME = {
     "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
     "table_font": COLOR_HITAM
@@ -85,50 +88,61 @@ st.markdown(f"""
         /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
-            color: {theme['font']};
         }}
-        section[data-testid="stSidebar'] * {{
+        section[data-testid="stSidebar"] * {{
             color: {theme['font']} !important;
         }}
 
-        /* Input & dropdown */
+        /* Input, select, textarea normal */
         input, textarea, select {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px;
         }}
+
+        /* Input saat fokus (klik) */
         input:focus, textarea:focus, select:focus {{
             background: {theme['input_focus_bg']} !important;
-            color: {theme['input_font']} !important;
+            color: {COLOR_HITAM if st.session_state.dark_mode else theme['input_font']} !important;
             border: 1px solid #66AFE9;
             outline: none;
         }}
 
-        /* st.selectbox aktif */
-        div[data-baseweb="select"] > div {{
+        /* Dropdown (stSelectbox) saat terbuka */
+        div[role="combobox"] > div {{
             background: {theme['input_focus_bg']} !important;
-            color: {theme['input_font']} !important;
+            color: {COLOR_HITAM if st.session_state.dark_mode else theme['input_font']} !important;
         }}
 
-        /* Placeholder & label */
+        /* Placeholder dan label */
         ::placeholder {{
-            color: {theme['input_font']} !important;
-            opacity: 0.8;
+            color: {theme['label_font']} !important;
+            opacity: 1;
         }}
         label, span, div[role="textbox"] {{
-            color: {theme['input_font']} !important;
+            color: {theme['label_font']} !important;
         }}
 
-        /* Expander */
+        /* Slider label */
+        .stSlider > div {{
+            color: {theme['label_font']} !important;
+        }}
+
+        /* Expander header */
+        div[data-testid="stExpander"] > details > summary {{
+            color: {theme['label_font']} !important;
+            font-weight: bold;
+        }}
+
+        /* Expander content */
         div[data-testid="stExpander"] {{
             background: {theme['input_bg']} !important;
-            color: {theme['input_font']} !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
-        /* Tabel kustom */
+        /* Tabel HTML kustom */
         .custom-html-table {{
             background: {TABLE_THEME['table_bg']};
             color: {TABLE_THEME['table_font']};
@@ -146,11 +160,11 @@ st.markdown(f"""
             background: transparent;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.25);
+            background-color: rgba(255,255,255,0.2);
             font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(255,255,255,0.15);
         }}
     </style>
 """, unsafe_allow_html=True)
