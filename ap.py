@@ -835,18 +835,16 @@ with st.expander("Kalkulator Pemupukan"):
         }
     }
 
-    st.markdown(f"Rekomendasi Pemupukan untuk **{tanaman}** per {luas_lahan} ha:")
     data_pupuk = []
-
     for jenis_pupuk, data in rekomendasi_pupuk.get(tanaman, {}).items():
         total_dosis = data["dosis"] * luas_lahan
         data_pupuk.append({
-            "Jenis Pupuk": jenis_pupuk,
-            "Total Kebutuhan (kg)": total_dosis,
+            "Jenis": jenis_pupuk,
+            "Total (kg)": total_dosis,
             "Fungsi": data["fungsi"]
         })
 
-    st.table(pd.DataFrame(data_pupuk))
+    df_pupuk = pd.DataFrame(data_pupuk)
     
 # ------------------ Harga Komoditas ------------------
 
@@ -886,16 +884,28 @@ if "harga_komoditas" not in st.session_state:
 with st.expander("Harga Komoditas di Sidrap"):
     st.markdown("Silakan ubah harga langsung di tabel berikut:")
 
+    # Ambil data
     df_edit = pd.DataFrame(st.session_state.harga_komoditas)
 
+    # Rename kolom ke bentuk lebih pendek dan mobile-friendly
+    df_edit = df_edit.rename(columns={"Harga (Rp/kg)": "Harga"})
+
+    # Tampilkan tabel editor
     edited_df = st.data_editor(
         df_edit,
+        column_config={
+            "Komoditas": st.column_config.TextColumn("Komoditas"),
+            "Harga": st.column_config.NumberColumn("Harga (Rp/kg)", format="Rp. %d"),
+        },
+        hide_index=True,
         use_container_width=True,
         num_rows="dynamic",
         key="editor_harga"
     )
 
     if st.button("Simpan Perubahan Harga"):
+        # Kembalikan nama kolom ke format aslinya untuk penyimpanan
+        edited_df = edited_df.rename(columns={"Harga": "Harga (Rp/kg)"})
         st.session_state.harga_komoditas = edited_df.to_dict(orient="records")
         save_harga_komoditas(st.session_state.harga_komoditas)
         st.success("✅ Harga komoditas berhasil diperbarui.")
