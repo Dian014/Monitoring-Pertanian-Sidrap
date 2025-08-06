@@ -433,34 +433,59 @@ model = LinearRegression().fit(
 
 # ------------------ PREDIKSI PANEN ------------------
 with st.expander("Prediksi Panen"):
+    # ---- Prediksi Manual dengan Input Cuaca (Khusus Padi) ----
+    st.subheader("Prediksi Manual Khusus Padi (Dengan Input Cuaca)")
+    ch_manual_padi = st.number_input("Curah Hujan (mm)", value=5.0, key="manual_padi_ch")
+    suhu_manual_padi = st.number_input("Suhu Maks (°C)", value=32.0, key="manual_padi_suhu")
+    hum_manual_padi = st.number_input("Kelembapan (%)", value=78.0, key="manual_padi_hum")
+    luas_manual_padi = st.number_input("Luas Lahan (ha)", value=1.0, key="manual_padi_luas")
+    harga_manual_padi = st.number_input("Harga Padi (Rp/kg)", value=7000, key="manual_padi_harga")
+    biaya_manual_padi = st.number_input("Biaya Produksi per Ha (Rp)", value=5000000, key="manual_padi_biaya")
 
-    # Input manual
-    st.subheader("Input Manual")
-    ch_manual = st.number_input("Curah Hujan (mm)", value=5.0, key="manual_ch")
-    suhu_manual = st.number_input("Suhu Maks (°C)", value=32.0, key="manual_suhu")
-    hum_manual = st.number_input("Kelembapan (%)", value=78.0, key="manual_hum")
-    luas_manual = st.number_input("Luas Lahan (ha)", value=1.0, key="manual_luas")
-    harga_manual = st.number_input("Harga Gabah (Rp/kg)", value=7000, key="manual_harga")
-    biaya_manual = st.number_input("Biaya Produksi per Ha (Rp)", value=5000000, key="manual_biaya")
-
-    pred_manual = model.predict([[ch_manual, suhu_manual, hum_manual]])[0]
-    total_manual = pred_manual * luas_manual
-    pendapatan_manual = total_manual * harga_manual
-    laba_kotor_manual = pendapatan_manual
-    laba_bersih_manual = pendapatan_manual - (biaya_manual * luas_manual)
+    pred_manual_padi = model.predict([[ch_manual_padi, suhu_manual_padi, hum_manual_padi]])[0]
+    total_manual_padi = pred_manual_padi * luas_manual_padi
+    pendapatan_manual_padi = total_manual_padi * harga_manual_padi
+    laba_bersih_manual_padi = pendapatan_manual_padi - (biaya_manual_padi * luas_manual_padi)
 
     st.markdown(f"""
-    - **Prediksi Hasil Panen (Manual):** {pred_manual:,.0f} kg/ha  
-    - **Total Panen:** {total_manual:,.0f} kg  
-    - **Pendapatan Kotor:** Rp {pendapatan_manual:,.0f}  
-    - **Laba Bersih:** Rp {laba_bersih_manual:,.0f}
+    - **Prediksi Hasil Panen Padi (Manual):** {pred_manual_padi:,.0f} kg/ha  
+    - **Total Panen:** {total_manual_padi:,.0f} kg  
+    - **Pendapatan Kotor:** Rp {pendapatan_manual_padi:,.0f}  
+    - **Laba Bersih:** Rp {laba_bersih_manual_padi:,.0f}
     """)
 
-    # Prediksi otomatis (dari data harian rata-rata)
-    st.subheader("Prediksi Otomatis (Berdasarkan Data Cuaca)")
+    # ---- Prediksi Manual tanpa Input Cuaca (Untuk Semua Komoditas) ----
+    st.subheader("Prediksi Manual Tanpa Data Cuaca")
+    komoditas_list = ["Padi", "Jagung", "Kopi", "Kakao", "Kelapa", "Porang"]
+    komoditas_manual = st.selectbox("Pilih Komoditas", komoditas_list, key="manual2_komoditas")
+    pred_yield_default = {
+        "Padi": 5000,
+        "Jagung": 6000,
+        "Kopi": 1200,
+        "Kakao": 1500,
+        "Kelapa": 2000,
+        "Porang": 10000
+    }
+    hasil_per_ha = pred_yield_default.get(komoditas_manual, 5000)
+    luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, key="manual2_luas")
+    harga = st.number_input(f"Harga {komoditas_manual} (Rp/kg)", value=7000, key="manual2_harga")
+    biaya = st.number_input("Biaya Produksi per Ha (Rp)", value=5000000, key="manual2_biaya")
 
+    total_hasil = hasil_per_ha * luas_lahan
+    pendapatan = total_hasil * harga
+    laba = pendapatan - (biaya * luas_lahan)
+
+    st.markdown(f"""
+    - **Prediksi Hasil Panen {komoditas_manual}:** {hasil_per_ha:,.0f} kg/ha  
+    - **Total Panen:** {total_hasil:,.0f} kg  
+    - **Pendapatan Kotor:** Rp {pendapatan:,.0f}  
+    - **Laba Bersih:** Rp {laba:,.0f}
+    """)
+
+    # ---- Prediksi Otomatis Berdasarkan Cuaca Harian (Khusus Padi) ----
+    st.subheader("Prediksi Otomatis (Berdasarkan Data Cuaca) - Khusus Padi")
     luas_auto = st.number_input("Luas Sawah (ha) (otomatis)", value=1.0, key="auto_luas")
-    harga_auto = st.number_input("Harga Gabah (Rp/kg) (otomatis)", value=7000, key="auto_harga")
+    harga_auto = st.number_input("Harga Padi (Rp/kg) (otomatis)", value=7000, key="auto_harga")
     biaya_auto = st.number_input("Biaya Produksi per Ha (Rp) (otomatis)", value=5000000, key="auto_biaya")
 
     if not df_harian.empty:
@@ -471,42 +496,31 @@ with st.expander("Prediksi Panen"):
 
     total_auto = pred_auto * luas_auto
     pendapatan_auto = total_auto * harga_auto
-    laba_kotor_auto = pendapatan_auto
     laba_bersih_auto = pendapatan_auto - (biaya_auto * luas_auto)
 
     st.markdown(f"""
-    - **Prediksi Hasil Panen (Otomatis):** {pred_auto:,.0f} kg/ha  
+    - **Prediksi Hasil Panen Padi (Otomatis):** {pred_auto:,.0f} kg/ha  
     - **Total Panen:** {total_auto:,.0f} kg  
     - **Pendapatan Kotor:** Rp {pendapatan_auto:,.0f}  
     - **Laba Bersih:** Rp {laba_bersih_auto:,.0f}
     """)
 
-    # Proyeksi Panen Tahunan (3 kali panen per tahun, setiap 3 bulan)
-    st.markdown("### Proyeksi Panen Tahunan (3 Kali Panen)")
-
-    # Panen 1: bulan 1-3 (gunakan 7 hari pertama data)
+    # ---- Prediksi 3 Kali Panen Tahunan (Khusus Padi) ----
+    st.markdown("### Proyeksi Panen Tahunan Padi (3 Kali Panen)")
     df_panen1 = df_harian.head(7)
-    input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
+    input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
     pred1 = model.predict(input_panen1)[0]
 
-    # Panen 2: bulan 4-6 (gunakan data hari 61-67 atau fallback ke 7 hari terakhir)
-    if len(df_harian) >= 67:
-        df_panen2 = df_harian[60:67]
-    else:
-        df_panen2 = df_harian.tail(7)
-    input_panen2 = df_panen2[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
+    df_panen2 = df_harian[60:67] if len(df_harian) >= 67 else df_harian.tail(7)
+    input_panen2 = df_panen2[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
     pred2 = model.predict(input_panen2)[0]
 
-    # Panen 3: bulan 7-9 (gunakan data hari 121-127 atau fallback ke 7 hari terakhir)
-    if len(df_harian) >= 127:
-        df_panen3 = df_harian[120:127]
-    else:
-        df_panen3 = df_harian.tail(7)
-    input_panen3 = df_panen3[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
+    df_panen3 = df_harian[120:127] if len(df_harian) >= 127 else df_harian.tail(7)
+    input_panen3 = df_panen3[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().reshape(1, -1)
     pred3 = model.predict(input_panen3)[0]
 
     luas_ha = st.number_input("Luas Lahan (ha) (Tahunan)", value=1.0, key="luas_tahunan")
-    harga_rp = st.number_input("Harga Gabah (Rp/kg) (Tahunan)", value=7000, key="harga_tahunan")
+    harga_rp = st.number_input("Harga Padi (Rp/kg) (Tahunan)", value=7000, key="harga_tahunan")
     biaya_tahunan = st.number_input("Biaya Produksi per Ha (Rp) (Tahunan)", value=5000000, key="biaya_tahunan")
 
     total1 = pred1 * luas_ha
@@ -514,7 +528,7 @@ with st.expander("Prediksi Panen"):
     total3 = pred3 * luas_ha
     hasil_total = total1 + total2 + total3
     pendapatan_total = hasil_total * harga_rp
-    biaya_total = biaya_tahunan * luas_ha * 3  # 3 kali panen
+    biaya_total = biaya_tahunan * luas_ha * 3
     laba_bersih_total = pendapatan_total - biaya_total
 
     st.write("#### Panen 1")
