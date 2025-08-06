@@ -17,20 +17,91 @@ from rapidfuzz import process, fuzz
 
 # ------------------ KONFIGURASI AWAL ------------------
 st.set_page_config(
-    page_title="Sistem Pertanian Cerdas Lakessi",
+    page_title="Sistem Pertanian Cerdas - Kabupaten Sidenreng Rappang",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ------------------ TAMPILAN KUSTOM CSS ------------------
+st.markdown("""
+    <style>
+    /* Background gradasi */
+    body, .main {
+        background: linear-gradient(to bottom right, #e0f7fa, #e0f2f1);
+    }
+
+    /* Header dan Title */
+    .css-10trblm.e16nr0p30 {
+        color: #004d40;
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    /* Markdown Subtitle */
+    .css-1v0mbdj p {
+        color: #00695c;
+        font-size: 18px;
+    }
+
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(to bottom, #00695c, #004d40);
+        color: white;
+    }
+
+    /* Expander Animasi & Border */
+    details {
+        border: 1px solid #b2dfdb;
+        border-radius: 8px;
+        padding: 8px;
+        transition: all 0.3s ease-in-out;
+        background-color: #ffffffee;
+    }
+
+    summary {
+        font-weight: bold;
+        font-size: 18px;
+        color: #004d40;
+    }
+
+    details[open] {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background-color: #e0f2f1;
+    }
+
+    /* Form input lebih rapi */
+    input, textarea {
+        border: 1px solid #b2dfdb !important;
+        border-radius: 6px !important;
+        padding: 8px !important;
+    }
+
+    /* Button styling */
+    button[kind="primary"] {
+        background-color: #00796b !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 10px 16px !important;
+        font-size: 16px !important;
+    }
+
+    /* Data table border */
+    .stDataFrame {
+        border: 1px solid #80cbc4;
+        border-radius: 8px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
 LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
 
 # ------------------ HEADER ------------------
-st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang ARIPAKKU SAYANGGGGGG SAYANGGGGGGGGGGGG")
+st.title("Dashboard Pertanian Cerdas – Kabupaten Sidenreng Rappang")
 st.markdown("""
 Lokasi: Kabupaten Sidenreng Rapppang – Sulawesi Selatan  
-Dikembangkan oleh Dian Eka Putra ARIPAKUU | Email: ekaputradian01@gmail.com | WA: 085654073752
+Dikembangkan oleh Dian Eka Putra | Email: ekaputradian01@gmail.com | WA: 085654073752
 """)
 
 # ------------------ PETA CURAH HUJAN ------------------
@@ -626,4 +697,4 @@ if st.session_state.laporan_update or st.session_state.todo_update:
 
 # Footer
 st.markdown("---")
-st.caption("© 2025 – Kabupaten Sidenreng Rappang | Dashboard Pertanian Digital by Dian Eka Putra cinta aripa")
+st.caption("© 2025 – Kabupaten Sidenreng Rappang | Dashboard Pertanian Digital by Dian Eka Putra")
