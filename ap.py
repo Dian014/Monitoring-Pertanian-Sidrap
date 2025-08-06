@@ -13,6 +13,7 @@ import pytz
 import subprocess
 import json
 import os
+from PIL import Image
 from rapidfuzz import process, fuzz
 
 # ------------------ KONFIGURASI AWAL ------------------
@@ -835,7 +836,9 @@ with st.expander("Tips Pertanian Harian Otomatis"):
         st.markdown(f" {row['Tanggal'].date()}: {'; '.join(tips)}")
 
 # ------------------ LAPORAN WARGA ------------------
-LAPORAN_FILE = "laporan_warga.json"
+# Pastikan folder upload ada
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
 
 def load_data(filename):
     if os.path.exists(filename):
@@ -854,7 +857,7 @@ if "laporan" not in st.session_state:
     st.session_state.laporan = load_data(LAPORAN_FILE)
 
 if "laporan_update" not in st.session_state:
-    st.session_state.laporan_update = False  # flag untuk rerun laporan
+    st.session_state.laporan_update = False
 
 with st.expander("Laporan Warga"):
     with st.form("form_laporan"):
@@ -863,17 +866,29 @@ with st.expander("Laporan Warga"):
         jenis = st.selectbox("Jenis", ["Masalah Irigasi", "Gangguan Hama", "Kondisi Cuaca", "Lainnya"])
         lokasi = st.text_input("Lokasi")
         isi = st.text_area("Deskripsi")
+        gambar = st.file_uploader("Upload Gambar (opsional)", type=["png", "jpg", "jpeg"])
         kirim = st.form_submit_button("Kirim")
 
         if kirim:
             if nama.strip() and kontak.strip() and isi.strip():
+                path_gambar = None
+                if gambar is not None:
+                    # Simpan gambar ke folder upload dengan nama unik
+                    ext = os.path.splitext(gambar.name)[1]
+                    filename = f"{datetime.now().strftime('%Y%m%d_%H%M%S')}{ext}"
+                    filepath = os.path.join(UPLOAD_DIR, filename)
+                    with open(filepath, "wb") as f:
+                        f.write(gambar.getbuffer())
+                    path_gambar = filepath
+
                 new_laporan = {
                     "Nama": nama.strip(),
                     "Kontak": kontak.strip(),
                     "Jenis": jenis,
                     "Lokasi": lokasi.strip(),
                     "Deskripsi": isi.strip(),
-                    "Tanggal": datetime.now(pytz.timezone("Asia/Makassar")).strftime("%d %B %Y %H:%M")
+                    "Tanggal": datetime.now(pytz.timezone("Asia/Makassar")).strftime("%d %B %Y %H:%M"),
+                    "Gambar": path_gambar,
                 }
                 st.session_state.laporan.append(new_laporan)
                 save_data(LAPORAN_FILE, st.session_state.laporan)
@@ -882,9 +897,9 @@ with st.expander("Laporan Warga"):
             else:
                 st.warning("Lengkapi semua isian sebelum mengirim laporan.")
 
-    # Tampilkan laporan warga (di luar form)
+    # Tampilkan laporan warga
     for i, lap in enumerate(st.session_state.laporan):
-        col1, col2 = st.columns([0.9, 0.1])
+        col1, col2 = st.columns([0.8, 0.2])
         with col1:
             st.markdown(
                 f"**{lap['Tanggal']}**  \n"
@@ -892,11 +907,22 @@ with st.expander("Laporan Warga"):
                 f"{lap['Lokasi']}  \n"
                 f"{lap['Deskripsi']}"
             )
+            if lap.get("Gambar"):
+                try:
+                    img = Image.open(lap["Gambar"])
+                    st.image(img, width=300)
+                except Exception as e:
+                    st.warning("Gambar tidak dapat ditampilkan.")
         with col2:
             if st.button("🗑️ Hapus", key=f"del_lap_{i}"):
+                # Hapus file gambar jika ada
+                if lap.get("Gambar") and os.path.exists(lap["Gambar"]):
+                    os.remove(lap["Gambar"])
                 st.session_state.laporan.pop(i)
                 save_data(LAPORAN_FILE, st.session_state.laporan)
                 st.session_state.laporan_update = True
+                st.experimental_rerun()
+
 
 # ------------------ PENGINGAT HARIAN ------------------
 TODO_FILE = "todo_harian.json"
