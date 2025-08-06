@@ -21,6 +21,8 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
+import streamlit as st
+
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
     layout="wide"
@@ -29,6 +31,11 @@ st.set_page_config(
 # ------------------ Dark Mode State ------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
+
+# ------------------ Toggle Function ------------------
+def toggle_dark_mode():
+    st.session_state.dark_mode = not st.session_state.dark_mode
+    st.experimental_rerun()
 
 # ------------------ Warna Utama ------------------
 COLOR_HIJAU_PADI = "#D4F1BE"
@@ -42,12 +49,16 @@ LIGHT_THEME = {
     "sidebar_bg": f"linear-gradient(to bottom, {COLOR_HIJAU_PADI}, {COLOR_BIRU_AIR})",
     "main_bg": COLOR_PUTIH,
     "text_color": COLOR_HITAM,
+    "input_bg": "#f7f7f7",
+    "input_text": COLOR_HITAM,
 }
 
 DARK_THEME = {
     "sidebar_bg": f"linear-gradient(to bottom, {COLOR_BIRU_TUA}, {COLOR_BIRU_AIR})",
     "main_bg": COLOR_BIRU_TUA,
     "text_color": COLOR_PUTIH,
+    "input_bg": "#1c1c1c",
+    "input_text": COLOR_PUTIH,
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -56,21 +67,19 @@ theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 st.markdown(
     f"""
     <style>
-    /* Body */
     .stApp {{
         background-color: {theme['main_bg']};
         color: {theme['text_color']};
     }}
-    /* Sidebar */
     section[data-testid="stSidebar"] > div:first-child {{
         background: {theme['sidebar_bg']};
     }}
     section[data-testid="stSidebar"] * {{
         color: {theme['text_color']} !important;
     }}
-    /* Inputs basic styling */
     input, textarea, select {{
-        color: {theme['text_color']} !important;
+        background-color: {theme['input_bg']} !important;
+        color: {theme['input_text']} !important;
     }}
     label {{
         color: {theme['text_color']} !important;
@@ -82,9 +91,9 @@ st.markdown(
 
 # ------------------ Sidebar ------------------
 with st.sidebar:
-    st.session_state.dark_mode = st.checkbox(
-        "Dark Mode",
-        value=st.session_state.dark_mode
+    st.button(
+        "🌗 Toggle Dark Mode",
+        on_click=toggle_dark_mode
     )
     
 # ------------------ INPUT KOORDINAT ------------------
