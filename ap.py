@@ -8,7 +8,7 @@ from streamlit_folium import st_folium
 from sklearn.linear_model import LinearRegression
 from io import BytesIO
 import base64
-from datetime import datetime
+from datetime import datetime as dt
 import pytz
 import subprocess
 import json
