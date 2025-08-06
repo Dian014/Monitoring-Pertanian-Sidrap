@@ -37,6 +37,14 @@ if dark_mode:
     text_secondary = "#E0E0E0"  # List teks putih
     border_color = "#333"
     table_text = "#E0E0E0"
+    coord_left_bg = "#2e7d32"  # hijau padi
+    coord_content_bg = "linear-gradient(90deg, #004080 0%, #001f4d 100%)"  # biru tua gradasi
+    list_bg = "linear-gradient(90deg, #81d4fa 0%, #4fc3f7 100%)"  # gradasi warna air
+    list_text = "#ffffff"
+    table_header_bg = "linear-gradient(90deg, #2e7d32 0%, #4caf50 100%)"  # hijau padi gradasi
+    table_left_col_bg = "#2e7d32"
+    table_other_col_bg = "linear-gradient(90deg, #004080 0%, #001f4d 100%)"
+    table_hover_bg = "linear-gradient(90deg, #4fc3f7 0%, #81d4fa 100%)"
 else:
     bg_main = "linear-gradient(to bottom right, #e0f7fa, #e0f2f1)"
     bg_sidebar = "linear-gradient(to bottom, #003366, #001f4d)"
@@ -44,6 +52,14 @@ else:
     text_secondary = "#000000"  # List teks hitam
     border_color = "#b2dfdb"
     table_text = "#001f4d"
+    coord_left_bg = "#001f4d"  # biru tua
+    coord_content_bg = "linear-gradient(90deg, #2e7d32 0%, #81c784 100%)"  # hijau padi gradasi
+    list_bg = "#ffffff"
+    list_text = "#000000"
+    table_header_bg = "#004080"
+    table_left_col_bg = "#004080"
+    table_other_col_bg = "linear-gradient(90deg, #c8e6c9 0%, #a5d6a7 100%)"
+    table_hover_bg = "#aed581"
 
 # ------------------ INJECT CSS ------------------
 st.markdown(f"""
@@ -62,12 +78,35 @@ st.markdown(f"""
         color: white !important;
     }}
 
-    /* Judul List / Fitur */
-    .list-text {{
-        color: {text_secondary};
-        font-size: 18px;
+    /* Koordinat sisi kiri */
+    .coord-left {{
+        background-color: {coord_left_bg};
+        color: white;
         font-weight: 600;
-        margin-bottom: 10px;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }}
+
+    /* Isi koordinat */
+    .coord-content {{
+        background: {coord_content_bg};
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        margin-bottom: 30px;
+        font-size: 16px;
+    }}
+
+    /* List fitur */
+    .list-fitur {{
+        background: {list_bg};
+        color: {list_text};
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 16px;
+        margin-bottom: 30px;
     }}
 
     /* TABEL */
@@ -83,27 +122,27 @@ st.markdown(f"""
         margin-bottom: 30px;
     }}
 
-    /* HEADER */
+    /* HEADER TABEL */
     table.styled-table thead th {{
         padding: 12px;
         text-align: center;
         font-weight: 700;
         color: white;
-        {"background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%);" if dark_mode else "background-color: #004080;"}
+        background: {table_header_bg};
     }}
 
-    /* KOLOM KOORDINAT KIRI */
+    /* KOLOM KOORDINAT KIRI TABEL */
     table.styled-table tbody td:first-child {{
         font-weight: 600;
         color: white;
-        {"background-color: #2e7d32;" if dark_mode else "background-color: #004080;"}
+        background-color: {table_left_col_bg};
     }}
 
-    /* SEL LAIN (ISI) */
+    /* SEL LAIN (ISI) TABEL */
     table.styled-table tbody td:not(:first-child) {{
         border: 1px solid {border_color};
         text-align: center;
-        {"background: linear-gradient(90deg, #004080 0%, #001f4d 100%);" if dark_mode else "background: linear-gradient(90deg, #c8e6c9 0%, #a5d6a7 100%);"}
+        background: {table_other_col_bg};
         color: {table_text};
     }}
 
@@ -119,7 +158,7 @@ st.markdown(f"""
 
     /* HOVER BARIS */
     table.styled-table tbody tr:hover td {{
-        background: {"linear-gradient(90deg, #4fc3f7 0%, #81d4fa 100%)" if dark_mode else "#aed581"};
+        background: {table_hover_bg};
         color: {"white" if dark_mode else "#001f4d"};
         cursor: pointer;
     }}
@@ -129,8 +168,14 @@ st.markdown(f"""
         table.styled-table {{
             font-size: 14px;
         }}
-        .list-text {{
+        .list-fitur {{
+            font-size: 14px;
+        }}
+        .coord-left {{
             font-size: 16px;
+        }}
+        .coord-content {{
+            font-size: 14px;
         }}
     }}
 </style>
@@ -140,6 +185,15 @@ st.markdown(f"""
 def render_styled_table(df):
     html = df.to_html(classes='styled-table', index=False)
     return html
+
+# ------------------ KONTEN UTAMA ------------------
+
+# Contoh konten sidebar koordinat & isi koordinat (sesuaikan dengan kebutuhanmu)
+st.markdown('<div class="coord-left">Koordinat Lokasi</div>', unsafe_allow_html=True)
+st.markdown('<div class="coord-content">Latitude: -5.406<br>Longitude: 119.444</div>', unsafe_allow_html=True)
+
+# Contoh list fitur
+st.markdown('<div class="list-fitur">- Fitur 1<br>- Fitur 2<br>- Fitur 3</div>', unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
@@ -614,7 +668,7 @@ for role, msg in st.session_state.chat_history:
 # ------------------ KALKULATOR PEMUPUKAN ------------------
 with st.expander("Kalkulator Pemupukan"):
     tanaman = st.selectbox("Pilih Komoditas", ["Padi", "Jagung", "Kedelai", "Kopi", "Kakao", "Kelapa", "Porang"], key="komoditas_pupuk")
-    luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, key="luas_pupuk")
+    luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, min_value=0.01, step=0.1, key="luas_pupuk")
 
     rekomendasi_pupuk = {
         "Padi": {
@@ -654,11 +708,17 @@ with st.expander("Kalkulator Pemupukan"):
         total_dosis = data["dosis"] * luas_lahan
         data_pupuk.append({
             "Jenis": jenis_pupuk,
-            "Total (kg)": total_dosis,
+            "Total (kg)": round(total_dosis, 2),
             "Fungsi": data["fungsi"]
         })
 
     df_pupuk = pd.DataFrame(data_pupuk)
+
+    if not df_pupuk.empty:
+        st.markdown("### Rekomendasi Pemupukan")
+        st.markdown(df_pupuk.to_html(classes='styled-table', index=False), unsafe_allow_html=True)
+    else:
+        st.write("Data pupuk belum tersedia untuk tanaman ini.")
     
 # ------------------ Harga Komoditas ------------------
 
