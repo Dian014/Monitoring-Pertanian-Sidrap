@@ -36,19 +36,19 @@ def gradient_css(colors, direction="to bottom right"):
 LIGHT_THEME = {
     "sidebar_bg": gradient_css(["#0A2647", "#144272"]),
     "main_bg": gradient_css(["#DFF5E1", "#CFF5B2"]),
-    "list_bg": "#B6E2D3",
+    "list_bg": "#B6E2D3",  # biru air
     "list_font": "black",
     "table_font": "black",
-    "table_bg": gradient_css(["#0A2647", "#CFF5B2"]),
+    "table_bg": gradient_css(["#B6E2D3", "#CFF5B2"]),  # biru air -> hijau padi
 }
 
 DARK_THEME = {
-    "sidebar_bg": gradient_css(["#CFF5B2", "#B7E5B4"]),
+    "sidebar_bg": gradient_css(["#CFF5B2", "#B6E2D3"]),  # hijau padi -> biru air
     "main_bg": gradient_css(["#0A2647", "#144272"]),
-    "list_bg": "#222222",
+    "list_bg": "#0A2647",  # biru tua
     "list_font": "white",
     "table_font": "white",
-    "table_bg": gradient_css(["#0A2647", "#CFF5B2"]),
+    "table_bg": gradient_css(["#144272", "#B6E2D3"]),  # biru tua -> biru air
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -56,49 +56,64 @@ theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
-        /* Background App */
         .stApp {{
             background: {theme['main_bg']};
             color: {theme['list_font']};
         }}
-
-        /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
             color: {theme['list_font']};
         }}
         section[data-testid="stSidebar"] label,
         section[data-testid="stSidebar"] input,
-        section[data-testid="stSidebar"] div[data-testid="stSlider"],
-        section[data-testid="stSidebar"] .stSlider,
         section[data-testid="stSidebar"] .stNumberInput,
-        section[data-testid="stSidebar"] .stCheckbox {{
+        section[data-testid="stSidebar"] .stCheckbox,
+        section[data-testid="stSidebar"] div[data-testid="stSlider"] {{
             color: {theme['list_font']} !important;
         }}
         section[data-testid="stSidebar"] .stNumberInput input {{
             color: {theme['list_font']} !important;
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255,255,255,0.15);
         }}
 
-        /* Expander */
+        /* Expander / List Fitur */
         div[data-testid="stExpander"] {{
             background-color: {theme['list_bg']} !important;
             color: {theme['list_font']} !important;
-            border-radius: 8px;
+            border-radius: 10px;
+            padding: 10px;
         }}
 
-        /* Tabel HTML Dataframe */
+        /* Tabel Streamlit */
         .stDataFrame, .stTable {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
         }}
-        .stDataFrame thead tr th {{
+        .stDataFrame thead tr th,
+        .stTable thead tr th {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
         }}
-        .stDataFrame tbody tr td {{
+        .stDataFrame tbody tr td,
+        .stTable tbody tr td {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
+        }}
+
+        /* Tabel HTML */
+        .custom-html-table {{
+            background: {theme['table_bg']};
+            color: {theme['table_font']};
+            border-collapse: collapse;
+            width: 100%;
+        }}
+        .custom-html-table th, .custom-html-table td {{
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px;
+            text-align: left;
+        }}
+        .custom-html-table th {{
+            background-color: rgba(255,255,255,0.1);
         }}
     </style>
 """, unsafe_allow_html=True)
