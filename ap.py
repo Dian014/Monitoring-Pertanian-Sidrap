@@ -26,47 +26,38 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Mode ----------------------
-st.set_page_config(
-    page_title="Dashboard Pertanian Cerdas",
-    layout="wide"
-)
-
-# ---------------------- Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Gradasi & Warna ----------------------
+# ---------------------- Warna & Gradasi ----------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna dasar
+# Palet warna
 COLOR_BIRU_TUA = "#0A2647"
-COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_HIJAU_PADI = "#CFF5B2"
+COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
 # Tema terang
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "main_bg": gradient_css([COLOR_HIJAU_PADI, "#EAF8DC"]),
-    "expander_bg": COLOR_PUTIH,
-    "expander_font": COLOR_HITAM,
+    "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
     "font": COLOR_HITAM,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR]),
     "table_font": COLOR_HITAM,
+    "expander_bg": gradient_css([COLOR_PUTIH, COLOR_BIRU_AIR]),
+    "table_bg": gradient_css(["#E6F4EA", COLOR_BIRU_AIR]),
 }
 
 # Tema gelap
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "expander_bg": gradient_css([COLOR_BIRU_AIR, COLOR_BIRU_TUA]),
-    "expander_font": COLOR_PUTIH,
     "font": COLOR_PUTIH,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
     "table_font": COLOR_PUTIH,
+    "expander_bg": gradient_css(["#144272", COLOR_BIRU_AIR]),
+    "table_bg": gradient_css(["#0A2647", COLOR_HIJAU_PADI]),
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -84,31 +75,27 @@ st.markdown(f"""
             background: {theme['sidebar_bg']};
             color: {theme['font']};
         }}
-        section[data-testid="stSidebar'] * {{
+        section[data-testid="stSidebar"] * {{
             color: {theme['font']} !important;
         }}
 
         /* Input Sidebar */
         section[data-testid="stSidebar"] .stNumberInput input,
-        section[data-testid="stSidebar'] .stTextInput input {{
-            background-color: rgba(255,255,255,0.1);
+        section[data-testid="stSidebar"] .stTextInput input {{
+            background-color: rgba(255,255,255,0.15);
             color: {theme['font']} !important;
         }}
 
-        /* Headings */
-        h1, h2, h3, h4, h5, h6 {{
-            color: {theme['font']} !important;
-        }}
-
-        /* Expander / List */
+        /* Expander */
         div[data-testid="stExpander"] {{
             background: {theme['expander_bg']} !important;
-            color: {theme['expander_font']} !important;
+            color: {theme['font']} !important;
             border-radius: 10px;
             padding: 10px;
+            margin-bottom: 1rem;
         }}
 
-        /* st.table dan st.dataframe */
+        /* Tabel bawaan Streamlit */
         .stTable, .stDataFrame {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
@@ -120,7 +107,7 @@ st.markdown(f"""
             background: transparent !important;
         }}
 
-        /* Tabel HTML Custom */
+        /* Tabel HTML kustom */
         .custom-html-table {{
             background: {theme['table_bg']};
             color: {theme['table_font']};
@@ -132,24 +119,17 @@ st.markdown(f"""
             font-size: 16px;
         }}
         .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(0,0,0,0.2);
+            border: 1px solid rgba(0,0,0,0.1);
             padding: 12px 15px;
             text-align: left;
             background: transparent;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.12);
+            background-color: rgba(255,255,255,0.15);
             font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.08);
-        }}
-
-        /* Responsif Mobile */
-        @media (max-width: 768px) {{
-            .custom-html-table {{
-                font-size: 14px;
-            }}
+            background-color: rgba(0,0,0,0.05);
         }}
     </style>
 """, unsafe_allow_html=True)
