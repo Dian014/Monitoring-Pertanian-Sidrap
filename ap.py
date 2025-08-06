@@ -41,76 +41,44 @@ COLOR_HITAM = "#000000"
 LIGHT_THEME = {
     "sidebar_bg": f"linear-gradient(to bottom, {COLOR_HIJAU_PADI}, {COLOR_BIRU_AIR})",
     "main_bg": COLOR_PUTIH,
-    "font": COLOR_HITAM,
-    "input_bg": "#F0F2F6",
-    "input_font": COLOR_HITAM,
-    "placeholder": "rgba(0,0,0,0.6)"
+    "text_color": COLOR_HITAM,
 }
 
 DARK_THEME = {
     "sidebar_bg": f"linear-gradient(to bottom, {COLOR_BIRU_TUA}, {COLOR_BIRU_AIR})",
     "main_bg": COLOR_BIRU_TUA,
-    "font": COLOR_PUTIH,
-    "input_bg": "rgba(255,255,255,0.1)",
-    "input_font": COLOR_PUTIH,
-    "placeholder": "rgba(255,255,255,0.6)"
+    "text_color": COLOR_PUTIH,
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ------------------ CSS Styling ------------------
-st.markdown(f"""
-<style>
-html, body, .stApp {{
-    background-color: {theme['main_bg']};
-    color: {theme['font']};
-}}
-
-/* Sidebar gradasi */
-section[data-testid="stSidebar"] > div:first-child {{
-    background: {theme['sidebar_bg']};
-}}
-
-/* Sidebar teks */
-section[data-testid="stSidebar"] * {{
-    color: {theme['font']} !important;
-}}
-
-/* Inputs */
-input, textarea, select {{
-    background-color: {theme['input_bg']} !important;
-    color: {theme['input_font']} !important;
-    border-radius: 6px;
-    border: 1px solid rgba(0,0,0,0.2);
-}}
-
-/* Placeholder */
-::placeholder {{
-    color: {theme['placeholder']} !important;
-}}
-
-/* Labels */
-label {{
-    color: {theme['font']} !important;
-    font-weight: 500;
-}}
-
-/* Expander */
-div[data-testid="stExpander"] {{
-    background-color: {theme['input_bg']} !important;
-    color: {theme['input_font']} !important;
-    border-radius: 8px;
-    padding: 10px;
-}}
-
-/* Button */
-button[kind="primary"] {{
-    background-color: {COLOR_BIRU_AIR} !important;
-    color: {COLOR_HITAM} !important;
-    border: none;
-}}
-</style>
-""", unsafe_allow_html=True)
+st.markdown(
+    f"""
+    <style>
+    /* Body */
+    .stApp {{
+        background-color: {theme['main_bg']};
+        color: {theme['text_color']};
+    }}
+    /* Sidebar */
+    section[data-testid="stSidebar"] > div:first-child {{
+        background: {theme['sidebar_bg']};
+    }}
+    section[data-testid="stSidebar"] * {{
+        color: {theme['text_color']} !important;
+    }}
+    /* Inputs basic styling */
+    input, textarea, select {{
+        color: {theme['text_color']} !important;
+    }}
+    label {{
+        color: {theme['text_color']} !important;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ------------------ Sidebar ------------------
 with st.sidebar:
