@@ -27,11 +27,11 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Deteksi Mode ----------------------
+# ------------------ Inisialisasi Dark Mode ------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Warna ----------------------
+# ------------------ Gradasi dan Warna ------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
@@ -45,9 +45,7 @@ COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 COLOR_GRAY_DARK = "#2A2A2A"
-COLOR_ABU_LABEL = "#DDDDDD"
 
-# Tema utama
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
     "main_bg": COLOR_PUTIH,
@@ -65,111 +63,110 @@ DARK_THEME = {
     "input_bg": COLOR_BIRU_INPUT_GRAD,
     "input_font": COLOR_PUTIH,
     "input_focus_bg": "#29476B",
-    "label_font": COLOR_ABU_LABEL
+    "label_font": COLOR_PUTIH
 }
 
-# Tema tabel
 TABLE_THEME = {
     "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
     "table_font": COLOR_HITAM
 }
 
-# Pilih tema
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
-# ---------------------- CSS Styling ----------------------
+# ------------------ CSS Styling ------------------
 st.markdown(f"""
-    <style>
-        html, body, .stApp {{
-            background: {theme['main_bg']};
-            color: {theme['font']};
-        }}
+<style>
+/* Body background and text */
+html, body, .stApp {{
+    background: {theme['main_bg']};
+    color: {theme['font']};
+}}
 
-        /* Sidebar */
-        section[data-testid="stSidebar"] > div {{
-            background: {theme['sidebar_bg']};
-        }}
-        section[data-testid="stSidebar"] * {{
-            color: {theme['font']} !important;
-        }}
+/* Sidebar background */
+section[data-testid="stSidebar"] > div {{
+    background: {theme['sidebar_bg']};
+}}
 
-        /* Input, select, textarea normal */
-        input, textarea, select {{
-            background: {theme['input_bg']} !important;
-            color: {theme['input_font']} !important;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
-        }}
+/* Sidebar text */
+section[data-testid="stSidebar"] * {{
+    color: {theme['font']} !important;
+}}
 
-        /* Input saat fokus (klik) */
-        input:focus, textarea:focus, select:focus {{
-            background: {theme['input_focus_bg']} !important;
-            color: {COLOR_HITAM if st.session_state.dark_mode else theme['input_font']} !important;
-            border: 1px solid #66AFE9;
-            outline: none;
-        }}
+/* Input fields */
+input, textarea, select {{
+    background: {theme['input_bg']} !important;
+    color: {theme['input_font']} !important;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+}}
 
-        /* Dropdown (stSelectbox) saat terbuka */
-        div[role="combobox"] > div {{
-            background: {theme['input_focus_bg']} !important;
-            color: {COLOR_HITAM if st.session_state.dark_mode else theme['input_font']} !important;
-        }}
+/* Input focus */
+input:focus, textarea:focus, select:focus {{
+    background: {theme['input_focus_bg']} !important;
+    color: {theme['input_font']} !important;
+    border: 1px solid #66AFE9;
+    outline: none;
+}}
 
-        /* Placeholder dan label */
-        ::placeholder {{
-            color: {theme['label_font']} !important;
-            opacity: 1;
-        }}
-        label, span, div[role="textbox"] {{
-            color: {theme['label_font']} !important;
-        }}
+/* Combobox dropdown (selectbox) */
+div[role="combobox"] > div {{
+    background: {theme['input_focus_bg']} !important;
+    color: {theme['input_font']} !important;
+}}
 
-        /* Slider label */
-        .stSlider > div {{
-            color: {theme['label_font']} !important;
-        }}
+/* Placeholder selalu kontras */
+::placeholder {{
+    color: rgba(255,255,255,0.9) !important;
+    opacity: 1 !important;
+}}
 
-        /* Expander header */
-        div[data-testid="stExpander"] > details > summary {{
-            color: {theme['label_font']} !important;
-            font-weight: bold;
-        }}
+/* Label dan teks di atas input */
+label, span, div[role="textbox"] {{
+    color: rgba(255,255,255,0.95) !important;
+    font-weight: 500;
+}}
 
-        /* Expander content */
-        div[data-testid="stExpander"] {{
-            background: {theme['input_bg']} !important;
-            border-radius: 10px;
-            padding: 10px;
-        }}
+/* Slider label */
+.stSlider > div {{
+    color: {theme['font']} !important;
+}}
 
-        /* Tabel HTML kustom */
-        .custom-html-table {{
-            background: {TABLE_THEME['table_bg']};
-            color: {TABLE_THEME['table_font']};
-            border-collapse: collapse;
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            font-size: 16px;
-        }}
-        .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(0,0,0,0.2);
-            padding: 12px 15px;
-            text-align: left;
-            background: transparent;
-        }}
-        .custom-html-table th {{
-            background-color: rgba(255,255,255,0.2);
-            font-weight: bold;
-        }}
-        .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.15);
-        }}
-    </style>
+/* Expander */
+div[data-testid="stExpander"] {{
+    background: {theme['input_bg']} !important;
+    color: {theme['input_font']} !important;
+    border-radius: 10px;
+    padding: 10px;
+}}
+
+/* Custom table */
+.custom-html-table {{
+    background: {TABLE_THEME['table_bg']};
+    color: {TABLE_THEME['table_font']};
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-size: 16px;
+}}
+.custom-html-table th, .custom-html-table td {{
+    border: 1px solid rgba(0,0,0,0.2);
+    padding: 12px 15px;
+    text-align: left;
+    background: transparent;
+}}
+.custom-html-table th {{
+    background-color: rgba(255,255,255,0.2);
+    font-weight: bold;
+}}
+.custom-html-table tbody tr:hover {{
+    background-color: rgba(255,255,255,0.15);
+}}
+</style>
 """, unsafe_allow_html=True)
 
-# ---------------------- Sidebar ----------------------
+# ------------------ Sidebar ------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
     
