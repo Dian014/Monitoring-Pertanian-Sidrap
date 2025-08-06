@@ -26,116 +26,93 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ------------------ CONTROLLER DARK MODE ------------------
+# ------------------ DARK MODE TOGGLE ------------------
 dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
-# ------------------ WARNA ------------------
+# ------------------ WARNA & GRADIENT ------------------
 if dark_mode:
     # Mode Gelap
-    bg_main = "linear-gradient(135deg, #002b5c, #001233)"  # Biru tua gradasi
-    coord_left_bg = "linear-gradient(135deg, #2e7d32, #81c784)"  # Hijau padi gradasi
-    list_bg = "linear-gradient(135deg, #4fc3f7, #81d4fa)"  # Air gradasi
-    list_text = "#ffffff"
-    table_text = "#ffffff"
-    table_header_bg = "linear-gradient(135deg, #004080, #2e7d32)"  # Biru tua + hijau padi
-    table_other_col_bg = "linear-gradient(135deg, #004080, #2e7d32)"
-    table_left_col_bg = "linear-gradient(135deg, #2e7d32, #004080)"
-    table_hover_bg = "linear-gradient(135deg, #81d4fa, #4fc3f7)"
+    bg_main = "linear-gradient(to bottom right, #0d47a1, #1976d2)"  # Biru tua gradasi
+    bg_sidebar = "linear-gradient(to bottom right, #aed581, #7cb342)"  # Hijau padi gradasi
+    list_bg = "#000000"  # Hitam
+    list_font = "#ffffff"  # Putih
+    table_gradient = "linear-gradient(to right, #0d47a1, #aed581)"
+    table_font = "#ffffff"
 else:
     # Mode Terang
-    bg_main = "linear-gradient(135deg, #81c784, #a5d6a7)"  # Hijau padi gradasi
-    coord_left_bg = "linear-gradient(135deg, #001f4d, #004080)"  # Biru tua gradasi
-    list_bg = "#ffffff"
-    list_text = "#000000"
-    table_text = "#000000"
-    table_header_bg = "linear-gradient(135deg, #004080, #2e7d32)"  # Biru tua + hijau padi
-    table_other_col_bg = "linear-gradient(135deg, #004080, #2e7d32)"
-    table_left_col_bg = "linear-gradient(135deg, #2e7d32, #004080)"
-    table_hover_bg = "linear-gradient(135deg, #a5d6a7, #81c784)"
+    bg_main = "linear-gradient(to bottom right, #aed581, #7cb342)"  # Hijau padi gradasi
+    bg_sidebar = "linear-gradient(to bottom right, #0d47a1, #1976d2)"  # Biru tua gradasi
+    list_bg = "#ffffff"  # Putih
+    list_font = "#000000"  # Hitam
+    table_gradient = "linear-gradient(to right, #0d47a1, #aed581)"
+    table_font = "#000000"
 
-# ------------------ INJECT CSS ------------------
+# ------------------ CSS DINAMIS ------------------
 st.markdown(f"""
-<style>
+    <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
     html, body, [class*="css"] {{
         font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }}
+
+    /* Background Main */
+    .main {{
         background: {bg_main} !important;
-        color: {list_text if not dark_mode else "#ffffff"} !important;
-        transition: all 0.3s ease;
+        min-height: 100vh;
     }}
 
-    section[data-testid="stSidebar"] > div:first-child {{
-        background: {coord_left_bg} !important;
-        color: white !important;
-        padding: 15px;
-        border-radius: 10px;
+    /* Sidebar */
+    section[data-testid="stSidebar"] {{
+        background: {bg_sidebar} !important;
+        color: {list_font} !important;
     }}
 
-    /* List Fitur */
-    .list-fitur {{
-        background: {list_bg};
-        color: {list_text};
-        padding: 15px 20px;
+    /* List Container */
+    .css-1v0mbdj, .stMarkdown, .stText {{
+        background-color: {list_bg} !important;
+        color: {list_font} !important;
+        padding: 10px;
         border-radius: 8px;
-        font-size: 16px;
-        margin-bottom: 30px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }}
 
     /* Tabel */
-    table.styled-table {{
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 16px;
-        color: {table_text};
+    .stDataFrame, .dataframe {{
+        background: {table_gradient} !important;
+        color: {table_font} !important;
         border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: none !important;
     }}
 
-    table.styled-table thead th {{
-        background: {table_header_bg};
-        color: white;
-        padding: 10px;
-        text-align: center;
+    table td, table th {{
+        color: {table_font} !important;
+        font-weight: 500;
     }}
 
-    table.styled-table tbody td:first-child {{
-        background: {table_left_col_bg};
-        color: white;
-        font-weight: bold;
-        text-align: center;
+    /* Button */
+    button[kind="primary"] {{
+        background-color: rgba(0,0,0,0.2) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 10px 16px !important;
+        font-size: 16px !important;
+        font-weight: 600;
+        transition: background-color 0.3s ease, transform 0.2s;
+    }}
+    button[kind="primary"]:hover {{
+        transform: scale(1.02);
+        background-color: rgba(255,255,255,0.2) !important;
     }}
 
-    table.styled-table tbody td:not(:first-child) {{
-        background: {table_other_col_bg};
-        text-align: center;
-        color: {table_text};
-        padding: 8px;
-    }}
-
-    table.styled-table tbody tr:hover td {{
-        background: {table_hover_bg} !important;
-        color: {"white" if dark_mode else "#000000"};
-        cursor: pointer;
-    }}
-
-    /* Responsive */
+    /* Responsif */
     @media (max-width: 768px) {{
-        table.styled-table {{
-            font-size: 14px;
-        }}
-        .list-fitur {{
-            font-size: 14px;
+        .css-10trblm, h1, h2, h3 {{
+            font-size: 1.4rem !important;
         }}
     }}
-</style>
+    </style>
 """, unsafe_allow_html=True)
-
-# ------------------ FUNGSI RENDER TABEL ------------------
-def render_styled_table(df):
-    return df.to_html(classes='styled-table', index=False, escape=False)
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
