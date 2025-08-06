@@ -26,92 +26,111 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ------------------ DARK MODE TOGGLE ------------------
-dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
+# Toggle Dark Mode
+# ---------------------------
+st.sidebar.markdown("## Pengaturan Tampilan")
+dark_mode = st.sidebar.toggle("Dark Mode 🌙", value=False)
 
-# ------------------ WARNA & GRADIENT ------------------
-if dark_mode:
-    # Mode Gelap
-    bg_main = "linear-gradient(to bottom right, #0d47a1, #1976d2)"  # Biru tua gradasi
-    bg_sidebar = "linear-gradient(to bottom right, #aed581, #7cb342)"  # Hijau padi gradasi
-    list_bg = "#000000"  # Hitam
-    list_font = "#ffffff"  # Putih
-    table_gradient = "linear-gradient(to right, #0d47a1, #aed581)"
-    table_font = "#ffffff"
-else:
-    # Mode Terang
-    bg_main = "linear-gradient(to bottom right, #aed581, #7cb342)"  # Hijau padi gradasi
-    bg_sidebar = "linear-gradient(to bottom right, #0d47a1, #1976d2)"  # Biru tua gradasi
-    list_bg = "#ffffff"  # Putih
-    list_font = "#000000"  # Hitam
-    table_gradient = "linear-gradient(to right, #0d47a1, #aed581)"
-    table_font = "#000000"
+# ---------------------------
+# Definisi Warna Berdasarkan Mode
+# ---------------------------
+bg_main = "linear-gradient(135deg, #2c3e50, #4ca1af)" if dark_mode else "linear-gradient(135deg, #ffffff, #e0eafc)"
+coord_left_bg = "#1c1c1c" if dark_mode else "#f5f5f5"
+list_bg = "#333" if dark_mode else "#ffffff"
+list_text = "#ffffff" if dark_mode else "#333333"
+table_header_bg = "#4ca1af"
+table_left_col_bg = "#2c3e50"
+table_other_col_bg = "#ffffff" if not dark_mode else "#555555"
+table_text = "#000000" if not dark_mode else "#ffffff"
+table_hover_bg = "#b0d4ff" if not dark_mode else "#666666"
 
-# ------------------ CSS DINAMIS ------------------
+# ---------------------------
+# Inject CSS Kustom
+# ---------------------------
 st.markdown(f"""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-    html, body, [class*="css"] {{
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }}
+html, body, .main {{
+    font-family: 'Inter', sans-serif;
+    background: {bg_main} !important;
+    color: {list_text if not dark_mode else "#ffffff"} !important;
+    transition: all 0.3s ease;
+}}
 
-    /* Background Main */
-    .main {{
-        background: {bg_main} !important;
-        min-height: 100vh;
-    }}
+section[data-testid="stSidebar"] > div:first-child {{
+    background: {coord_left_bg} !important;
+    color: white !important;
+    padding: 15px;
+    border-radius: 10px;
+}}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {{
-        background: {bg_sidebar} !important;
-        color: {list_font} !important;
-    }}
+.list-fitur {{
+    background: {list_bg};
+    color: {list_text};
+    padding: 15px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}}
 
-    /* List Container */
-    .css-1v0mbdj, .stMarkdown, .stText {{
-        background-color: {list_bg} !important;
-        color: {list_font} !important;
+.list-fitur:hover {{
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}}
+
+table.styled-table {{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+    color: {table_text};
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}}
+
+table.styled-table thead th {{
+    background: {table_header_bg};
+    color: white;
+    padding: 10px;
+    text-align: center;
+}}
+
+table.styled-table tbody td:first-child {{
+    background: {table_left_col_bg};
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}}
+
+table.styled-table tbody td:not(:first-child) {{
+    background: {table_other_col_bg};
+    text-align: center;
+    color: {table_text};
+    padding: 8px;
+}}
+
+table.styled-table tbody tr:hover td {{
+    background: {table_hover_bg} !important;
+    color: {"white" if dark_mode else "#000000"};
+    cursor: pointer;
+}}
+
+@media only screen and (max-width: 768px) {{
+    .list-fitur {{
+        font-size: 14px;
         padding: 10px;
-        border-radius: 8px;
     }}
-
-    /* Tabel */
-    .stDataFrame, .dataframe {{
-        background: {table_gradient} !important;
-        color: {table_font} !important;
-        border-radius: 8px;
-        border: none !important;
+    table.styled-table {{
+        font-size: 13px;
     }}
-
-    table td, table th {{
-        color: {table_font} !important;
-        font-weight: 500;
+    section[data-testid="stSidebar"] > div:first-child {{
+        padding: 10px;
     }}
-
-    /* Button */
-    button[kind="primary"] {{
-        background-color: rgba(0,0,0,0.2) !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        font-size: 16px !important;
-        font-weight: 600;
-        transition: background-color 0.3s ease, transform 0.2s;
-    }}
-    button[kind="primary"]:hover {{
-        transform: scale(1.02);
-        background-color: rgba(255,255,255,0.2) !important;
-    }}
-
-    /* Responsif */
-    @media (max-width: 768px) {{
-        .css-10trblm, h1, h2, h3 {{
-            font-size: 1.4rem !important;
-        }}
-    }}
-    </style>
+}}
+</style>
 """, unsafe_allow_html=True)
     
 # ------------------ INPUT KOORDINAT ------------------
