@@ -9,6 +9,7 @@ from sklearn.linear_model import LinearRegression
 from io import BytesIO
 import base64
 from datetime import datetime as dt
+from datetime import datetime
 UPLOAD_DIR = "uploads"
 LAPORAN_FILE = "laporan_warga.json"
 import pytz
