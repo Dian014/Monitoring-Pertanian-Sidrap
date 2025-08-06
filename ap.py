@@ -35,31 +35,27 @@ COLOR_HIJAU_PADI = "#d8f3dc"
 COLOR_BIRU_TUA = "#1b263b"
 COLOR_BIRU_MUDA = "#a8dadc"
 COLOR_PUTIH = "#ffffff"
-COLOR_HITAM = "#000000"
-COLOR_LIST_FONT_DARK = "#ffffff"
-COLOR_LIST_FONT_LIGHT = "#000000"
+COLOR_HITAM_LEMBUT = "#1c1c1e"  # pengganti hitam murni
 
 # ------------------ Berdasarkan Mode ------------------
 if st.session_state.dark_mode:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_BIRU_TUA} 75%, {COLOR_BIRU_MUDA} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_BIRU_TUA}, {COLOR_BIRU_MUDA})"
     FONT_COLOR = COLOR_PUTIH
-    INPUT_BG = "#2b2b2b"
+    INPUT_BG = "#2e2e2e"
     INPUT_FONT = COLOR_PUTIH
-    EXPANDER_BG = "#1e1e1e"
+    EXPANDER_BG = "#232323"
     TABLE_BG = "#2a2a2a"
-    HOVER_BG = "#333333"
-    LIST_FONT = COLOR_LIST_FONT_DARK
+    HOVER_BG = "#3a3a3a"
 else:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
-    FONT_COLOR = COLOR_HITAM
+    FONT_COLOR = COLOR_HITAM_LEMBUT
     INPUT_BG = COLOR_PUTIH
-    INPUT_FONT = COLOR_HITAM
+    INPUT_FONT = COLOR_HITAM_LEMBUT
     EXPANDER_BG = "#f9f9f9"
     TABLE_BG = "#ffffff"
     HOVER_BG = "#f0f0f0"
-    LIST_FONT = COLOR_LIST_FONT_LIGHT
 
 # ------------------ CSS ------------------
 st.markdown(f"""
@@ -88,7 +84,6 @@ input:focus, textarea:focus, select:focus {{
     outline: none;
 }}
 
-/* Expander */
 div[data-testid="stExpander"] {{
     background: {EXPANDER_BG} !important;
     border-radius: 10px;
@@ -101,41 +96,36 @@ div[data-testid="stExpander"] > details > summary {{
     font-weight: bold;
 }}
 
-/* File uploader */
 section div[data-testid="stFileUploaderDropzone"] {{
     background-color: {HOVER_BG} !important;
     border: 2px dashed #aaa !important;
     color: {FONT_COLOR} !important;
 }}
 
-/* Table */
 .stApp .dataframe, .stApp .stDataFrame, .stApp .stTable {{
     background-color: {TABLE_BG} !important;
     color: {FONT_COLOR} !important;
 }}
+
 .stApp .dataframe td, .stApp .dataframe th,
 .stApp .stDataFrame td, .stApp .stDataFrame th {{
     color: {FONT_COLOR} !important;
 }}
 
-/* Text */
 .stApp div, .stApp span, .stApp label, .stApp p,
 .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp h5, .stApp h6 {{
     color: {FONT_COLOR} !important;
 }}
 
-/* Placeholder */
 ::placeholder {{
     color: #bbbbbb !important;
 }}
 
-/* Selectbox */
 .stSelectbox div[data-baseweb="select"] > div {{
     background-color: {INPUT_BG} !important;
     color: {INPUT_FONT} !important;
 }}
 
-/* Form */
 div[data-testid="stForm"] {{
     background-color: {EXPANDER_BG} !important;
     border: 1px solid #555 !important;
@@ -143,25 +133,24 @@ div[data-testid="stForm"] {{
     padding: 12px;
 }}
 
-/* Checkbox */
 .stApp .stCheckbox label {{
     color: {FONT_COLOR} !important;
 }}
 
-/* Cursor */
 input, textarea {{
     caret-color: {FONT_COLOR} !important;
 }}
 
-/* Dropdown list / popover */
+/* Popover, dropdown, list option */
 [data-baseweb="popover"], [role="listbox"] {{
     background-color: {HOVER_BG} !important;
-    color: {LIST_FONT} !important;
+    color: {FONT_COLOR} !important;
     border: 1px solid #777;
 }}
 [data-baseweb="popover"] * {{
-    color: {LIST_FONT} !important;
+    color: {FONT_COLOR} !important;
 }}
+
 </style>
 """, unsafe_allow_html=True)
 
