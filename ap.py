@@ -21,6 +21,8 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
+import streamlit as st
+
 st.set_page_config(
     page_title="Dashboard Pertanian",
     layout="wide"
@@ -35,7 +37,7 @@ COLOR_HIJAU_PADI = "#d8f3dc"
 COLOR_BIRU_TUA = "#1b263b"
 COLOR_BIRU_MUDA = "#a8dadc"
 COLOR_PUTIH = "#ffffff"
-COLOR_HITAM_LEMBUT = "#1c1c1e"  # pengganti hitam murni
+COLOR_HITAM_LEMBUT = "#1c1c1e"
 
 # ------------------ Berdasarkan Mode ------------------
 if st.session_state.dark_mode:
@@ -47,6 +49,8 @@ if st.session_state.dark_mode:
     EXPANDER_BG = "#232323"
     TABLE_BG = "#2a2a2a"
     HOVER_BG = "#3a3a3a"
+    BORDER_COLOR = "#444"
+    PLACEHOLDER_COLOR = "#aaaaaa"
 else:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
@@ -56,6 +60,8 @@ else:
     EXPANDER_BG = "#f9f9f9"
     TABLE_BG = "#ffffff"
     HOVER_BG = "#f0f0f0"
+    BORDER_COLOR = "#ccc"
+    PLACEHOLDER_COLOR = "#666666"
 
 # ------------------ CSS ------------------
 st.markdown(f"""
@@ -73,21 +79,29 @@ section[data-testid="stSidebar"] * {{
     color: {FONT_COLOR} !important;
 }}
 
-input, textarea, select {{
+input, textarea, select, button, .stButton button {{
     background-color: {INPUT_BG} !important;
     color: {INPUT_FONT} !important;
-    border: 1px solid #999;
-    border-radius: 6px;
+    border: 1px solid {BORDER_COLOR} !important;
+    border-radius: 6px !important;
 }}
 input:focus, textarea:focus, select:focus {{
     border: 1px solid #66AFE9 !important;
     outline: none;
 }}
 
+.stTextInput > div > div > input,
+.stTextArea textarea,
+.stSelectbox div[data-baseweb="select"],
+.stMultiSelect div[data-baseweb="select"] {{
+    background-color: {INPUT_BG} !important;
+    color: {INPUT_FONT} !important;
+}}
+
 div[data-testid="stExpander"] {{
     background: {EXPANDER_BG} !important;
     border-radius: 10px;
-    border: 1px solid #555;
+    border: 1px solid {BORDER_COLOR};
     padding: 12px;
     color: {FONT_COLOR} !important;
 }}
@@ -98,7 +112,7 @@ div[data-testid="stExpander"] > details > summary {{
 
 section div[data-testid="stFileUploaderDropzone"] {{
     background-color: {HOVER_BG} !important;
-    border: 2px dashed #aaa !important;
+    border: 2px dashed {BORDER_COLOR} !important;
     color: {FONT_COLOR} !important;
 }}
 
@@ -118,37 +132,49 @@ section div[data-testid="stFileUploaderDropzone"] {{
 }}
 
 ::placeholder {{
-    color: #bbbbbb !important;
+    color: {PLACEHOLDER_COLOR} !important;
 }}
 
-.stSelectbox div[data-baseweb="select"] > div {{
+.stSelectbox div[data-baseweb="select"] > div,
+.stMultiSelect div[data-baseweb="select"] > div {{
     background-color: {INPUT_BG} !important;
     color: {INPUT_FONT} !important;
 }}
 
-div[data-testid="stForm"] {{
-    background-color: {EXPANDER_BG} !important;
-    border: 1px solid #555 !important;
-    border-radius: 10px;
-    padding: 12px;
-}}
-
-.stApp .stCheckbox label {{
-    color: {FONT_COLOR} !important;
-}}
-
-input, textarea {{
-    caret-color: {FONT_COLOR} !important;
-}}
-
-/* Popover, dropdown, list option */
-[data-baseweb="popover"], [role="listbox"] {{
+[data-baseweb="popover"], [role="listbox"], [data-baseweb="menu"] {{
     background-color: {HOVER_BG} !important;
     color: {FONT_COLOR} !important;
-    border: 1px solid #777;
+    border: 1px solid {BORDER_COLOR};
 }}
-[data-baseweb="popover"] * {{
+[data-baseweb="popover"] *, [role="listbox"] *, [data-baseweb="menu"] * {{
     color: {FONT_COLOR} !important;
+}}
+
+.stApp .stCheckbox label,
+.stRadio label, .stRadio div[role="radiogroup"] label {{
+    color: {FONT_COLOR} !important;
+}}
+
+.stApp svg {{
+    fill: {FONT_COLOR} !important;
+    color: {FONT_COLOR} !important;
+}}
+
+.stMarkdown a {{
+    color: #aadfff !important;
+}}
+
+.stApp .stAlert, .stApp .stException {{
+    background-color: {EXPANDER_BG} !important;
+    color: {FONT_COLOR} !important;
+}}
+
+::-webkit-scrollbar {{
+    width: 10px;
+}}
+::-webkit-scrollbar-thumb {{
+    background-color: {HOVER_BG};
+    border-radius: 10px;
 }}
 
 </style>
