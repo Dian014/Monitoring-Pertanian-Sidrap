@@ -47,7 +47,7 @@ LIGHT_THEME = {
     "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
     "font": COLOR_HITAM,
     "table_font": COLOR_HITAM,
-    "table_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR, COLOR_HIJAU_PADI, COLOR_PUTIH], direction="to bottom right"),
 }
 
 # Tema gelap
@@ -56,7 +56,7 @@ DARK_THEME = {
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
     "font": COLOR_PUTIH,
     "table_font": COLOR_PUTIH,
-    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR, COLOR_HIJAU_PADI, COLOR_PUTIH], direction="to bottom right"),
 }
 
 # Pilih tema berdasarkan checkbox
@@ -86,6 +86,11 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {{
+            color: {theme['font']} !important;
+        }}
+
         /* Expander */
         div[data-testid="stExpander"] {{
             background: {theme['table_bg']} !important;
@@ -104,6 +109,7 @@ st.markdown(f"""
         .stTable td, .stDataFrame td {{
             color: {theme['table_font']} !important;
             background: transparent !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }}
 
         /* Tabel HTML kustom */
@@ -122,6 +128,7 @@ st.markdown(f"""
             padding: 12px 15px;
             text-align: left;
             background: transparent;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }}
         .custom-html-table th {{
             background-color: rgba(255,255,255,0.12);
@@ -136,7 +143,6 @@ st.markdown(f"""
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
-
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
