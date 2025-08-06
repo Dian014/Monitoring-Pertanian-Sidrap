@@ -57,7 +57,7 @@ else:
     TABLE_BG = "#ffffff"
     TABLE_FONT = COLOR_HITAM
 
-# ------------------ CSS Styling ------------------
+# ------------------ CSS Styling Utama ------------------
 st.markdown(f"""
 <style>
 html, body, .stApp {{
@@ -98,16 +98,6 @@ div[data-testid="stExpander"] > details > summary {{
     font-weight: bold;
 }}
 
-/* Upload area fix */
-section div[data-testid="stFileUploaderDropzone"] {{
-    background-color: #333 !important;
-    border: 2px dashed #999 !important;
-    color: {FONT_COLOR} !important;
-}}
-section div[data-testid="stFileUploaderDropzone"] * {{
-    color: {FONT_COLOR} !important;
-}}
-
 /* Table styling */
 .stApp .dataframe, 
 .stApp .stDataFrame, 
@@ -124,6 +114,11 @@ section div[data-testid="stFileUploaderDropzone"] * {{
     color: {TABLE_FONT} !important;
 }}
 
+/* Placeholder text */
+::placeholder {{
+    color: #bbbbbb !important;
+}}
+
 /* All other texts */
 .stApp div, .stApp span, .stApp label, .stApp p, 
 .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
@@ -131,18 +126,7 @@ section div[data-testid="stFileUploaderDropzone"] * {{
     color: {FONT_COLOR} !important;
 }}
 
-/* Placeholder text */
-::placeholder {{
-    color: #bbbbbb !important;
-}}
-
-/* Selectbox fix */
-.stSelectbox div[data-baseweb="select"] > div {{
-    background-color: {INPUT_BG} !important;
-    color: {INPUT_FONT} !important;
-}}
-
-/* Form container styling */
+/* Form container */
 div[data-testid="stForm"] {{
     background: #222 !important;
     border: 1px solid #555 !important;
@@ -159,6 +143,50 @@ div[data-testid="stForm"] {{
 input, textarea {{
     caret-color: #ffffff !important;
 }}
+</style>
+""", unsafe_allow_html=True)
+
+# ------------------ PATCH CSS Khusus: Dropdown, Upload, Listbox Fix ------------------
+st.markdown("""
+<style>
+/* Dropdown menu */
+div[data-baseweb="menu"] {
+    background-color: #2b2b2b !important;
+    color: white !important;
+}
+div[data-baseweb="menu"] div {
+    color: white !important;
+}
+
+/* Selectbox field */
+div[data-baseweb="select"] {
+    background-color: #2b2b2b !important;
+    color: white !important;
+}
+
+/* Multiselect tags */
+div[data-baseweb="tag"] {
+    background-color: #2b2b2b !important;
+    color: white !important;
+}
+
+/* FileUploader text & icon */
+section div[data-testid="stFileUploaderDropzone"] {
+    background-color: #2b2b2b !important;
+    border: 2px dashed #999 !important;
+}
+section div[data-testid="stFileUploaderDropzone"] * {
+    color: white !important;
+}
+
+/* Listbox items */
+ul[role="listbox"] > li {
+    color: white !important;
+    background-color: #2b2b2b !important;
+}
+ul[role="listbox"] > li:hover {
+    background-color: #3a3a3a !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
