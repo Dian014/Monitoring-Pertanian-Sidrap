@@ -20,124 +20,79 @@ from PIL import Image
 from rapidfuzz import process, fuzz
 
 # ------------------ KONFIGURASI AWAL ------------------
+# ---------------------- Konfigurasi Awal ----------------------
 st.set_page_config(
-    page_title="Sistem Pertanian Cerdas - Kabupaten Sidenreng Rappang",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Dashboard Pertanian Cerdas",
+    layout="wide"
 )
 
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
 
-# Toggle mode (simulasi): Ganti ini sesuai setting di app kamu
-dark_mode = st.toggle("Mode Gelap")  # Atau ambil dari config/themes
+# ---------------------- Fungsi Gradasi ----------------------
+def gradient_css(colors, direction="to bottom right"):
+    return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna dan gradasi
-if dark_mode:
-    bg_main = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"  # Biru tua gradasi
-    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"        # Hijau padi gradasi
-    list_bg = "#000000"
-    list_text = "#ffffff"
-    table_text = "#ffffff"
-    table_header_bg = "linear-gradient(90deg, #0f2027, #56ab2f)"
-    table_left_col = "linear-gradient(90deg, #56ab2f, #0f2027)"
-    table_other_col = "#1a1a1a"
-    table_hover = "#333333"
-else:
-    bg_main = "linear-gradient(135deg, #d4fc79, #96e6a1)"            # Hijau padi gradasi
-    sidebar_bg = "linear-gradient(135deg, #1e3c72, #2a5298)"        # Biru tua gradasi
-    list_bg = "#d0f0ff"  # Biru air
-    list_text = "#000000"
-    table_text = "#000000"
-    table_header_bg = "linear-gradient(90deg, #1e3c72, #a8e063)"
-    table_left_col = "linear-gradient(90deg, #a8e063, #1e3c72)"
-    table_other_col = "#ffffff"
-    table_hover = "#e0f7fa"
+# ---------------------- Warna Tema ----------------------
+LIGHT_THEME = {
+    "sidebar_bg": gradient_css(["#0A2647", "#144272"]),
+    "main_bg": gradient_css(["#DFF5E1", "#CFF5B2"]),
+    "list_bg": "#B6E2D3",
+    "list_font": "black",
+    "table_font": "black",
+    "table_bg": gradient_css(["#0A2647", "#CFF5B2"]),
+}
 
-# Inject CSS
+DARK_THEME = {
+    "sidebar_bg": gradient_css(["#CFF5B2", "#B7E5B4"]),
+    "main_bg": gradient_css(["#0A2647", "#144272"]),
+    "list_bg": "#222222",
+    "list_font": "white",
+    "table_font": "white",
+    "table_bg": gradient_css(["#0A2647", "#CFF5B2"]),
+}
+
+theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
+
+# ---------------------- CSS Styling ----------------------
 st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
-/* Global font & body background */
-html, body, .main {{
-    font-family: 'Inter', sans-serif;
-    background: {bg_main} !important;
-    color: {list_text};
-    transition: all 0.5s ease;
-}}
-
-/* Sidebar styling */
-section[data-testid="stSidebar"] > div:first-child {{
-    background: {sidebar_bg};
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
-}}
-
-/* Expander list fitur */
-.list-fitur {{
-    background: {list_bg};
-    color: {list_text};
-    padding: 18px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}}
-.list-fitur:hover {{
-    transform: scale(1.02);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}}
-
-/* Tabel styling */
-table.styled-table {{
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 16px;
-    color: {table_text};
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}}
-table.styled-table thead th {{
-    background: {table_header_bg};
-    color: white;
-    padding: 10px;
-    text-align: center;
-}}
-table.styled-table tbody td:first-child {{
-    background: {table_left_col};
-    color: white;
-    font-weight: bold;
-    text-align: center;
-    padding: 8px;
-}}
-table.styled-table tbody td:not(:first-child) {{
-    background: {table_other_col};
-    text-align: center;
-    color: {table_text};
-    padding: 8px;
-}}
-table.styled-table tbody tr:hover td {{
-    background: {table_hover} !important;
-    color: {list_text};
-    cursor: pointer;
-}}
-
-/* Responsif untuk HP */
-@media only screen and (max-width: 768px) {{
-    .list-fitur {{
-        font-size: 14px;
-        padding: 12px;
-    }}
-    table.styled-table {{
-        font-size: 13px;
-    }}
-    section[data-testid="stSidebar"] > div:first-child {{
-        padding: 15px;
-    }}
-}}
-</style>
+    <style>
+        .stApp {{
+            background: {theme['main_bg']};
+            color: {theme['list_font']};
+        }}
+        section[data-testid="stSidebar"] > div {{
+            background: {theme['sidebar_bg']};
+        }}
+        div[data-testid="stExpander"] {{
+            background-color: {theme['list_bg']} !important;
+            color: {theme['list_font']} !important;
+            border-radius: 8px;
+        }}
+        .css-1xarl3l {{
+            color: {theme['list_font']} !important;
+        }}
+        thead tr th {{
+            background: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
+        }}
+        tbody tr td {{
+            background: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
+        }}
+    </style>
 """, unsafe_allow_html=True)
+
+# ---------------------- Sidebar ----------------------
+with st.sidebar:
+    st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
+    st.write("Latitude")
+    lat = st.number_input("Latitude", value=-3.921406, label_visibility="collapsed")
+    st.write("Longitude")
+    lon = st.number_input("Longitude", value=119.772731, label_visibility="collapsed")
+    st.write("Batas Curah Hujan untuk Irigasi (mm):")
+    st.slider("Curah Hujan", min_value=0, max_value=50, value=5, label_visibility="collapsed")
+
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
