@@ -26,9 +26,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ------------------ TAMPILAN KUSTOM CSS ------------------
-
-# ------------------ DARK MODE TOGGLE ------------------
+# ------------------ CONTROLLER DARK MODE ------------------
 dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
 # ------------------ WARNA DAN CSS ------------------
@@ -139,11 +137,10 @@ st.markdown(f"""
         transform: scale(1.05);
         transition: 0.3s ease;
     }}
-
 </style>
 """, unsafe_allow_html=True)
 
-# Fungsi untuk membuat tabel HTML dengan styling
+# ------------------ FUNGSI RENDER TABEL ------------------
 def render_styled_table(dataframe):
     styles = """
     <style>
@@ -178,11 +175,18 @@ def render_styled_table(dataframe):
         }
     </style>
     """
-
     html = dataframe.to_html(classes='styled-table', index=False)
     return styles + html
 
-# Render dan tampilkan tabel HTML yang sudah distyling
+# ------------------ CONTOH DATAFRAME ------------------
+df = pd.DataFrame({
+    'Produk': ['Pupuk', 'Laptop', 'HP', 'Traktor', 'Bibit Padi'],
+    'Jumlah': [100, 50, 75, 10, 200],
+    'Kategori': ['Pertanian', 'Elektronik', 'Elektronik', 'Pertanian', 'Pertanian'],
+    'Harga Satuan': ['Rp50.000', 'Rp7.000.000', 'Rp2.500.000', 'Rp150.000.000', 'Rp5.000']
+})
+
+# ------------------ TAMPILKAN TABEL ------------------
 st.markdown(render_styled_table(df), unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
