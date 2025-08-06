@@ -186,15 +186,6 @@ def render_styled_table(df):
     html = df.to_html(classes='styled-table', index=False)
     return html
 
-# ------------------ KONTEN UTAMA ------------------
-
-# Contoh konten sidebar koordinat & isi koordinat (sesuaikan dengan kebutuhanmu)
-st.markdown('<div class="coord-left">Koordinat Lokasi</div>', unsafe_allow_html=True)
-st.markdown('<div class="coord-content">Latitude: -5.406<br>Longitude: 119.444</div>', unsafe_allow_html=True)
-
-# Contoh list fitur
-st.markdown('<div class="list-fitur">- Fitur 1<br>- Fitur 2<br>- Fitur 3</div>', unsafe_allow_html=True)
-
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
 LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
