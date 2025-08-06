@@ -26,111 +26,108 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Toggle Dark Mode
-# ---------------------------
-st.sidebar.markdown("## Pengaturan Tampilan")
-dark_mode = st.sidebar.toggle("Dark Mode 🌙", value=False)
+# Dark mode toggle
+dark_mode = st.sidebar.checkbox("🌙 Dark Mode")
 
-# ---------------------------
-# Definisi Warna Berdasarkan Mode
-# ---------------------------
-bg_main = "linear-gradient(135deg, #2c3e50, #4ca1af)" if dark_mode else "linear-gradient(135deg, #ffffff, #e0eafc)"
-coord_left_bg = "#1c1c1c" if dark_mode else "#f5f5f5"
-list_bg = "#333" if dark_mode else "#ffffff"
-list_text = "#ffffff" if dark_mode else "#333333"
-table_header_bg = "#4ca1af"
-table_left_col_bg = "#2c3e50"
-table_other_col_bg = "#ffffff" if not dark_mode else "#555555"
-table_text = "#000000" if not dark_mode else "#ffffff"
-table_hover_bg = "#b0d4ff" if not dark_mode else "#666666"
+# Konfigurasi warna berdasarkan mode
+if dark_mode:
+    bg_main = "linear-gradient(135deg, #0f2027, #203a43, #2c5364)"  # Biru tua gradasi
+    sidebar_bg = "linear-gradient(135deg, #a8e063, #56ab2f)"        # Hijau padi gradasi
+    list_bg = "linear-gradient(135deg, #000000, #1c1c1c)"           # List fitur gelap
+    list_text = "#ffffff"
+    table_text = "#ffffff"
+else:
+    bg_main = "linear-gradient(135deg, #e0f7da, #a5d6a7)"           # Hijau padi gradasi
+    sidebar_bg = "linear-gradient(135deg, #283c86, #45a247)"        # Biru tua gradasi
+    list_bg = "linear-gradient(135deg, #e0ffff, #b2ebf2)"           # List fitur terang
+    list_text = "#000000"
+    table_text = "#000000"
 
-# ---------------------------
-# Inject CSS Kustom
-# ---------------------------
+# Warna tabel (gradasi sama untuk kedua mode)
+table_header_bg = "linear-gradient(135deg, #0f2027, #2c5364)"
+table_left_col_bg = "linear-gradient(135deg, #2c5364, #a8e063)"
+table_other_col_bg = "#ffffff80" if not dark_mode else "#00000080"
+table_hover_bg = "#90caf9" if not dark_mode else "#3949ab"
+
+# Inject CSS
 st.markdown(f"""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-html, body, .main {{
-    font-family: 'Inter', sans-serif;
-    background: {bg_main} !important;
-    color: {list_text if not dark_mode else "#ffffff"} !important;
-    transition: all 0.3s ease;
-}}
-
-section[data-testid="stSidebar"] > div:first-child {{
-    background: {coord_left_bg} !important;
-    color: white !important;
-    padding: 15px;
-    border-radius: 10px;
-}}
-
-.list-fitur {{
-    background: {list_bg};
-    color: {list_text};
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}}
-
-.list-fitur:hover {{
-    transform: scale(1.02);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-}}
-
-table.styled-table {{
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 16px;
-    color: {table_text};
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}}
-
-table.styled-table thead th {{
-    background: {table_header_bg};
-    color: white;
-    padding: 10px;
-    text-align: center;
-}}
-
-table.styled-table tbody td:first-child {{
-    background: {table_left_col_bg};
-    color: white;
-    font-weight: bold;
-    text-align: center;
-}}
-
-table.styled-table tbody td:not(:first-child) {{
-    background: {table_other_col_bg};
-    text-align: center;
-    color: {table_text};
-    padding: 8px;
-}}
-
-table.styled-table tbody tr:hover td {{
-    background: {table_hover_bg} !important;
-    color: {"white" if dark_mode else "#000000"};
-    cursor: pointer;
-}}
-
-@media only screen and (max-width: 768px) {{
-    .list-fitur {{
-        font-size: 14px;
-        padding: 10px;
+    <style>
+    html, body, .main {{
+        background: {bg_main};
+        font-family: 'Inter', sans-serif;
+        color: {list_text};
+        transition: all 0.3s ease;
     }}
-    table.styled-table {{
-        font-size: 13px;
-    }}
+
     section[data-testid="stSidebar"] > div:first-child {{
-        padding: 10px;
+        background: {sidebar_bg};
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
     }}
-}}
-</style>
+
+    .custom-list {{
+        background: {list_bg};
+        color: {list_text};
+        padding: 20px;
+        border-radius: 12px;
+        font-size: 16px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    }}
+
+    .custom-list:hover {{
+        transform: scale(1.01);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }}
+
+    table.custom-table {{
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+        margin-top: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }}
+
+    table.custom-table th {{
+        background: {table_header_bg};
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }}
+
+    table.custom-table td:first-child {{
+        background: {table_left_col_bg};
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }}
+
+    table.custom-table td {{
+        background: {table_other_col_bg};
+        padding: 10px;
+        color: {table_text};
+        text-align: center;
+    }}
+
+    table.custom-table tr:hover td {{
+        background: {table_hover_bg};
+        color: black;
+        cursor: pointer;
+    }}
+
+    /* Responsif */
+    @media only screen and (max-width: 768px) {{
+        .custom-list {{
+            font-size: 14px;
+            padding: 12px;
+        }}
+        table.custom-table {{
+            font-size: 13px;
+        }}
+    }}
+    </style>
 """, unsafe_allow_html=True)
     
 # ------------------ INPUT KOORDINAT ------------------
