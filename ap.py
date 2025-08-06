@@ -26,46 +26,47 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Deteksi atau Simpan Mode ----------------------
+# ---------------------- Deteksi Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Warna & Gradasi ----------------------
+# ---------------------- Warna ----------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Palet warna
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
+COLOR_BIRU_NAVY = "#102040"
 COLOR_HIJAU_TERANG = "#CFF5B2"
 COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
-# Tema terang
+# Tema utama (gelap & terang)
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
     "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
-    "input_bg": COLOR_PUTIH,
+    "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
-    "table_bg": COLOR_HIJAU_LEMBUT,
-    "table_font": COLOR_HITAM
 }
 
-# Tema gelap
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
-    "main_bg": COLOR_BIRU_TUA,
+    "main_bg": COLOR_BIRU_NAVY,
     "font": COLOR_PUTIH,
     "input_bg": "#1A2B4C",
     "input_font": COLOR_PUTIH,
-    "table_bg": "#1A2B4C",
-    "table_font": COLOR_PUTIH
 }
 
-# Pilih tema berdasarkan checkbox
+# Tema tabel SELALU tetap
+TABLE_THEME = {
+    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
+    "table_font": COLOR_HITAM
+}
+
+# Pilih tema
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
@@ -79,49 +80,43 @@ st.markdown(f"""
         /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
-            color: {theme['font']};
         }}
         section[data-testid="stSidebar"] * {{
             color: {theme['font']} !important;
         }}
 
-        /* Input Sidebar */
-        section[data-testid="stSidebar"] input,
-        section[data-testid="stSidebar"] textarea,
-        section[data-testid="stSidebar"] select {{
+        /* Semua input */
+        input, textarea, select {{
             background-color: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
         }}
 
-        /* Slider */
+        /* Placeholder dan label */
+        ::placeholder {{
+            color: {theme['input_font']} !important;
+            opacity: 1;
+        }}
+        label, span, div[role="textbox"] {{
+            color: {theme['input_font']} !important;
+        }}
+
+        /* Slider label */
         .stSlider > div {{
             color: {theme['font']} !important;
         }}
 
-        /* Expander */
+        /* Expander (untuk kotak di dalam halaman) */
         div[data-testid="stExpander"] {{
-            background: {theme['table_bg']};
-            color: {theme['table_font']};
+            background: {theme['input_bg']} !important;
+            color: {theme['input_font']} !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
-        /* st.table dan st.dataframe */
-        .stTable, .stDataFrame {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
-            border-radius: 10px;
-        }}
-        .stTable th, .stDataFrame th,
-        .stTable td, .stDataFrame td {{
-            color: {theme['table_font']} !important;
-            background: transparent !important;
-        }}
-
-        /* Tabel HTML kustom */
+        /* Tabel HTML kustom: SELALU kontras */
         .custom-html-table {{
-            background: {theme['table_bg']};
-            color: {theme['table_font']};
+            background: {TABLE_THEME['table_bg']};
+            color: {TABLE_THEME['table_font']};
             border-collapse: collapse;
             width: 100%;
             border-radius: 12px;
@@ -133,13 +128,14 @@ st.markdown(f"""
             border: 1px solid rgba(0,0,0,0.2);
             padding: 12px 15px;
             text-align: left;
+            background: transparent;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.15);
+            background-color: rgba(255,255,255,0.2);
             font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.08);
+            background-color: rgba(255,255,255,0.15);
         }}
     </style>
 """, unsafe_allow_html=True)
