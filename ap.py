@@ -19,7 +19,6 @@ import os
 from PIL import Image
 from rapidfuzz import process, fuzz
 
-# ------------------ KONFIGURASI AWAL ------------------
 # ---------------------- Konfigurasi Awal ----------------------
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
@@ -63,6 +62,13 @@ st.markdown(f"""
         }}
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
+            color: {theme['list_font']};
+        }}
+        section[data-testid="stSidebar"] label, 
+        section[data-testid="stSidebar"] input, 
+        section[data-testid="stSidebar"] span, 
+        section[data-testid="stSidebar"] .stSlider {{
+            color: {theme['list_font']} !important;
         }}
         div[data-testid="stExpander"] {{
             background-color: {theme['list_bg']} !important;
@@ -86,13 +92,9 @@ st.markdown(f"""
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
-    st.write("Latitude")
-    lat = st.number_input("Latitude", value=-3.921406, label_visibility="collapsed")
-    st.write("Longitude")
-    lon = st.number_input("Longitude", value=119.772731, label_visibility="collapsed")
-    st.write("Batas Curah Hujan untuk Irigasi (mm):")
-    st.slider("Curah Hujan", min_value=0, max_value=50, value=5, label_visibility="collapsed")
-
+    lat = st.number_input("Latitude", value=-3.921406)
+    lon = st.number_input("Longitude", value=119.772731)
+    st.slider("Batas Curah Hujan untuk Irigasi (mm):", min_value=0, max_value=50, value=5)
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
