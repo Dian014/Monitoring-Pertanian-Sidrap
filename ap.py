@@ -26,142 +26,68 @@ st.set_page_config(
     layout="wide"
 )
 
-# ------------------ Inisialisasi Dark Mode ------------------
+# ------------------ Dark Mode State ------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ------------------ Fungsi Gradasi ------------------
-def gradient_css(colors, direction="to right"):
-    return f"linear-gradient({direction}, {', '.join(colors)})"
-
-# ------------------ Warna Dasar ------------------
+# ------------------ Warna ------------------
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
-COLOR_BIRU_NAVY = "#102040"
-COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
-COLOR_HIJAU_TERANG = "#CFF5B2"
-COLOR_HIJAU_LEMBUT = "#E9FCD4"
-COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
-COLOR_GRAY_DARK = "#2A2A2A"
 
-# ------------------ Tema ------------------
 LIGHT_THEME = {
-    "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
+    "sidebar_bg": "#E9FCD4",
     "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
     "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
-    "input_focus_bg": "#FFFFFF",
-    "label_font": COLOR_HITAM,
     "placeholder": "rgba(0,0,0,0.6)"
 }
 
 DARK_THEME = {
-    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
-    "main_bg": COLOR_BIRU_NAVY,
+    "sidebar_bg": COLOR_BIRU_TUA,
+    "main_bg": COLOR_BIRU_MUDA,
     "font": COLOR_PUTIH,
-    "input_bg": COLOR_BIRU_INPUT_GRAD,
+    "input_bg": "#22334A",
     "input_font": COLOR_PUTIH,
-    "input_focus_bg": "#29476B",
-    "label_font": COLOR_PUTIH,
-    "placeholder": "rgba(255,255,255,0.8)"
-}
-
-TABLE_THEME = {
-    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
-    "table_font": COLOR_HITAM
+    "placeholder": "rgba(255,255,255,0.7)"
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
-# ------------------ CSS Styling ------------------
+# ------------------ CSS Styling Minimal ------------------
 st.markdown(f"""
 <style>
-/* Body background dan font */
+/* Main background and font */
 html, body, .stApp {{
-    background: {theme['main_bg']};
+    background-color: {theme['main_bg']};
     color: {theme['font']};
 }}
 
-/* Sidebar */
-section[data-testid="stSidebar"] > div {{
-    background: {theme['sidebar_bg']};
+/* Sidebar background and font */
+section[data-testid="stSidebar"] {{
+    background-color: {theme['sidebar_bg']};
 }}
 section[data-testid="stSidebar"] * {{
     color: {theme['font']} !important;
 }}
 
-/* Input fields */
+/* Inputs */
 input, textarea, select {{
-    background: {theme['input_bg']} !important;
-    color: {theme['input_font']} !important;
-    border: 1px solid rgba(200,200,200,0.4);
-    border-radius: 6px;
-}}
-
-/* Input focus */
-input:focus, textarea:focus, select:focus {{
-    background: {theme['input_focus_bg']} !important;
-    color: {theme['input_font']} !important;
-    border: 1px solid #66AFE9;
-    outline: none;
-}}
-
-/* Selectbox dropdown */
-div[role="combobox"] > div {{
-    background: {theme['input_focus_bg']} !important;
+    background-color: {theme['input_bg']} !important;
     color: {theme['input_font']} !important;
 }}
 
 /* Placeholder */
 ::placeholder {{
     color: {theme['placeholder']} !important;
-    opacity: 1 !important;
 }}
 
-/* Label dan teks di atas input */
-label, span, div[role="textbox"] {{
-    color: {theme['label_font']} !important;
-    font-weight: 500;
-}}
-
-/* Slider label */
-.stSlider > div {{
+/* Labels */
+label {{
     color: {theme['font']} !important;
-}}
-
-/* Expander */
-div[data-testid="stExpander"] {{
-    background: {theme['input_bg']} !important;
-    color: {theme['input_font']} !important;
-    border-radius: 10px;
-    padding: 10px;
-}}
-
-/* Tabel kustom */
-.custom-html-table {{
-    background: {TABLE_THEME['table_bg']};
-    color: {TABLE_THEME['table_font']};
-    border-collapse: collapse;
-    width: 100%;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    font-size: 16px;
-}}
-.custom-html-table th, .custom-html-table td {{
-    border: 1px solid rgba(0,0,0,0.2);
-    padding: 12px 15px;
-    text-align: left;
-}}
-.custom-html-table th {{
-    background-color: rgba(255,255,255,0.2);
-    font-weight: bold;
-}}
-.custom-html-table tbody tr:hover {{
-    background-color: rgba(255,255,255,0.1);
+    font-weight: 500;
 }}
 </style>
 """, unsafe_allow_html=True)
