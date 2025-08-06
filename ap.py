@@ -27,6 +27,12 @@ st.set_page_config(
 )
 
 # ---------------------- Mode ----------------------
+st.set_page_config(
+    page_title="Dashboard Pertanian Cerdas",
+    layout="wide"
+)
+
+# ---------------------- Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -34,28 +40,33 @@ if "dark_mode" not in st.session_state:
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna
+# Warna dasar
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_HIJAU_PADI = "#CFF5B2"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
-# Tema utama
+# Tema terang
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "main_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_PUTIH]),
-    "list_bg": gradient_css([COLOR_PUTIH, COLOR_BIRU_AIR]),
-    "list_font": COLOR_HITAM,
+    "main_bg": gradient_css([COLOR_HIJAU_PADI, "#EAF8DC"]),
+    "expander_bg": COLOR_PUTIH,
+    "expander_font": COLOR_HITAM,
     "font": COLOR_HITAM,
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_AIR]),
+    "table_font": COLOR_HITAM,
 }
 
+# Tema gelap
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
     "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "list_bg": gradient_css([COLOR_BIRU_AIR, "#144272"]),
-    "list_font": COLOR_PUTIH,
+    "expander_bg": gradient_css([COLOR_BIRU_AIR, COLOR_BIRU_TUA]),
+    "expander_font": COLOR_PUTIH,
     "font": COLOR_PUTIH,
+    "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI]),
+    "table_font": COLOR_PUTIH,
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
@@ -79,7 +90,7 @@ st.markdown(f"""
 
         /* Input Sidebar */
         section[data-testid="stSidebar"] .stNumberInput input,
-        section[data-testid="stSidebar"] .stTextInput input {{
+        section[data-testid="stSidebar'] .stTextInput input {{
             background-color: rgba(255,255,255,0.1);
             color: {theme['font']} !important;
         }}
@@ -89,31 +100,30 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
-        /* Expander / Card */
+        /* Expander / List */
         div[data-testid="stExpander"] {{
-            background: {theme['list_bg']} !important;
-            color: {theme['list_font']} !important;
+            background: {theme['expander_bg']} !important;
+            color: {theme['expander_font']} !important;
             border-radius: 10px;
             padding: 10px;
         }}
 
-        /* Tabel bawaan Streamlit */
+        /* st.table dan st.dataframe */
         .stTable, .stDataFrame {{
-            background: linear-gradient(to right, {COLOR_BIRU_TUA}, {COLOR_HIJAU_PADI}) !important;
-            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH} !important;
+            background: {theme['table_bg']} !important;
+            color: {theme['table_font']} !important;
             border-radius: 10px;
         }}
         .stTable th, .stDataFrame th,
         .stTable td, .stDataFrame td {{
-            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH} !important;
+            color: {theme['table_font']} !important;
             background: transparent !important;
-            text-shadow: 0 0 2px rgba(0,0,0,0.4);
         }}
 
-        /* Tabel HTML Custom - Gradasi sendiri */
+        /* Tabel HTML Custom */
         .custom-html-table {{
-            background: linear-gradient(to right, {COLOR_BIRU_TUA}, {COLOR_BIRU_AIR});
-            color: {COLOR_HITAM if not st.session_state.dark_mode else COLOR_PUTIH};
+            background: {theme['table_bg']};
+            color: {theme['table_font']};
             border-collapse: collapse;
             width: 100%;
             border-radius: 12px;
@@ -135,7 +145,7 @@ st.markdown(f"""
             background-color: rgba(255,255,255,0.08);
         }}
 
-        /* Responsif */
+        /* Responsif Mobile */
         @media (max-width: 768px) {{
             .custom-html-table {{
                 font-size: 14px;
