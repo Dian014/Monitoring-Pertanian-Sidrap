@@ -26,7 +26,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- Deteksi Mode ----------------------
+# ---------------------- Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -34,44 +34,44 @@ if "dark_mode" not in st.session_state:
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# Warna utama
+# Warna dasar
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
 COLOR_BIRU_NAVY = "#102040"
-COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
+COLOR_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
 COLOR_HIJAU_TERANG = "#CFF5B2"
 COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
+COLOR_GRAY_GELAP = "#2A2A2A"
 
-# Tema terang
+# Tema utama
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
-    "main_bg": COLOR_PUTIH,
+    "main_bg": "#FAFAFA",
     "font": COLOR_HITAM,
     "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
     "input_focus_bg": "#FFFFFF"
 }
 
-# Tema gelap
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
     "main_bg": COLOR_BIRU_NAVY,
     "font": COLOR_PUTIH,
-    "input_bg": "#1A2B3D",
+    "input_bg": COLOR_INPUT_GRAD,
     "input_font": COLOR_PUTIH,
     "input_focus_bg": "#29476B"
 }
 
-# Tema tabel tetap
+# Tema tabel (selalu terang)
 TABLE_THEME = {
-    "table_bg": gradient_css(["#E2FADB", "#C0EED7", "#C2E5F5", "#C8F1F3"]),
+    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
     "table_font": COLOR_HITAM
 }
 
-# Pilih tema aktif
+# Pilih tema
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
@@ -85,16 +85,17 @@ st.markdown(f"""
         /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
+            color: {theme['font']};
         }}
         section[data-testid="stSidebar'] * {{
             color: {theme['font']} !important;
         }}
 
-        /* Input, TextArea, Selectbox */
+        /* Input & dropdown */
         input, textarea, select {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
-            border: 1px solid rgba(200,200,200,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 6px;
         }}
         input:focus, textarea:focus, select:focus {{
@@ -104,16 +105,16 @@ st.markdown(f"""
             outline: none;
         }}
 
-        /* Dropdown */
-        div[role="combobox"] > div {{
+        /* st.selectbox aktif */
+        div[data-baseweb="select"] > div {{
             background: {theme['input_focus_bg']} !important;
             color: {theme['input_font']} !important;
         }}
 
-        /* Placeholder dan Label */
+        /* Placeholder & label */
         ::placeholder {{
-            color: {theme['input_font']};
-            opacity: 0.7;
+            color: {theme['input_font']} !important;
+            opacity: 0.8;
         }}
         label, span, div[role="textbox"] {{
             color: {theme['input_font']} !important;
@@ -127,7 +128,7 @@ st.markdown(f"""
             padding: 10px;
         }}
 
-        /* Tabel HTML Custom */
+        /* Tabel kustom */
         .custom-html-table {{
             background: {TABLE_THEME['table_bg']};
             color: {TABLE_THEME['table_font']};
@@ -145,11 +146,11 @@ st.markdown(f"""
             background: transparent;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(255,255,255,0.25);
             font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(255,255,255,0.15);
+            background-color: rgba(255,255,255,0.2);
         }}
     </style>
 """, unsafe_allow_html=True)
