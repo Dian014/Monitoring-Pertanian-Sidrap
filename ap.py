@@ -26,15 +26,15 @@ st.set_page_config(
     layout="wide"
 )
 
-# ---------------------- State Mode ----------------------
+# ---------------------- Deteksi Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
-# ---------------------- Fungsi Gradasi ----------------------
+# ---------------------- Warna & Gradasi ----------------------
 def gradient_css(colors, direction="to right"):
     return f"linear-gradient({direction}, {', '.join(colors)})"
 
-# ---------------------- Warna ----------------------
+# Warna utama
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
 COLOR_BIRU_NAVY = "#102040"
@@ -45,31 +45,33 @@ COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
+# Tema terang
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
     "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
     "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
-    "input_focus_bg": "#FFFFFF",
-    "border_color": "#CCCCCC"
+    "input_focus_bg": "#FFFFFF"
 }
 
+# Tema gelap
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
     "main_bg": COLOR_BIRU_NAVY,
     "font": COLOR_PUTIH,
-    "input_bg": COLOR_BIRU_INPUT_GRAD,
+    "input_bg": "#1A2B3D",
     "input_font": COLOR_PUTIH,
-    "input_focus_bg": "#29476B",
-    "border_color": "#3c5b8a"
+    "input_focus_bg": "#29476B"
 }
 
+# Tema tabel tetap
 TABLE_THEME = {
-    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
+    "table_bg": gradient_css(["#E2FADB", "#C0EED7", "#C2E5F5", "#C8F1F3"]),
     "table_font": COLOR_HITAM
 }
 
+# Pilih tema aktif
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
@@ -84,51 +86,37 @@ st.markdown(f"""
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
         }}
-        section[data-testid="stSidebar"] * {{
+        section[data-testid="stSidebar'] * {{
             color: {theme['font']} !important;
         }}
 
-        /* Input fields */
+        /* Input, TextArea, Selectbox */
         input, textarea, select {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
-            border: 1px solid {theme['border_color']} !important;
+            border: 1px solid rgba(200,200,200,0.3);
             border-radius: 6px;
         }}
         input:focus, textarea:focus, select:focus {{
             background: {theme['input_focus_bg']} !important;
             color: {theme['input_font']} !important;
-            border: 1px solid #66AFE9 !important;
-            outline: none !important;
+            border: 1px solid #66AFE9;
+            outline: none;
         }}
 
-        /* Dropdown container */
-        div[role="combobox"] {{
-            background: {theme['input_bg']} !important;
-            color: {theme['input_font']} !important;
-            border: 1px solid {theme['border_color']} !important;
-            border-radius: 6px !important;
-        }}
-
-        /* Dropdown options saat terbuka */
-        div[role="listbox"] > div {{
-            background: {theme['input_bg']} !important;
-            color: {theme['input_font']} !important;
-        }}
-        div[role="listbox"] > div:hover {{
+        /* Dropdown */
+        div[role="combobox"] > div {{
             background: {theme['input_focus_bg']} !important;
             color: {theme['input_font']} !important;
         }}
 
-        /* Label, placeholder */
-        label, span, div[role="textbox"], ::placeholder {{
-            color: {theme['input_font']} !important;
-            opacity: 0.9;
+        /* Placeholder dan Label */
+        ::placeholder {{
+            color: {theme['input_font']};
+            opacity: 0.7;
         }}
-
-        /* Slider label */
-        .stSlider > div {{
-            color: {theme['font']} !important;
+        label, span, div[role="textbox"] {{
+            color: {theme['input_font']} !important;
         }}
 
         /* Expander */
@@ -139,7 +127,7 @@ st.markdown(f"""
             padding: 10px;
         }}
 
-        /* Tabel HTML kustom */
+        /* Tabel HTML Custom */
         .custom-html-table {{
             background: {TABLE_THEME['table_bg']};
             color: {TABLE_THEME['table_font']};
