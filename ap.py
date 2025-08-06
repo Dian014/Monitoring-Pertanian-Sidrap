@@ -29,31 +29,21 @@ st.set_page_config(
 # ------------------ CONTROLLER DARK MODE ------------------
 dark_mode = st.sidebar.checkbox("Dark Mode", value=False)
 
-# ------------------ WARNA DAN CSS ------------------
+# ------------------ WARNA ------------------
 if dark_mode:
     bg_main = "#121212"
     bg_sidebar = "#1E1E1E"
     text_main = "#E0E0E0"
-    text_secondary = "#B0B0B0"
+    text_secondary = "#E0E0E0"  # List teks putih
     border_color = "#333"
-    expander_bg = "#222"
-    expander_open_bg = "#2a7f62"
-    button_bg = "#1E8E7E"
-    button_hover = "#145C4D"
-    table_bg = "#1e1e1e"
     table_text = "#E0E0E0"
 else:
     bg_main = "linear-gradient(to bottom right, #e0f7fa, #e0f2f1)"
-    bg_sidebar = "linear-gradient(to bottom, #003366, #001f4d)"  # Biru tua Sidrap
-    text_main = "#001f4d"  # Biru tua Sidrap
-    text_secondary = "#2e7d32"  # Hijau padi
+    bg_sidebar = "linear-gradient(to bottom, #003366, #001f4d)"
+    text_main = "#001f4d"
+    text_secondary = "#000000"  # List teks hitam
     border_color = "#b2dfdb"
-    expander_bg = "#ffffffee"
-    expander_open_bg = "#c8e6c9"
-    button_bg = "#004080"  # Biru tua Sidrap
-    button_hover = "#00264d"
-    table_bg = "white"
-    table_text = "#001f4d"  # Biru tua Sidrap
+    table_text = "#001f4d"
 
 # ------------------ INJECT CSS ------------------
 st.markdown(f"""
@@ -72,122 +62,84 @@ st.markdown(f"""
         color: white !important;
     }}
 
-    .css-10trblm.e16nr0p30 {{
-        color: {text_main} !important;
-        font-size: 40px;
-        font-weight: 700;
-    }}
-
-    .css-1v0mbdj p {{
-        color: {text_secondary} !important;
+    /* Judul List / Fitur */
+    .list-text {{
+        color: {text_secondary};
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 600;
+        margin-bottom: 10px;
     }}
 
-    .stDataFrame {{
-        border: 1px solid {border_color} !important;
-        border-radius: 8px;
-        background-color: {table_bg} !important;
-        color: {table_text} !important;
+    /* TABEL */
+    table.styled-table {{
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Inter', sans-serif;
         font-size: 16px;
-        transition: all 0.3s ease;
+        color: {table_text};
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
     }}
 
-    .stDataFrame th {{
-        background-color: #004080 !important;  /* Header biru tua Sidrap */
-        color: white !important;
+    /* HEADER */
+    table.styled-table thead th {{
+        padding: 12px;
+        text-align: center;
         font-weight: 700;
+        color: white;
+        {"background: linear-gradient(90deg, #2e7d32 0%, #4caf50 100%);" if dark_mode else "background-color: #004080;"}
+    }}
+
+    /* KOLOM KOORDINAT KIRI */
+    table.styled-table tbody td:first-child {{
+        font-weight: 600;
+        color: white;
+        {"background-color: #2e7d32;" if dark_mode else "background-color: #004080;"}
+    }}
+
+    /* SEL LAIN (ISI) */
+    table.styled-table tbody td:not(:first-child) {{
+        border: 1px solid {border_color};
         text-align: center;
+        {"background: linear-gradient(90deg, #004080 0%, #001f4d 100%);" if dark_mode else "background: linear-gradient(90deg, #c8e6c9 0%, #a5d6a7 100%);"}
+        color: {table_text};
     }}
 
-    .stDataFrame td {{
-        padding: 8px !important;
-        text-align: center;
+    /* BARIS GANJIL */
+    table.styled-table tbody tr:nth-child(odd) td:not(:first-child) {{
+        opacity: 0.85;
     }}
 
-    /* Baris ganjil */
-    .stDataFrame tbody tr:nth-child(odd) {{
-        background-color: #e8f5e9 !important; /* hijau padi muda */
+    /* BARIS GENAP */
+    table.styled-table tbody tr:nth-child(even) td:not(:first-child) {{
+        opacity: 1;
     }}
 
-    /* Baris genap */
-    .stDataFrame tbody tr:nth-child(even) {{
-        background-color: #c8e6c9 !important; /* hijau padi */
-    }}
-
-    /* Hover efek */
-    .stDataFrame tbody tr:hover {{
-        background-color: #aed581 !important; /* hijau padi cerah */
-        color: #001f4d !important; /* teks biru tua */
+    /* HOVER BARIS */
+    table.styled-table tbody tr:hover td {{
+        background: {"linear-gradient(90deg, #4fc3f7 0%, #81d4fa 100%)" if dark_mode else "#aed581"};
+        color: {"white" if dark_mode else "#001f4d"};
         cursor: pointer;
     }}
 
-    /* Tombol */
-    button[kind="primary"] {{
-        background-color: {button_bg} !important;
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        font-size: 16px !important;
-        font-weight: 600;
-    }}
-
-    button[kind="primary"]:hover {{
-        background-color: {button_hover} !important;
-        transform: scale(1.05);
-        transition: 0.3s ease;
+    /* RESPONSIVE */
+    @media (max-width: 768px) {{
+        table.styled-table {{
+            font-size: 14px;
+        }}
+        .list-text {{
+            font-size: 16px;
+        }}
     }}
 </style>
 """, unsafe_allow_html=True)
 
 # ------------------ FUNGSI RENDER TABEL ------------------
-def render_styled_table(dataframe):
-    styles = """
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Inter', sans-serif;
-            font-size: 16px;
-            color: #001f4d;
-        }
-        thead th {
-            background-color: #004080;
-            color: white;
-            padding: 12px;
-            text-align: center;
-        }
-        tbody td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #b2dfdb;
-        }
-        tbody tr:nth-child(odd) {
-            background-color: #e8f5e9;
-        }
-        tbody tr:nth-child(even) {
-            background-color: #c8e6c9;
-        }
-        tbody tr:hover {
-            background-color: #aed581;
-            color: #001f4d;
-            cursor: pointer;
-        }
-    </style>
-    """
-    html = dataframe.to_html(classes='styled-table', index=False)
-    return styles + html
-
-# ------------------ CONTOH DATAFRAME ------------------
-df = pd.DataFrame({
-    'Produk': ['Pupuk', 'Laptop', 'HP', 'Traktor', 'Bibit Padi'],
-    'Jumlah': [100, 50, 75, 10, 200],
-    'Kategori': ['Pertanian', 'Elektronik', 'Elektronik', 'Pertanian', 'Pertanian'],
-    'Harga Satuan': ['Rp50.000', 'Rp7.000.000', 'Rp2.500.000', 'Rp150.000.000', 'Rp5.000']
-})
-
-# ------------------ TAMPILKAN TABEL ------------------
-st.markdown(render_styled_table(df), unsafe_allow_html=True)
+def render_styled_table(df):
+    html = df.to_html(classes='styled-table', index=False)
+    return html
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
