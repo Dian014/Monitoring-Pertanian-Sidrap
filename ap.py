@@ -34,14 +34,14 @@ if dark_mode:
     bg_main = "#121212"
     bg_sidebar = "#1E1E1E"
     text_main = "#E0E0E0"
-    text_secondary = "#E0E0E0"  # List teks putih
+    text_secondary = "#E0E0E0"
     border_color = "#333"
     table_text = "#E0E0E0"
     coord_left_bg = "#2e7d32"  # hijau padi
-    coord_content_bg = "linear-gradient(90deg, #004080 0%, #001f4d 100%)"  # biru tua gradasi
-    list_bg = "linear-gradient(90deg, #81d4fa 0%, #4fc3f7 100%)"  # gradasi warna air
+    coord_content_bg = "linear-gradient(90deg, #004080 0%, #001f4d 100%)"
+    list_bg = "linear-gradient(90deg, #81d4fa 0%, #4fc3f7 100%)"
     list_text = "#ffffff"
-    table_header_bg = "linear-gradient(90deg, #2e7d32 0%, #4caf50 100%)"  # hijau padi gradasi
+    table_header_bg = "linear-gradient(90deg, #2e7d32 0%, #4caf50 100%)"
     table_left_col_bg = "#2e7d32"
     table_other_col_bg = "linear-gradient(90deg, #004080 0%, #001f4d 100%)"
     table_hover_bg = "linear-gradient(90deg, #4fc3f7 0%, #81d4fa 100%)"
@@ -49,11 +49,11 @@ else:
     bg_main = "linear-gradient(to bottom right, #e0f7fa, #e0f2f1)"
     bg_sidebar = "linear-gradient(to bottom, #003366, #001f4d)"
     text_main = "#001f4d"
-    text_secondary = "#000000"  # List teks hitam
+    text_secondary = "#000000"
     border_color = "#b2dfdb"
     table_text = "#001f4d"
     coord_left_bg = "#001f4d"  # biru tua
-    coord_content_bg = "linear-gradient(90deg, #2e7d32 0%, #81c784 100%)"  # hijau padi gradasi
+    coord_content_bg = "linear-gradient(90deg, #2e7d32 0%, #81c784 100%)"
     list_bg = "#ffffff"
     list_text = "#000000"
     table_header_bg = "#004080"
@@ -146,24 +146,20 @@ st.markdown(f"""
         color: {table_text};
     }}
 
-    /* BARIS GANJIL */
     table.styled-table tbody tr:nth-child(odd) td:not(:first-child) {{
         opacity: 0.85;
     }}
 
-    /* BARIS GENAP */
     table.styled-table tbody tr:nth-child(even) td:not(:first-child) {{
         opacity: 1;
     }}
 
-    /* HOVER BARIS */
     table.styled-table tbody tr:hover td {{
         background: {table_hover_bg};
         color: {"white" if dark_mode else "#001f4d"};
         cursor: pointer;
     }}
 
-    /* RESPONSIVE */
     @media (max-width: 768px) {{
         table.styled-table {{
             font-size: 14px;
@@ -183,8 +179,22 @@ st.markdown(f"""
 
 # ------------------ FUNGSI RENDER TABEL ------------------
 def render_styled_table(df):
-    html = df.to_html(classes='styled-table', index=False)
-    return html
+    return df.to_html(classes='styled-table', index=False)
+
+# ------------------ CONTOH PENGGUNAAN ------------------
+st.markdown('<div class="coord-left">Koordinat Lokasi</div>', unsafe_allow_html=True)
+st.markdown('<div class="coord-content">Lat: -3.832, Long: 119.959</div>', unsafe_allow_html=True)
+
+st.markdown('<div class="list-fitur">📋 Daftar Fitur</div>', unsafe_allow_html=True)
+
+data = {
+    "Kecamatan": ["Panca Lautang", "Baranti", "Maritengngae"],
+    "Luas Lahan (Ha)": [2500, 3200, 2800],
+    "Produksi (Ton)": [5000, 6500, 5900]
+}
+df = pd.DataFrame(data)
+
+st.markdown(render_styled_table(df), unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
