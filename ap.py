@@ -26,6 +26,7 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------------- Deteksi atau Simpan Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -58,13 +59,13 @@ DARK_THEME = {
     "table_bg": gradient_css([COLOR_BIRU_TUA, COLOR_HIJAU_PADI, COLOR_PUTIH, COLOR_BIRU_AIR]),
 }
 
-# Pilih tema
+# Pilih tema berdasarkan checkbox
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
-        .stApp {{
+        html, body, .stApp {{
             background: {theme['main_bg']};
             color: {theme['font']};
         }}
@@ -74,16 +75,15 @@ st.markdown(f"""
             background: {theme['sidebar_bg']};
             color: {theme['font']};
         }}
-        section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] input,
-        section[data-testid="stSidebar"] .stNumberInput,
-        section[data-testid="stSidebar"] .stCheckbox,
-        section[data-testid="stSidebar"] div[data-testid="stSlider"] {{
+        section[data-testid="stSidebar"] * {{
             color: {theme['font']} !important;
         }}
-        section[data-testid="stSidebar"] .stNumberInput input {{
-            color: {theme['font']} !important;
+
+        /* Input Sidebar */
+        section[data-testid="stSidebar"] .stNumberInput input,
+        section[data-testid="stSidebar"] .stTextInput input {{
             background-color: rgba(255,255,255,0.1);
+            color: {theme['font']} !important;
         }}
 
         /* Expander */
@@ -99,7 +99,6 @@ st.markdown(f"""
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
             border-radius: 10px;
-            padding: 10px;
         }}
         .stTable th, .stDataFrame th,
         .stTable td, .stDataFrame td {{
@@ -107,7 +106,7 @@ st.markdown(f"""
             background: transparent !important;
         }}
 
-        /* Tabel HTML */
+        /* Tabel HTML kustom */
         .custom-html-table {{
             background: {theme['table_bg']};
             color: {theme['table_font']};
