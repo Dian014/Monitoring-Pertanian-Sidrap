@@ -797,42 +797,56 @@ for role, msg in st.session_state.chat_history:
     else:
         st.markdown(f"**{role}**: {msg}")
         
-# ------------------ Kalkulator Pemupukan Dasar ------------------
-with st.expander("Kalkulator Pemupukan Dasar"):
-    tanaman = st.selectbox("Jenis Tanaman", ["Padi", "Jagung", "Kedelai"])
-    luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, key="pupuk_luas")
+# ------------------ KALKULATOR PEMUPUKAN ------------------
+with st.expander("Kalkulator Pemupukan"):
+    tanaman = st.selectbox("Pilih Komoditas", ["Padi", "Jagung", "Kedelai", "Kopi", "Kakao", "Kelapa", "Porang"], key="komoditas_pupuk")
+    luas_lahan = st.number_input("Luas Lahan (ha)", value=1.0, key="luas_pupuk")
 
-    # Data dosis dan penjelasan per tanaman dan pupuk
     rekomendasi_pupuk = {
         "Padi": {
             "Urea": {"dosis": 250, "fungsi": "Merangsang pertumbuhan daun dan batang"},
             "SP-36": {"dosis": 100, "fungsi": "Membentuk akar dan anakan, serta meningkatkan hasil malai"},
-            "KCl": {"dosis": 100, "fungsi": "Meningkatkan ketahanan terhadap hama/penyakit dan kualitas gabah"}
+            "KCl": {"dosis": 100, "fungsi": "Meningkatkan ketahanan terhadap hama/penyakit dan kualitas gabah"},
         },
         "Jagung": {
             "Urea": {"dosis": 300, "fungsi": "Mendorong pertumbuhan vegetatif (daun dan batang)"},
             "SP-36": {"dosis": 150, "fungsi": "Meningkatkan perkembangan akar dan pembentukan tongkol"},
-            "KCl": {"dosis": 100, "fungsi": "Meningkatkan pengisian biji dan ketahanan tanaman"}
+            "KCl": {"dosis": 100, "fungsi": "Meningkatkan pengisian biji dan ketahanan tanaman"},
         },
         "Kedelai": {
             "Urea": {"dosis": 100, "fungsi": "Dosis rendah karena kedelai bisa fiksasi nitrogen sendiri"},
             "SP-36": {"dosis": 100, "fungsi": "Mendukung pembentukan bunga dan polong"},
-            "KCl": {"dosis": 75, "fungsi": "Meningkatkan kualitas dan daya simpan hasil panen"}
+            "KCl": {"dosis": 75, "fungsi": "Meningkatkan kualitas dan daya simpan hasil panen"},
+        },
+        "Kopi": {
+            "NPK": {"dosis": 500, "fungsi": "Meningkatkan pertumbuhan dan produksi buah kopi"}
+        },
+        "Kakao": {
+            "Urea": {"dosis": 150, "fungsi": "Meningkatkan pertumbuhan daun dan buah kakao"},
+            "TSP": {"dosis": 100, "fungsi": "Meningkatkan pembentukan bunga dan buah"},
+            "KCl": {"dosis": 150, "fungsi": "Meningkatkan rasa dan mutu biji kakao"}
+        },
+        "Kelapa": {
+            "NPK": {"dosis": 300, "fungsi": "Memperbaiki pertumbuhan dan produktivitas kelapa"}
+        },
+        "Porang": {
+            "Urea": {"dosis": 200, "fungsi": "Meningkatkan pertumbuhan daun dan umbi porang"},
+            "KCl": {"dosis": 100, "fungsi": "Meningkatkan pembentukan dan bobot umbi"}
         }
     }
 
-    st.markdown(f"Rekomendasi Pupuk untuk **{tanaman}** per {luas_lahan} ha")
-    data_tabel = []
+    st.markdown(f"Rekomendasi Pemupukan untuk **{tanaman}** per {luas_lahan} ha:")
+    data_pupuk = []
 
-    for jenis_pupuk, data in rekomendasi_pupuk[tanaman].items():
-        total_kg = data["dosis"] * luas_lahan
-        data_tabel.append({
+    for jenis_pupuk, data in rekomendasi_pupuk.get(tanaman, {}).items():
+        total_dosis = data["dosis"] * luas_lahan
+        data_pupuk.append({
             "Jenis Pupuk": jenis_pupuk,
-            "Total Kebutuhan (kg)": total_kg,
+            "Total Kebutuhan (kg)": total_dosis,
             "Fungsi": data["fungsi"]
         })
 
-    st.table(pd.DataFrame(data_tabel))
+    st.table(pd.DataFrame(data_pupuk))
     
 # ------------------ Harga Komoditas ------------------
 
