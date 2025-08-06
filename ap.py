@@ -26,6 +26,7 @@ st.set_page_config(
     layout="wide"
 )
 
+# ---------------------- Deteksi atau Simpan Mode ----------------------
 if "dark_mode" not in st.session_state:
     st.session_state.dark_mode = False
 
@@ -35,31 +36,36 @@ def gradient_css(colors, direction="to right"):
 
 # Palet warna
 COLOR_BIRU_TUA = "#0A2647"
-COLOR_HIJAU_PADI = "#CFF5B2"
+COLOR_BIRU_MUDA = "#144272"
+COLOR_HIJAU_TERANG = "#CFF5B2"
+COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
 
 # Tema terang
 LIGHT_THEME = {
-    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
-    "main_bg": gradient_css(["#DFF5E1", COLOR_HIJAU_PADI]),
+    "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
+    "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
-    "table_font": COLOR_HITAM,
-    "expander_bg": gradient_css([COLOR_PUTIH, COLOR_BIRU_AIR]),
-    "table_bg": gradient_css(["#E6F4EA", COLOR_BIRU_AIR]),
+    "input_bg": COLOR_PUTIH,
+    "input_font": COLOR_HITAM,
+    "table_bg": COLOR_HIJAU_LEMBUT,
+    "table_font": COLOR_HITAM
 }
 
 # Tema gelap
 DARK_THEME = {
-    "sidebar_bg": gradient_css([COLOR_HIJAU_PADI, COLOR_BIRU_AIR]),
-    "main_bg": gradient_css([COLOR_BIRU_TUA, "#144272"]),
+    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
+    "main_bg": COLOR_BIRU_TUA,
     "font": COLOR_PUTIH,
-    "table_font": COLOR_PUTIH,
-    "expander_bg": gradient_css(["#144272", COLOR_BIRU_AIR]),
-    "table_bg": gradient_css(["#0A2647", COLOR_HIJAU_PADI]),
+    "input_bg": "#1A2B4C",
+    "input_font": COLOR_PUTIH,
+    "table_bg": "#1A2B4C",
+    "table_font": COLOR_PUTIH
 }
 
+# Pilih tema berdasarkan checkbox
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
 # ---------------------- CSS Styling ----------------------
@@ -80,22 +86,27 @@ st.markdown(f"""
         }}
 
         /* Input Sidebar */
-        section[data-testid="stSidebar"] .stNumberInput input,
-        section[data-testid="stSidebar"] .stTextInput input {{
-            background-color: rgba(255,255,255,0.15);
+        section[data-testid="stSidebar"] input,
+        section[data-testid="stSidebar"] textarea,
+        section[data-testid="stSidebar"] select {{
+            background-color: {theme['input_bg']} !important;
+            color: {theme['input_font']} !important;
+        }}
+
+        /* Slider */
+        .stSlider > div {{
             color: {theme['font']} !important;
         }}
 
         /* Expander */
         div[data-testid="stExpander"] {{
-            background: {theme['expander_bg']} !important;
-            color: {theme['font']} !important;
+            background: {theme['table_bg']};
+            color: {theme['table_font']};
             border-radius: 10px;
             padding: 10px;
-            margin-bottom: 1rem;
         }}
 
-        /* Tabel bawaan Streamlit */
+        /* st.table dan st.dataframe */
         .stTable, .stDataFrame {{
             background: {theme['table_bg']} !important;
             color: {theme['table_font']} !important;
@@ -119,17 +130,16 @@ st.markdown(f"""
             font-size: 16px;
         }}
         .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.2);
             padding: 12px 15px;
             text-align: left;
-            background: transparent;
         }}
         .custom-html-table th {{
             background-color: rgba(255,255,255,0.15);
             font-weight: bold;
         }}
         .custom-html-table tbody tr:hover {{
-            background-color: rgba(0,0,0,0.05);
+            background-color: rgba(255,255,255,0.08);
         }}
     </style>
 """, unsafe_allow_html=True)
@@ -137,7 +147,6 @@ st.markdown(f"""
 # ---------------------- Sidebar ----------------------
 with st.sidebar:
     st.checkbox("Dark Mode", value=st.session_state.dark_mode, key="dark_mode")
-    
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
 LON = st.sidebar.number_input("Longitude", value=119.772731, format="%.6f")
