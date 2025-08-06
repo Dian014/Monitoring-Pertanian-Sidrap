@@ -122,14 +122,129 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ------------------ DARK MODE TOGGLE ------------------
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
+dark_mode = st.sidebar.checkbox("🌙 Dark Mode", value=False)
 
-def toggle_theme():
-    st.session_state.dark_mode = not st.session_state.dark_mode
+# ------------------ CSS DINAMIS BERDASARKAN MODE ------------------
+if dark_mode:
+    bg_main = "#121212"
+    bg_sidebar = "#1E1E1E"
+    text_main = "#E0E0E0"
+    text_secondary = "#B0B0B0"
+    border_color = "#333"
+    expander_bg = "#222"
+    expander_open_bg = "#2a7f62"
+    button_bg = "#1E8E7E"
+    button_hover = "#145C4D"
+else:
+    bg_main = "linear-gradient(to bottom right, #e0f7fa, #e0f2f1)"
+    bg_sidebar = "linear-gradient(to bottom, #00695c, #004d40)"
+    text_main = "#004d40"
+    text_secondary = "#00695c"
+    border_color = "#b2dfdb"
+    expander_bg = "#ffffffee"
+    expander_open_bg = "#c8e6c9"
+    button_bg = "#00796b"
+    button_hover = "#004d40"
 
-st.sidebar.title("⚙️ Pengaturan")
-st.sidebar.checkbox("🌙 Dark Mode", value=st.session_state.dark_mode, on_change=toggle_theme)
+st.markdown(f"""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    html, body, [class*="css"]  {{
+        font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        background: {bg_main} !important;
+        color: {text_main} !important;
+    }}
+
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {{
+        background: {bg_sidebar} !important;
+        color: {text_main} !important;
+        transition: background 0.3s ease;
+    }}
+
+    /* Header dan Title */
+    .css-10trblm.e16nr0p30 {{
+        color: {text_main} !important;
+        font-size: 40px;
+        font-weight: 700;
+        transition: color 0.3s ease;
+    }}
+
+    /* Markdown Subtitle */
+    .css-1v0mbdj p {{
+        color: {text_secondary} !important;
+        font-size: 18px;
+        font-weight: 500;
+    }}
+
+    /* Expander Animasi & Border */
+    details {{
+        border: 1px solid {border_color} !important;
+        border-radius: 8px;
+        padding: 8px;
+        transition: all 0.4s ease-in-out;
+        background-color: {expander_bg} !important;
+    }}
+
+    summary {{
+        font-weight: 600;
+        font-size: 18px;
+        color: {text_main} !important;
+        transition: color 0.3s ease;
+    }}
+
+    details[open] {{
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background-color: {expander_open_bg} !important;
+        transform: scale(1.01);
+    }}
+
+    /* Form input lebih rapi */
+    input, textarea {{
+        border: 1px solid {border_color} !important;
+        border-radius: 6px !important;
+        padding: 8px !important;
+        font-family: 'Inter', sans-serif;
+        background-color: {"#222" if dark_mode else "#fff"} !important;
+        color: {text_main} !important;
+        transition: all 0.2s ease;
+    }}
+
+    input:focus, textarea:focus {{
+        border-color: {button_bg} !important;
+        box-shadow: 0 0 0 3px rgba(38, 166, 154, 0.4);
+        outline: none;
+    }}
+
+    /* Button styling */
+    button[kind="primary"] {{
+        background-color: {button_bg} !important;
+        color: white !important;
+        border-radius: 8px !important;
+        padding: 10px 16px !important;
+        font-size: 16px !important;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        transition: background-color 0.3s ease, transform 0.2s;
+    }}
+
+    button[kind="primary"]:hover {{
+        background-color: {button_hover} !important;
+        transform: scale(1.02);
+    }}
+
+    /* Data table border */
+    .stDataFrame {{
+        border: 1px solid {border_color} !important;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        background-color: {"#1e1e1e" if dark_mode else "white"} !important;
+        color: {text_main} !important;
+    }}
+    </style>
+""", unsafe_allow_html=True)
 
 # ------------------ TAMPILAN KUSTOM CSS ------------------
 
@@ -207,87 +322,6 @@ light_css = """
         color: #004d40;
     }
 """
-
-# CSS untuk tema gelap
-dark_css = """
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        background: linear-gradient(to bottom right, #263238, #37474f);
-        color: #a7ffeb;
-    }
-
-    section[data-testid="stSidebar"] {
-        background: linear-gradient(to bottom, #004d40, #00251a);
-        color: #a7ffeb;
-    }
-
-    details {
-        border: 1px solid #004d40;
-        border-radius: 8px;
-        padding: 8px;
-        background-color: #004d40bb;
-        transition: all 0.4s ease-in-out;
-    }
-
-    summary {
-        font-weight: 600;
-        font-size: 18px;
-        color: #a7ffeb;
-    }
-
-    details[open] {
-        box-shadow: 0 4px 12px rgba(0,255,209,0.3);
-        background-color: #00796b;
-        transform: scale(1.01);
-    }
-
-    input, textarea {
-        border: 1px solid #004d40 !important;
-        border-radius: 6px !important;
-        padding: 8px !important;
-        font-family: 'Inter', sans-serif;
-        transition: all 0.2s ease;
-        background-color: #263238 !important;
-        color: #a7ffeb !important;
-    }
-
-    input:focus, textarea:focus {
-        border-color: #00bfa5 !important;
-        box-shadow: 0 0 0 3px rgba(0,191,165,0.4);
-    }
-
-    button[kind="primary"] {
-        background-color: #009688 !important;
-        color: #004d40 !important;
-        border-radius: 8px !important;
-        padding: 10px 16px !important;
-        font-size: 16px !important;
-        font-weight: 600;
-        font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, transform 0.2s;
-    }
-
-    button[kind="primary"]:hover {
-        background-color: #004d40 !important;
-        color: #a7ffeb !important;
-        transform: scale(1.02);
-    }
-
-    .stDataFrame {
-        border: 1px solid #00bfa5;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-        color: #a7ffeb;
-    }
-"""
-
-if st.session_state.dark_mode:
-    st.markdown(f"<style>{dark_css}</style>", unsafe_allow_html=True)
-else:
-    st.markdown(f"<style>{light_css}</style>", unsafe_allow_html=True)
 
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
