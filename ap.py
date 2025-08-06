@@ -45,7 +45,7 @@ if st.session_state.dark_mode:
     INPUT_BG = "#2b2b2b"
     INPUT_FONT = COLOR_PUTIH
     EXPANDER_BG = "#1e1e1e"
-    TABLE_BG = "#2b2b2b"
+    TABLE_THEME = "dark"
 else:
     BACKGROUND = f"linear-gradient(135deg, {COLOR_HIJAU_PADI} 75%, {COLOR_PUTIH} 25%)"
     SIDEBAR_BG = f"linear-gradient(180deg, {COLOR_HIJAU_PADI}, {COLOR_PUTIH})"
@@ -53,7 +53,7 @@ else:
     INPUT_BG = COLOR_PUTIH
     INPUT_FONT = COLOR_HITAM
     EXPANDER_BG = "#f9f9f9"
-    TABLE_BG = "#ffffff"
+    TABLE_THEME = "light"
 
 # ------------------ CSS Styling ------------------
 st.markdown(f"""
@@ -100,45 +100,17 @@ st.markdown(f"""
             padding: 12px;
         }}
 
-        /* Pastikan semua teks default inherit mode warna */
+        /* Pastikan semua teks default inherit */
         .stApp div, .stApp span, .stApp label, .stApp p, 
         .stApp h1, .stApp h2, .stApp h3, .stApp h4, 
         .stApp h5, .stApp h6 {{
             color: inherit !important;
         }}
 
-        /* Bagian tabel kosong atau dataframe punya latar kontras */
-        .stApp .dataframe, 
-        .stApp .stDataFrame, 
-        .stApp .stTable, 
-        .stApp div[role="table"] {{
-            background-color: {TABLE_BG} !important;
-            color: {FONT_COLOR} !important;
-        }}
-
-        /* Teks di dalam tabel, header dan cell */
-        .stApp .dataframe th, 
-        .stApp .dataframe td,
-        .stApp .stDataFrame th,
-        .stApp .stDataFrame td,
-        .stApp div[role="table"] * {{
-            color: {FONT_COLOR} !important;
-        }}
-
-        /* Placeholder warna kontras */
         ::placeholder {{
             color: #bbbbbb !important;
         }}
 
-        /* Expander summary tetap kontras */
-        div[data-testid="stExpander"] > details > summary {{
-            color: {FONT_COLOR} !important;
-        }}
-
-        /* Hilangkan border shadow putih aneh */
-        .stDataFrame, .stTable {{
-            border: none !important;
-        }}
     </style>
 """, unsafe_allow_html=True)
 
