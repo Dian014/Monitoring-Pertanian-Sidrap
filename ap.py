@@ -20,7 +20,7 @@ from PIL import Image
 from rapidfuzz import process, fuzz
 
 
-# ---------------------- Konfigurasi Awal ----------------------
+# ---------------------- Konfigurasi halaman ----------------------
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
     layout="wide"
@@ -102,7 +102,7 @@ st.markdown(f"""
             outline: none !important;
         }}
 
-        /* Dropdown (stSelectbox) container */
+        /* Dropdown container */
         div[role="combobox"] {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
@@ -110,12 +110,12 @@ st.markdown(f"""
             border-radius: 6px !important;
         }}
 
-        /* Dropdown options */
-        div[role="option"] {{
+        /* Dropdown options saat terbuka */
+        div[role="listbox"] > div {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
         }}
-        div[role="option"]:hover {{
+        div[role="listbox"] > div:hover {{
             background: {theme['input_focus_bg']} !important;
             color: {theme['input_font']} !important;
         }}
