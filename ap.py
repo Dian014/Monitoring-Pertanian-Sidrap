@@ -19,6 +19,7 @@ import os
 from PIL import Image
 from rapidfuzz import process, fuzz
 
+
 # ---------------------- Konfigurasi Awal ----------------------
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
@@ -38,28 +39,32 @@ LIGHT_THEME = {
     "main_bg": gradient_css(["#DFF5E1", "#CFF5B2"]),
     "list_bg": "#B6E2D3",  # biru air
     "list_font": "black",
-    "table_font": "black",
-    "table_bg": gradient_css(["#B6E2D3", "#CFF5B2"]),  # biru air -> hijau padi
 }
 
 DARK_THEME = {
-    "sidebar_bg": gradient_css(["#CFF5B2", "#B6E2D3"]),  # hijau padi -> biru air
+    "sidebar_bg": gradient_css(["#CFF5B2", "#B6E2D3"]),
     "main_bg": gradient_css(["#0A2647", "#144272"]),
     "list_bg": "#0A2647",  # biru tua
     "list_font": "white",
-    "table_font": "white",
-    "table_bg": gradient_css(["#144272", "#B6E2D3"]),  # biru tua -> biru air
 }
 
 theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
 
+# ---------------------- Warna Gradasi Tabel ----------------------
+TABLE_GRADIENT_COLORS = ["#0A2647", "#CFF5B2"]  # biru tua ke hijau padi
+table_bg_gradient = f"linear-gradient(to right, {TABLE_GRADIENT_COLORS[0]}, {TABLE_GRADIENT_COLORS[1]})"
+table_font_color = "white" if st.session_state.dark_mode else "black"
+
 # ---------------------- CSS Styling ----------------------
 st.markdown(f"""
     <style>
+        /* Background dan warna teks utama */
         .stApp {{
             background: {theme['main_bg']};
             color: {theme['list_font']};
         }}
+
+        /* Sidebar */
         section[data-testid="stSidebar"] > div {{
             background: {theme['sidebar_bg']};
             color: {theme['list_font']};
@@ -84,36 +89,47 @@ st.markdown(f"""
             padding: 10px;
         }}
 
-        /* Tabel Streamlit */
+        /* Gradasi khusus untuk tabel Streamlit */
         .stDataFrame, .stTable {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
+            background: {table_bg_gradient} !important;
+            color: {table_font_color} !important;
         }}
         .stDataFrame thead tr th,
         .stTable thead tr th {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
+            background: {table_bg_gradient} !important;
+            color: {table_font_color} !important;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }}
         .stDataFrame tbody tr td,
         .stTable tbody tr td {{
-            background: {theme['table_bg']} !important;
-            color: {theme['table_font']} !important;
+            background: {table_bg_gradient} !important;
+            color: {table_font_color} !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }}
 
-        /* Tabel HTML */
+        /* Gradasi khusus untuk tabel HTML */
         .custom-html-table {{
-            background: {theme['table_bg']};
-            color: {theme['table_font']};
+            background: {table_bg_gradient};
+            color: {table_font_color};
             border-collapse: collapse;
             width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }}
         .custom-html-table th, .custom-html-table td {{
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 15px;
             text-align: left;
         }}
         .custom-html-table th {{
-            background-color: rgba(255,255,255,0.1);
+            background-color: rgba(255, 255, 255, 0.15);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }}
+        .custom-html-table tbody tr:hover {{
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s ease;
         }}
     </style>
 """, unsafe_allow_html=True)
