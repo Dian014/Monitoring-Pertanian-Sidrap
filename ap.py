@@ -21,115 +21,157 @@ from rapidfuzz import process, fuzz
 
 
 # ---------------------- Konfigurasi halaman ----------------------
-
 st.set_page_config(
     page_title="Dashboard Pertanian Cerdas",
-    layout="wide",
+    layout="wide"
 )
 
-# --- Custom CSS untuk Dark Mode & Light Mode ---
-custom_css = """
+# ------------------ Inisialisasi Dark Mode ------------------
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = False
+
+# ------------------ Fungsi Gradasi ------------------
+def gradient_css(colors, direction="to right"):
+    return f"linear-gradient({direction}, {', '.join(colors)})"
+
+# ------------------ Warna Dasar ------------------
+COLOR_BIRU_TUA = "#0A2647"
+COLOR_BIRU_MUDA = "#144272"
+COLOR_BIRU_NAVY = "#102040"
+COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
+COLOR_HIJAU_TERANG = "#CFF5B2"
+COLOR_HIJAU_LEMBUT = "#E9FCD4"
+COLOR_BIRU_AIR = "#B6E2D3"
+COLOR_PUTIH = "#FFFFFF"
+COLOR_HITAM = "#000000"
+COLOR_GRAY_DARK = "#2A2A2A"
+
+# ------------------ Tema ------------------
+LIGHT_THEME = {
+    "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
+    "main_bg": COLOR_PUTIH,
+    "font": COLOR_HITAM,
+    "input_bg": "#F0F2F6",
+    "input_font": COLOR_HITAM,
+    "input_focus_bg": "#FFFFFF",
+    "label_font": COLOR_HITAM,
+    "placeholder": "rgba(0,0,0,0.6)"
+}
+
+DARK_THEME = {
+    "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
+    "main_bg": COLOR_BIRU_NAVY,
+    "font": COLOR_PUTIH,
+    "input_bg": COLOR_BIRU_INPUT_GRAD,
+    "input_font": COLOR_PUTIH,
+    "input_focus_bg": "#29476B",
+    "label_font": COLOR_PUTIH,
+    "placeholder": "rgba(255,255,255,0.8)"
+}
+
+TABLE_THEME = {
+    "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
+    "table_font": COLOR_HITAM
+}
+
+theme = DARK_THEME if st.session_state.dark_mode else LIGHT_THEME
+
+# ------------------ CSS Styling ------------------
+st.markdown(f"""
 <style>
-/* Umum */
-body, .stApp {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-/* Semua container latar stabil */
-.stContainer, .stExpander, .stForm, .stTextInput, .stTextArea, .stNumberInput, .stFileUploader {
-    background-color: transparent !important;
-}
+/* Body background dan font */
+html, body, .stApp {{
+    background: {theme['main_bg']};
+    color: {theme['font']};
+}}
 
-/* Panel sidebar dark & light mode */
-[data-testid="stSidebar"] {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364, #0f2027);
-    color: white;
-}
+/* Sidebar */
+section[data-testid="stSidebar"] > div {{
+    background: {theme['sidebar_bg']};
+}}
+section[data-testid="stSidebar"] * {{
+    color: {theme['font']} !important;
+}}
 
-/* Kontrol Dark Mode Toggle */
-[data-testid="stSidebar"] .stCheckbox > div {
-    color: white;
-}
+/* Input fields */
+input, textarea, select {{
+    background: {theme['input_bg']} !important;
+    color: {theme['input_font']} !important;
+    border: 1px solid rgba(200,200,200,0.4);
+    border-radius: 6px;
+}}
 
-/* Panel utama dark mode */
-html[data-theme="dark"] .stApp {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364, #0f2027);
-}
-html[data-theme="dark"] .stMarkdown, 
-html[data-theme="dark"] .stTextInput, 
-html[data-theme="dark"] .stTextArea, 
-html[data-theme="dark"] .stNumberInput,
-html[data-theme="dark"] .stSelectbox,
-html[data-theme="dark"] .stFileUploader,
-html[data-theme="dark"] label, 
-html[data-theme="dark"] .stButton {
-    color: #ffffff;
-    background-color: #1f2f3d;
-    border-color: #3e4e5e;
-}
-html[data-theme="dark"] input, 
-html[data-theme="dark"] textarea, 
-html[data-theme="dark"] select {
-    background-color: #2c3e50;
-    color: #ffffff;
-}
+/* Input focus */
+input:focus, textarea:focus, select:focus {{
+    background: {theme['input_focus_bg']} !important;
+    color: {theme['input_font']} !important;
+    border: 1px solid #66AFE9;
+    outline: none;
+}}
 
-/* Panel utama light mode */
-html[data-theme="light"] .stApp {
-    background: linear-gradient(135deg, #e0f7fa, #ffffff, #f0f0f0, #e0f7fa);
-}
-html[data-theme="light"] .stMarkdown,
-html[data-theme="light"] .stTextInput,
-html[data-theme="light"] .stTextArea,
-html[data-theme="light"] .stNumberInput,
-html[data-theme="light"] .stSelectbox,
-html[data-theme="light"] .stFileUploader,
-html[data-theme="light"] label,
-html[data-theme="light"] .stButton {
-    color: #000000;
-    background-color: #ffffff;
-    border-color: #cccccc;
-}
-html[data-theme="light"] input,
-html[data-theme="light"] textarea,
-html[data-theme="light"] select {
-    background-color: #ffffff;
-    color: #000000;
-}
+/* Selectbox dropdown */
+div[role="combobox"] > div {{
+    background: {theme['input_focus_bg']} !important;
+    color: {theme['input_font']} !important;
+}}
 
-/* Hover dan focus jelas */
-.stTextInput>div>div>input:focus,
-.stTextArea>div>textarea:focus,
-.stSelectbox>div>div>div>div:focus,
-.stNumberInput>div>input:focus {
-    border: 2px solid #00bcd4 !important;
-}
+/* Placeholder */
+::placeholder {{
+    color: {theme['placeholder']} !important;
+    opacity: 1 !important;
+}}
 
-/* Expander styling */
-.stExpander {
-    background-color: rgba(255,255,255,0.1) !important;
-    border: 1px solid rgba(200,200,200,0.2) !important;
-}
-html[data-theme="light"] .stExpander {
-    background-color: #f9f9f9 !important;
-    border: 1px solid #ddd !important;
-}
-html[data-theme="dark"] .stExpander {
-    background-color: #1f2f3d !important;
-    border: 1px solid #3e4e5e !important;
-}
+/* Label dan teks di atas input */
+label, span, div[role="textbox"] {{
+    color: {theme['label_font']} !important;
+    font-weight: 500;
+}}
 
-/* Button styling */
-.stButton>button {
-    border-radius: 8px;
-    padding: 0.5em 1em;
-}
+/* Slider label */
+.stSlider > div {{
+    color: {theme['font']} !important;
+}}
+
+/* Expander */
+div[data-testid="stExpander"] {{
+    background: {theme['input_bg']} !important;
+    color: {theme['input_font']} !important;
+    border-radius: 10px;
+    padding: 10px;
+}}
+
+/* Tabel kustom */
+.custom-html-table {{
+    background: {TABLE_THEME['table_bg']};
+    color: {TABLE_THEME['table_font']};
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-size: 16px;
+}}
+.custom-html-table th, .custom-html-table td {{
+    border: 1px solid rgba(0,0,0,0.2);
+    padding: 12px 15px;
+    text-align: left;
+}}
+.custom-html-table th {{
+    background-color: rgba(255,255,255,0.2);
+    font-weight: bold;
+}}
+.custom-html-table tbody tr:hover {{
+    background-color: rgba(255,255,255,0.1);
+}}
 </style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# --- Sidebar ---
+# ------------------ Sidebar ------------------
 with st.sidebar:
-    dark_mode = st.checkbox("Dark Mode", value=True)
+    st.session_state.dark_mode = st.checkbox(
+        "Dark Mode",
+        value=st.session_state.dark_mode
+    )
     
 # ------------------ INPUT KOORDINAT ------------------
 LAT = st.sidebar.number_input("Latitude", value=-3.921406, format="%.6f")
