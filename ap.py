@@ -807,7 +807,7 @@ with st.expander("Kalkulator Pemupukan Dasar"):
         }
     }
 
-    st.markdown(f"###Rekomendasi Pupuk untuk **{tanaman}** per {luas_lahan} ha")
+    st.markdown(f"Rekomendasi Pupuk untuk **{tanaman}** per {luas_lahan} ha")
     data_tabel = []
 
     for jenis_pupuk, data in rekomendasi_pupuk[tanaman].items():
@@ -820,10 +820,14 @@ with st.expander("Kalkulator Pemupukan Dasar"):
 
     st.table(pd.DataFrame(data_tabel))
     
-# ------------------ Harga Komoditas (Bisa Diedit) ------------------
+# ------------------ Harga Komoditas ------------------
 
 # Nama file harga komoditas
 HARGA_FILE = "data/harga_komoditas.json"
+
+# Cegah error folder
+if not os.path.exists("data"):
+    os.makedirs("data")
 
 # Fungsi load/save data harga
 def load_harga_komoditas():
