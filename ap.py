@@ -37,30 +37,34 @@ def gradient_css(colors, direction="to right"):
 COLOR_BIRU_TUA = "#0A2647"
 COLOR_BIRU_MUDA = "#144272"
 COLOR_BIRU_NAVY = "#102040"
+COLOR_BIRU_INPUT_GRAD = gradient_css(["#1F3554", "#29476B"])
 COLOR_HIJAU_TERANG = "#CFF5B2"
 COLOR_HIJAU_LEMBUT = "#E9FCD4"
 COLOR_BIRU_AIR = "#B6E2D3"
 COLOR_PUTIH = "#FFFFFF"
 COLOR_HITAM = "#000000"
+COLOR_GRAY_DARK = "#2A2A2A"
 
-# Tema utama (gelap & terang)
+# Tema utama
 LIGHT_THEME = {
     "sidebar_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_HIJAU_LEMBUT]),
     "main_bg": COLOR_PUTIH,
     "font": COLOR_HITAM,
     "input_bg": "#F0F2F6",
     "input_font": COLOR_HITAM,
+    "input_focus_bg": "#FFFFFF"
 }
 
 DARK_THEME = {
     "sidebar_bg": gradient_css([COLOR_BIRU_TUA, COLOR_BIRU_MUDA]),
     "main_bg": COLOR_BIRU_NAVY,
     "font": COLOR_PUTIH,
-    "input_bg": "#1A2B4C",
+    "input_bg": COLOR_BIRU_INPUT_GRAD,
     "input_font": COLOR_PUTIH,
+    "input_focus_bg": "#29476B"
 }
 
-# Tema tabel SELALU tetap
+# Tema tabel
 TABLE_THEME = {
     "table_bg": gradient_css([COLOR_HIJAU_TERANG, COLOR_BIRU_AIR]),
     "table_font": COLOR_HITAM
@@ -85,16 +89,32 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
-        /* Semua input */
+        /* Input, select, textarea normal */
         input, textarea, select {{
-            background-color: {theme['input_bg']} !important;
+            background: {theme['input_bg']} !important;
+            color: {theme['input_font']} !important;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+        }}
+
+        /* Input saat fokus (klik) */
+        input:focus, textarea:focus, select:focus {{
+            background: {theme['input_focus_bg']} !important;
+            color: {theme['input_font']} !important;
+            border: 1px solid #66AFE9;
+            outline: none;
+        }}
+
+        /* Dropdown (stSelectbox) saat terbuka */
+        div[role="combobox"] > div {{
+            background: {theme['input_focus_bg']} !important;
             color: {theme['input_font']} !important;
         }}
 
         /* Placeholder dan label */
         ::placeholder {{
             color: {theme['input_font']} !important;
-            opacity: 1;
+            opacity: 0.8;
         }}
         label, span, div[role="textbox"] {{
             color: {theme['input_font']} !important;
@@ -105,7 +125,7 @@ st.markdown(f"""
             color: {theme['font']} !important;
         }}
 
-        /* Expander (untuk kotak di dalam halaman) */
+        /* Expander */
         div[data-testid="stExpander"] {{
             background: {theme['input_bg']} !important;
             color: {theme['input_font']} !important;
@@ -113,7 +133,7 @@ st.markdown(f"""
             padding: 10px;
         }}
 
-        /* Tabel HTML kustom: SELALU kontras */
+        /* Tabel HTML kustom */
         .custom-html-table {{
             background: {TABLE_THEME['table_bg']};
             color: {TABLE_THEME['table_font']};
