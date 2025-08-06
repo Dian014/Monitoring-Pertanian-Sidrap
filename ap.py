@@ -434,7 +434,7 @@ model = LinearRegression().fit(
 # ------------------ PREDIKSI PANEN ------------------
 with st.expander("Prediksi Panen"):
     # ---- Prediksi Manual dengan Input Cuaca (Khusus Padi) ----
-    st.subheader("Prediksi Manual Khusus Padi (Dengan Input Cuaca)")
+    st.subheader("Prediksi Panen Khusus Padi (Dengan Input Cuaca)")
     ch_manual_padi = st.number_input("Curah Hujan (mm)", value=5.0, key="manual_padi_ch")
     suhu_manual_padi = st.number_input("Suhu Maks (°C)", value=32.0, key="manual_padi_suhu")
     hum_manual_padi = st.number_input("Kelembapan (%)", value=78.0, key="manual_padi_hum")
@@ -455,7 +455,7 @@ with st.expander("Prediksi Panen"):
     """)
 
     # ---- Prediksi Manual tanpa Input Cuaca (Untuk Semua Komoditas) ----
-    st.subheader("Prediksi Manual Tanpa Data Cuaca")
+    st.subheader("Prediksi Panen Otomatis Komoditas Pertanian Di Kabupaten Sidrap")
     komoditas_list = ["Padi", "Jagung", "Kopi", "Kakao", "Kelapa", "Porang"]
     komoditas_manual = st.selectbox("Pilih Komoditas", komoditas_list, key="manual2_komoditas")
     pred_yield_default = {
@@ -483,7 +483,7 @@ with st.expander("Prediksi Panen"):
     """)
 
     # ---- Prediksi Otomatis Berdasarkan Cuaca Harian (Khusus Padi) ----
-    st.subheader("Prediksi Otomatis (Berdasarkan Data Cuaca) - Khusus Padi")
+    st.subheader("Prediksi Panen Otomatis Khusus Padi")
     luas_auto = st.number_input("Luas Sawah (ha) (otomatis)", value=1.0, key="auto_luas")
     harga_auto = st.number_input("Harga Padi (Rp/kg) (otomatis)", value=7000, key="auto_harga")
     biaya_auto = st.number_input("Biaya Produksi per Ha (Rp) (otomatis)", value=5000000, key="auto_biaya")
@@ -506,7 +506,7 @@ with st.expander("Prediksi Panen"):
     """)
 
     # ---- Prediksi 3 Kali Panen Tahunan (Khusus Padi) ----
-    st.markdown("### Proyeksi Panen Tahunan Padi (3 Kali Panen)")
+    st.markdown("Proyeksi Panen Tahunan Padi (3 Kali Panen)")
     df_panen1 = df_harian.head(7)
     input_panen1 = df_panen1[["Curah Hujan (mm)", "Suhu Maks (°C)", "Kelembapan (%)"]].mean().values.reshape(1, -1)
     pred1 = model.predict(input_panen1)[0]
@@ -850,14 +850,13 @@ with st.expander("Kalkulator Pemupukan"):
     
 # ------------------ Harga Komoditas ------------------
 
-# Nama file harga komoditas
 HARGA_FILE = "data/harga_komoditas.json"
 
-# Cegah error folder
+# Buat folder jika belum ada
 if not os.path.exists("data"):
     os.makedirs("data")
 
-# Fungsi load/save data harga
+# Fungsi untuk load & simpan harga
 def load_harga_komoditas():
     if os.path.exists(HARGA_FILE):
         with open(HARGA_FILE, "r", encoding="utf-8") as f:
@@ -865,50 +864,41 @@ def load_harga_komoditas():
                 return json.load(f)
             except json.JSONDecodeError:
                 pass
+    # Default komoditas khas Sidrap
     return [
-        {"Komoditas": "Gabah Kering", "Harga (Rp/kg)": 7000},
+        {"Komoditas": "Padi", "Harga (Rp/kg)": 7000},
         {"Komoditas": "Jagung", "Harga (Rp/kg)": 5300},
-        {"Komoditas": "Beras Medium", "Harga (Rp/kg)": 10500}
+        {"Komoditas": "Kopi", "Harga (Rp/kg)": 8500},
+        {"Komoditas": "Kakao", "Harga (Rp/kg)": 12000},
+        {"Komoditas": "Kelapa", "Harga (Rp/kg)": 2500},
+        {"Komoditas": "Porang", "Harga (Rp/kg)": 10000}
     ]
 
 def save_harga_komoditas(data):
     with open(HARGA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-# Inisialisasi harga di session_state
+# Load harga ke session_state
 if "harga_komoditas" not in st.session_state:
     st.session_state.harga_komoditas = load_harga_komoditas()
 
-with st.expander("Harga Komoditas"):
-    st.markdown("Silakan ubah harga langsung pada kolom input di bawah ini.")
+# UI Harga Komoditas
+with st.expander("Harga Komoditas di Sidrap"):
+    st.markdown("Silakan ubah harga langsung di tabel berikut:")
 
-    new_data = []
-    for i, row in enumerate(st.session_state.harga_komoditas):
-        komoditas = st.text_input(f"Komoditas {i+1}", value=row["Komoditas"], key=f"komo_{i}")
-        harga = st.number_input(f"Harga {komoditas} (Rp/kg)", value=row["Harga (Rp/kg)"], key=f"harga_{i}")
-        new_data.append({"Komoditas": komoditas, "Harga (Rp/kg)": harga})
+    df_edit = pd.DataFrame(st.session_state.harga_komoditas)
 
-    if st.button("Simpan Harga Komoditas"):
-        st.session_state.harga_komoditas = new_data
-        save_harga_komoditas(new_data)
-        st.success("Harga komoditas berhasil diperbarui.")
+    edited_df = st.data_editor(
+        df_edit,
+        use_container_width=True,
+        num_rows="dynamic",
+        key="editor_harga"
+    )
 
-    st.markdown("Tabel Harga Saat Ini")
-    st.table(pd.DataFrame(st.session_state.harga_komoditas))
-
-# ------------------ TIPS PERTANIAN ------------------
-with st.expander("Tips Pertanian Harian Otomatis"):
-    for _, row in df_harian.iterrows():
-        tips = []
-        if row["Curah Hujan (mm)"] < threshold:
-            tips.append("Lakukan irigasi untuk menjaga kelembaban tanah")
-        if row["Suhu Maks (°C)"] > 33:
-            tips.append("Waspadai stres panas pada padi")
-        if row["Kelembapan (%)"] > 85:
-            tips.append("Tingkatkan kewaspadaan terhadap penyakit jamur")
-        if not tips:
-            tips.append("Kondisi ideal untuk pertumbuhan padi")
-        st.markdown(f" {row['Tanggal'].date()}: {'; '.join(tips)}")
+    if st.button("Simpan Perubahan Harga"):
+        st.session_state.harga_komoditas = edited_df.to_dict(orient="records")
+        save_harga_komoditas(st.session_state.harga_komoditas)
+        st.success("✅ Harga komoditas berhasil diperbarui.")
 
 # ------------------ LAPORAN WARGA ------------------
 # Pastikan folder upload ada
